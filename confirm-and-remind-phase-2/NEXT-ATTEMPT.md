@@ -37,3 +37,21 @@ Attempts run one after another overnight, with the same pass line as above, unch
   which the agent never sees); items 3 and 4 are also read in the code.
 - **It stops** at the first attempt that passes, or at $20.
 - **Every attempt is published here,** passed or not, with its cost.
+
+## How item 2 is judged from attempt 12 on (added before attempt 12 starts)
+
+**Item 2 is whatever the four cases say on the attempt's own adapter, published as is.** No re-runs to get a
+better number, no changes to the cases after seeing a result.
+
+- **The cases never change.** [tests/review-no-tap-routes.v2.test.ts](tests/review-no-tap-routes.v2.test.ts) is the
+  original [tests/review-no-tap-routes.test.ts](tests/review-no-tap-routes.test.ts) with only its import lines
+  replaced (and one comment): `diff` the two files to check. The four cases are byte for byte the same.
+- **The adapter is the only other thing.** Each build names its functions differently, so it gets a small
+  `review-adapter.<attempt>.ts`, published with its result. It only forwards the five names the cases use to the
+  functions that build's own API routes call. It adds no locks, checks or retries. Things outside the app are
+  stood in for, and each says so in the adapter: the AI provider (the cases' own mocked answer, in the shape the
+  app reads), and the Next.js `server-only` marker (a no-op, as Next.js makes it on the server).
+- **Nothing else changes in the judge's copy of the app:** no added files, no extra settings. The judge runs the
+  published cases and the published adapter byte for byte.
+- **A control keeps the adapters honest:** run 9 through its own adapter must give run 9's original result
+  (3 of 4). It does.

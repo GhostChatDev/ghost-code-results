@@ -7,13 +7,16 @@
 //   POST /api/ai/suggestions (dismiss)   → update ai_suggestions set status "dismissed" where pending
 // The job has no way to take a mocked model, so the provider is stood in for: fetch answers in the
 // OpenAI-compatible shape the app reads, with the review test's own mocked model output.
-import { MemoryDb } from "../src/lib/core/db";
-import { createNote } from "../src/lib/core/service";
+// src/lib/server/ai.ts starts with `import "server-only"`, a marker Next.js supplies when it builds the app (as a
+// no-op on the server). Outside Next.js it doesn't exist, so it's stood in for here, in the adapter, as a no-op.
+import { vi } from "vitest";
+vi.mock("server-only", () => ({}));
 import { runAiJob } from "../src/lib/server/ai";
 import { validateConfirmation } from "../src/lib/core/ai";
 import type { Db } from "../src/lib/core/db";
 
-export { MemoryDb, createNote };
+export { MemoryDb } from "../src/lib/core/db";
+export { createNote } from "../src/lib/core/service";
 
 type ReviewModel = () => Promise<{ value: unknown; usage: { inputTokens: number; outputTokens: number } }>;
 
