@@ -1,0 +1,544 @@
+name: Ghost Screenshots
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  shots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Start a database (only when the app uses Postgres)
+        run: |
+          if [ -f package.json ] && grep -qE '"(pg|postgres|@prisma/client|prisma|drizzle-orm|knex|sequelize|typeorm|@neondatabase/serverless|@vercel/postgres)"' package.json; then
+            docker run -d --name ghost-db -e POSTGRES_PASSWORD=ghost -e POSTGRES_DB=app -p 5432:5432 postgres:16-alpine >/dev/null
+            for i in $(seq 1 40); do docker exec ghost-db pg_isready -U postgres -d app >/dev/null 2>&1 && break; sleep 1; done
+            echo "DATABASE_URL=postgresql://postgres:ghost@127.0.0.1:5432/app" >> "$GITHUB_ENV"
+            echo "Postgres is ready: DATABASE_URL is set for the build and the app's server."
+          fi
+      - name: Install and build the app
+        run: |
+          if [ -f package.json ]; then
+            if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm install --frozen-lockfile
+            elif [ -f yarn.lock ]; then yarn install --frozen-lockfile
+            elif [ -f package-lock.json ]; then npm ci
+            else npm install; fi
+            if [ -n "$DATABASE_URL" ]; then
+              if [ -f prisma/schema.prisma ]; then
+                if [ -d prisma/migrations ]; then npx prisma migrate deploy; else npx prisma db push --skip-generate; fi
+              fi
+              for s in db:migrate migrate; do if npm run | grep -qE "^  $s$"; then npm run $s; break; fi; done
+            fi
+            if npm run | grep -qE "^  build$"; then npm run build; fi
+          fi
+      - name: Install a real browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/shots" && cd "$RUNNER_TEMP/shots"
+          npm init -y >/dev/null && npm install playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Photograph the app
+        run: |
+          cat > "$RUNNER_TEMP/shots/shots.mjs" <<'GHOST_SHOTS'
+          import http from "node:http";
+          import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
+          import path from "node:path";
+          import { spawn } from "node:child_process";
+          import { chromium } from "playwright";
+
+          const BASE = process.env.GITHUB_WORKSPACE || process.cwd();
+          // Pauses after loads and clicks (for animations). The sandbox check shortens them (GHOST_WAIT_SCALE=0.6).
+          const WAIT = Math.min(1, Math.max(0.3, Number(process.env.GHOST_WAIT_SCALE) || 1));
+          const OUT = path.join(BASE, "ghost-screenshots");
+          const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp", ".ico": "image/x-icon", ".woff": "font/woff", ".woff2": "font/woff2", ".txt": "text/plain", ".wasm": "application/wasm" };
+          await mkdir(OUT, { recursive: true });
+          const report = { console: [], page: [], requests: [], overflow: {}, blank: [], views: [], menu: [], clicks: [] };
+          let serverOut = ""; // the app's own server output (npm start), shown when the check fails
+          // A broken page fails the check (an uncaught error, a blank page, no app, a page that won't open), with
+          // one FAIL: line each, so the fix loop reads what broke. Console errors, failed requests, sideways
+          // scrolling and menu items that won't open are listed as WARN: lines and shown in the pictures' report.
+          const finish = async () => {
+            for (const k of ["console", "page", "requests", "menu"]) report[k] = [...new Set(report[k])].slice(0, 12);
+            await writeFile(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
+            const fails = [];
+            if (report.error) fails.push(report.error);
+            if (report.login) {
+              console.log("LOGIN: " + report.login.result + (report.login.steps.length ? " (" + report.login.steps.join(", ") + ")" : ""));
+              if (report.login.result !== "ok" && !/^could not run|^login only/.test(report.login.result)) fails.push("the login doesn't work for a new person: " + report.login.result + ". The check signs up with an email and password, reloads, logs out, tries a wrong password and logs in again" + (report.login.steps.length ? " (it got as far as: " + report.login.steps.join(", ") + ")" : "") + ".");
+            }
+            for (const p of report.page) fails.push("uncaught error or page that won't open: " + p);
+            for (const b of report.blank) fails.push(b + ": the page is blank (almost no text)");
+            for (const c of report.console) console.log("WARN: console error: " + c);
+            for (const r of report.requests) console.log("WARN: failed request: " + r);
+            for (const m of report.menu) console.log("WARN: " + m);
+            // The click test: a button that does nothing is a bug the user would hit at once.
+            // Every button counts: one dead button is enough to fail (a task must not end at 7 of 8 and call itself done).
+            // A button whose effect can't be seen on the page (copy, download, share, print) is reported, not failed.
+            const dead = report.clicks.filter((c) => c.result === "does nothing").map((c) => "'" + c.label + "'");
+            if (dead.length) fails.push((dead.length === 1 ? "this button does nothing when pressed: " : "these buttons do nothing when pressed: ") + dead.join(", ") + ". Make each one work (open, switch, add, filter...) or remove it");
+            for (const c of report.clicks.filter((c) => c.result === "can't tell")) console.log("WARN: the button '" + c.label + "' changed nothing on the page (it may copy, download, share or print): make sure it does what its label says");
+            // The refresh test: something the user added must still be there in a new browser.
+            if (report.refresh?.result === "lost") fails.push("something added in the app ('" + report.refresh.word + "', typed into the first text box) is gone after reopening the app in a new browser" + (report.refresh.server ? " with the server restarted (data kept only in the server's memory is lost: save it in the database)" : "") + ": save what people add (localStorage, IndexedDB or the app's database) and load it on start");
+            if (report.refresh) console.log("REFRESH (this device remembers): " + report.refresh.result);
+            // The cross-browser test: an app with a server must hold what people add on the server.
+            if (report.crossBrowser) console.log("CROSS-BROWSER (the server holds it): " + report.crossBrowser.result);
+            if (report.crossBrowser && report.crossBrowser.result === "not seen") fails.push("something added in the app ('" + report.crossBrowser.word + "') survives a refresh but a second, empty browser doesn't see it: it is kept only in the browser that added it. This app has a server: save what people add in its database through the server");
+            const worked = report.clicks.filter((c) => c.result === "works").length;
+            if (report.clicks.length) console.log("CLICKS: " + worked + " of " + report.clicks.length + " buttons pressed did something");
+            for (const k of Object.keys(report.overflow)) console.log("WARN: " + k + ": the page scrolls sideways by " + report.overflow[k] + "px");
+            for (const f of fails) console.log("FAIL: " + f);
+            if (report.server) {
+              report.server.log = serverOut.split("\n").filter((l) => l.trim()).slice(-25);
+              await writeFile(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
+              if (fails.length && report.server.log.length) console.log("SERVER OUTPUT (last lines of npm start):\n" + report.server.log.join("\n"));
+            }
+            console.log(fails.length ? "The app is broken in the browser (" + fails.length + " problem(s)). Screenshots are in the ghost-screenshots artifact." : "The app opened in the browser with no uncaught errors. Screenshots are in the ghost-screenshots artifact.");
+            process.exit(fails.length ? 1 : 0);
+          };
+          const has = async (file) => { try { await stat(file); return true; } catch { return false; } };
+
+          // An app with its own server (package.json has a "start" script): start it the way it runs online, with
+          // PORT set (and DATABASE_URL when the workflow started a database), wait until it really answers, and test
+          // that instead of the files. If it never answers, fail with the server's own output, so a slow or crashed
+          // start isn't mistaken for a broken page.
+          let url = null;
+          let serverChild = null;
+          const SERVER_PORT = 4300 + Math.floor(Math.random() * 500);
+          const SERVER_LIMIT = Number(process.env.SERVER_WAIT_MS) || 90000;
+          const startServer = async () => {
+            const env = Object.assign({}, process.env, { PORT: String(SERVER_PORT), HOST: "127.0.0.1", HOSTNAME: "127.0.0.1", BROWSER: "none", NODE_ENV: process.env.NODE_ENV || "production" });
+            const child = spawn("npm", ["start"], { cwd: BASE, env: env, stdio: ["ignore", "pipe", "pipe"], detached: true });
+            serverChild = child;
+            const keep = (d) => { serverOut = (serverOut + d.toString()).slice(-8000); };
+            child.stdout.on("data", keep);
+            child.stderr.on("data", keep);
+            child.exited = null;
+            child.on("exit", (c) => { child.exited = c === null ? "a signal" : c; });
+            const answers = async (u) => { try { const r = await fetch(u, { signal: AbortSignal.timeout(3000) }); return r.status < 500; } catch { return false; } };
+            const from = serverOut.length;
+            const t0 = Date.now();
+            while (child.exited === null && Date.now() - t0 < SERVER_LIMIT) {
+              const tries = new Set(["http://127.0.0.1:" + SERVER_PORT + "/"]);
+              for (const m of serverOut.slice(Math.max(0, from - 200)).matchAll(/https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|\[::\]):(\d{2,5})/g)) tries.add("http://127.0.0.1:" + m[1] + "/");
+              for (const u of tries) { if (await answers(u)) return { url: u, ms: Date.now() - t0, exited: null }; }
+              await new Promise((r) => setTimeout(r, 1000));
+            }
+            return { url: null, ms: Date.now() - t0, exited: child.exited };
+          };
+          const stopServer = async () => {
+            const child = serverChild;
+            if (!child || child.exited !== null) return;
+            try { process.kill(-child.pid, "SIGTERM"); } catch {}
+            for (let i = 0; i < 50 && child.exited === null; i++) await new Promise((r) => setTimeout(r, 100));
+            if (child.exited === null) { try { process.kill(-child.pid, "SIGKILL"); } catch {} await new Promise((r) => setTimeout(r, 300)); }
+          };
+          process.on("exit", () => { if (serverChild) { try { process.kill(-serverChild.pid, "SIGKILL"); } catch {} } });
+          const pkg = await readFile(path.join(BASE, "package.json"), "utf8").then((t) => JSON.parse(t)).catch(() => null);
+          if (pkg && pkg.scripts && pkg.scripts.start && !process.env.GHOST_STATIC) {
+            report.server = { command: "npm start", port: SERVER_PORT };
+            const s = await startServer();
+            url = s.url;
+            report.server.ready_ms = s.url ? s.ms : null;
+            if (!url && s.exited === 0) {
+              // "start" ran something that finished (a build or a script), not a server: test the files instead.
+              report.server = null;
+              console.log("WARN: npm start finished without serving anything, so the app's files are tested instead");
+            } else if (!url) {
+              report.error = s.exited !== null
+                ? "the app's server (npm start) stopped (exit " + s.exited + ") before it answered; its output is below"
+                : "the app's server (npm start) didn't answer within " + Math.round(SERVER_LIMIT / 1000) + " seconds; it must listen on process.env.PORT. Its output is below";
+              await finish();
+            } else {
+              report.served = "npm start (" + url + ")";
+              console.log("SERVER: npm start answered at " + url + " after " + (s.ms / 1000).toFixed(1) + "s");
+            }
+          }
+
+          // A server in the code (server.js, app.js... calling listen) that nothing starts: the app can't run as it
+          // would online, so testing its page files alone would pass a broken app. Fail and say what's missing.
+          if (!url && !report.server && !process.env.GHOST_STATIC && !(pkg && pkg.scripts && pkg.scripts.start)) {
+            for (const f of ["server.js", "server.mjs", "server.ts", "app.js", "index.js", "src/server.js", "src/server.ts", "src/index.js", "src/app.js"]) {
+              const code = await readFile(path.join(BASE, f), "utf8").catch(() => "");
+              if (code.includes(".listen(") && (code.includes("express") || code.includes("http") || code.includes("fastify") || code.includes("koa"))) {
+                report.error = f + " is a server, but " + (pkg ? "package.json has no 'start' script" : "there is no package.json") + ", so the app can't run. Add a package.json with its dependencies and a 'start' script (e.g. 'node " + f + "') that listens on process.env.PORT.";
+                await finish();
+              }
+            }
+          }
+
+          let root = null;
+          let server = null;
+          if (!url) {
+          for (const d of [process.env.APP_DIR, "dist", "build", "out", ".", "docs", "public"]) {
+            if (!d) continue;
+            const dir = path.resolve(BASE, d);
+            if (await has(path.join(dir, "index.html"))) { root = dir; break; }
+          }
+          if (!root) {
+            report.error = "no index.html found (looked in dist, build, out, the repository root, docs and public)";
+            await finish();
+          }
+          report.served = path.relative(BASE, root) || ".";
+
+          // A tiny static server, so the app runs from http:// like it will online (single-page apps fall back to index.html).
+          server = http.createServer(async (req, res) => {
+            try {
+              let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
+              if (p.endsWith("/")) p += "index.html";
+              let file = path.join(root, p);
+              if (!file.startsWith(root)) throw new Error("outside the app folder");
+              if (!(await has(file)) && !path.extname(file)) file = path.join(root, "index.html");
+              const data = await readFile(file);
+              res.writeHead(200, { "content-type": TYPES[path.extname(file).toLowerCase()] || "application/octet-stream" });
+              res.end(data);
+            } catch {
+              res.writeHead(404);
+              res.end("not found");
+            }
+          });
+          await new Promise((r) => server.listen(0, "127.0.0.1", r));
+          url = "http://127.0.0.1:" + server.address().port + "/";
+          }
+
+          // A small picture of a screenshot, drawn in the browser (no image library needed).
+          const thumbOf = async (context, jpg) => {
+            const t = await context.newPage();
+            await t.setContent("<canvas id='c'></canvas>");
+            const b64 = await t.evaluate(async (a) => {
+              const img = new Image();
+              img.src = "data:image/jpeg;base64," + a.b64;
+              await img.decode();
+              const c = document.getElementById("c");
+              c.width = a.w;
+              c.height = Math.round(img.height * (a.w / img.width));
+              c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+              return c.toDataURL("image/jpeg", 0.6).split(",")[1];
+            }, { b64: jpg.toString("base64"), w: 360 });
+            await t.close();
+            return Buffer.from(b64, "base64");
+          };
+
+          // The login test (apps with accounts): when the first screen asks for a password, the check signs up as a new
+          // person, and everything after it (menu, buttons, refresh) runs logged in, like a real user. It also checks
+          // that the login survives a reload, that Log out logs out, that a wrong password is refused and that the same
+          // email and password log in again.
+          const RAND = Math.floor(Math.random() * 900000 + 100000);
+          const CREDS = { email: "ghost" + RAND + "@example.com", user: "ghost" + RAND, pass: "Gh0st-" + RAND + "-pw", name: "Ghost Tester" };
+          const askingPassword = async (page) => (await page.locator("input[type='password']").filter({ visible: true }).count().catch(() => 0)) > 0;
+          // A sign-in screen: a password box, an email box, or a "Sign in" / "Log in" button.
+          const signInScreen = async (page) =>
+            (await askingPassword(page)) ||
+            (await page.locator("input[type='email'], input[autocomplete='email'], input[autocomplete='username']").filter({ visible: true }).count().catch(() => 0)) > 0 ||
+            (await page.getByRole("button", { name: /sign ?in|log ?in|sign ?up|create account/i }).filter({ visible: true }).count().catch(() => 0)) > 0;
+          const clickText = async (page, re) => {
+            for (const role of ["button", "link", "tab"]) {
+              const t = page.getByRole(role, { name: re }).filter({ visible: true }).first();
+              if (await t.count()) { await t.click({ timeout: 3000 }).catch(() => {}); await page.waitForTimeout(WAIT * 700); return true; }
+            }
+            const t = page.getByText(re).filter({ visible: true }).first();
+            if (await t.count()) { await t.click({ timeout: 3000 }).catch(() => {}); await page.waitForTimeout(WAIT * 700); return true; }
+            return false;
+          };
+          const fillAuth = async (page, pass) => {
+            const fields = page.locator("input").filter({ visible: true });
+            const n = await fields.count();
+            for (let i = 0; i < n; i++) {
+              const f = fields.nth(i);
+              const d = await f.evaluate((el) => {
+                const lab = (el.labels && el.labels[0] ? el.labels[0].innerText : "") + " " + (el.name || "") + " " + (el.id || "") + " " + (el.placeholder || "") + " " + (el.getAttribute("aria-label") || "") + " " + (el.autocomplete || "");
+                return { type: (el.type || "text").toLowerCase(), hint: lab.toLowerCase() };
+              }).catch(() => null);
+              if (!d || ["checkbox", "radio", "hidden", "submit", "button", "file", "range", "color"].includes(d.type)) continue;
+              let v = null;
+              if (d.type === "password") v = pass;
+              else if (d.type === "email" || d.hint.includes("email") || d.hint.includes("e-mail")) v = CREDS.email;
+              else if (d.hint.includes("user") || d.hint.includes("login") || d.hint.includes("handle")) v = CREDS.user;
+              else if (d.hint.includes("name")) v = CREDS.name;
+              else if (d.type === "text" || d.type === "tel") v = d.type === "tel" ? "5550100" : CREDS.name;
+              if (v !== null) await f.fill(v, { timeout: 2000 }).catch(() => {});
+            }
+          };
+          const submitAuth = async (page, re) => {
+            const pw = page.locator("input[type='password']").filter({ visible: true }).last();
+            if (await pw.count()) await pw.press("Enter").catch(() => {});
+            await page.waitForTimeout(WAIT * 1500);
+            if (await askingPassword(page)) {
+              const b = page.getByRole("button", { name: re }).filter({ visible: true }).last();
+              if (await b.count()) { await b.click({ timeout: 3000 }).catch(() => {}); await page.waitForTimeout(WAIT * 1500); }
+            }
+            return !(await askingPassword(page));
+          };
+          const SIGNUP = /sign ?up|create (an |your )?account|register|join|get started/i;
+          const LOGIN = /log ?in|sign ?in|continue|submit/i;
+          const logIn = async (page, pass) => {
+            if (!(await askingPassword(page))) await clickText(page, /log ?in|sign ?in/i);
+            if (!(await askingPassword(page))) return false;
+            await fillAuth(page, pass);
+            return submitAuth(page, LOGIN);
+          };
+          const loginTest = async (page) => {
+            const r = { result: "", steps: [] };
+            // Sign up: open the sign-up form if there is one, fill it in, send it.
+            const opened = await clickText(page, SIGNUP);
+            const canSignUp = opened || (await page.getByText(SIGNUP).filter({ visible: true }).count()) > 0;
+            await fillAuth(page, CREDS.pass);
+            let inside = await submitAuth(page, SIGNUP);
+            // Some apps go back to the login form after signing up.
+            if (!inside) inside = await logIn(page, CREDS.pass);
+            // A login with no way to sign up (an admin password): a stranger can't get in, and that is by design.
+            if (!inside) { r.result = canSignUp ? "can't get in" : "login only (no sign-up to test)"; return r; }
+            r.steps.push("signed up and logged in");
+            await page.reload({ waitUntil: "load" }).catch(() => {});
+            await page.waitForTimeout(WAIT * 1200);
+            if (await askingPassword(page)) { r.result = "logged out by a reload"; return r; }
+            r.steps.push("still logged in after a reload");
+            // A person confirms "Are you sure?" or "Discard changes?" when they log out.
+            const yes = (d) => { d.accept().catch(() => {}); };
+            page.on("dialog", yes);
+            const out = await clickText(page, /log ?out|sign ?out/i);
+            await page.waitForTimeout(WAIT * 500);
+            page.off("dialog", yes);
+            if (!out) { r.result = "ok"; r.steps.push("no Log out button found"); return r; }
+            if (!(await askingPassword(page))) await page.goto(url, { waitUntil: "load" }).catch(() => {});
+            if (!(await askingPassword(page))) { r.result = "Log out didn't log out"; return r; }
+            r.steps.push("Log out worked");
+            if (await logIn(page, CREDS.pass + "-wrong")) { r.result = "a wrong password logged in"; return r; }
+            r.steps.push("a wrong password was refused");
+            await page.goto(url, { waitUntil: "load" }).catch(() => {});
+            await page.waitForTimeout(WAIT * 800);
+            if (!(await logIn(page, CREDS.pass))) { r.result = "can't log back in with the same email and password"; return r; }
+            r.steps.push("logged back in");
+            r.result = "ok";
+            return r;
+          };
+
+          const VIEWS = [["desktop", 1280, 800, false], ["tablet", 820, 1100, false], ["phone", 390, 844, true]];
+          const browser = await chromium.launch();
+          for (const [name, width, height, mobile] of VIEWS) {
+            const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, isMobile: mobile, hasTouch: mobile });
+            const page = await context.newPage();
+            page.on("pageerror", (e) => report.page.push(name + ": " + e.message));
+            page.on("console", (m) => { if (m.type() === "error" && !/favicon/i.test(m.text())) report.console.push(name + ": " + m.text().slice(0, 300)); });
+            page.on("response", (r) => { if (r.status() >= 400 && !/favicon/i.test(r.url())) report.requests.push(name + ": " + r.status() + " " + r.url().replace(url, "/")); });
+            try {
+              await page.goto(url, { waitUntil: "load", timeout: 20000 });
+              await page.waitForTimeout(WAIT * 1500);
+              const info = await page.evaluate(() => ({ h: document.documentElement.scrollHeight, over: document.documentElement.scrollWidth - window.innerWidth, text: (document.body ? document.body.innerText : "").trim().length }));
+              if (info.over > 2) report.overflow[name] = info.over;
+              if (info.text < 20) report.blank.push(name);
+              await page.setViewportSize({ width, height: Math.min(Math.max(info.h, 600), 1800) });
+              await page.waitForTimeout(WAIT * 400);
+              const jpg = await page.screenshot({ type: "jpeg", quality: 60 });
+              await writeFile(path.join(OUT, name + ".jpg"), jpg);
+              await writeFile(path.join(OUT, name + ".thumb.jpg"), await thumbOf(context, jpg));
+
+              // An app that asks for a password: sign up and test the login first; the rest runs logged in.
+              if (name === "desktop" && (await askingPassword(page))) {
+                try {
+                  report.login = await loginTest(page);
+                } catch (e) {
+                  report.login = { result: "could not run (" + String(e.message).split("\n")[0] + ")", steps: [] };
+                }
+              }
+
+              // The other screens: up to three items of the menu (sidebar, nav bar or tabs), opened one at a time on desktop.
+              // A menu item that opens nothing, or a page that errors, shows up in the pictures and in the report.
+              if (name === "desktop") {
+                const labels = await page.evaluate(() => {
+                  const out = [];
+                  const seen = new Set();
+                  for (const el of document.querySelectorAll("nav a, nav button, aside a, aside button, [role='tab'], [role='tablist'] button")) {
+                    const r = el.getBoundingClientRect();
+                    const t = (el.innerText || el.getAttribute("aria-label") || "").trim().split("\n")[0].trim();
+                    if (!t || t.length > 24 || r.width < 20 || r.height < 14 || seen.has(t)) continue;
+                    if (el.tagName === "A" && (el.target === "_blank" || (el.origin && el.origin !== location.origin))) continue;
+                    if (/log ?out|sign ?out|delete|remove|reset|disconnect|disable/i.test(t)) continue;
+                    seen.add(t);
+                    out.push(t);
+                  }
+                  return out.slice(1, 4);
+                });
+                report.views = [];
+                for (let k = 0; k < labels.length; k++) {
+                  try {
+                    await page.setViewportSize({ width, height });
+                    await page.goto(url, { waitUntil: "load", timeout: 20000 });
+                    await page.waitForTimeout(WAIT * 800);
+                    const before = await page.evaluate(() => location.href + "|" + (document.querySelector("main") || document.body).innerText);
+                    await page.getByText(labels[k], { exact: true }).first().click({ timeout: 4000 });
+                    await page.waitForTimeout(WAIT * 900);
+                    const after = await page.evaluate(() => location.href + "|" + (document.querySelector("main") || document.body).innerText);
+                    if (after === before) report.menu.push("desktop: the menu item '" + labels[k] + "' opens nothing (the screen didn't change)");
+                    const h = await page.evaluate(() => document.documentElement.scrollHeight);
+                    await page.setViewportSize({ width, height: Math.min(Math.max(h, 600), 1400) });
+                    await page.waitForTimeout(WAIT * 300);
+                    const v = await page.screenshot({ type: "jpeg", quality: 60 });
+                    const vname = "view-" + (k + 1);
+                    await writeFile(path.join(OUT, vname + ".jpg"), v);
+                    await writeFile(path.join(OUT, vname + ".thumb.jpg"), await thumbOf(context, v));
+                    report.views.push({ name: vname, label: labels[k] });
+                  } catch (e) {
+                    report.menu.push("desktop: the menu item '" + labels[k] + "' could not be opened (" + String(e.message).split("\n")[0] + ")");
+                  }
+                }
+
+                // The click test: press up to 8 visible buttons of the first screen, one at a time from a fresh
+                // page, and see whether each did something (the page changed, a dialog opened, the address changed).
+                // A press that throws shows up as an uncaught error; one that changes nothing is listed.
+                try {
+                  await page.setViewportSize({ width, height });
+                  await page.goto(url, { waitUntil: "load", timeout: 20000 });
+                  await page.waitForTimeout(WAIT * 800);
+                  const buttons = await page.evaluate(() => {
+                    const out = [];
+                    const seen = new Set();
+                    for (const el of document.querySelectorAll("button, [role='button'], input[type='button'], input[type='submit']")) {
+                      if (el.closest("nav, aside") || el.disabled) continue;
+                      // A tab or filter that is already the one selected ("All" on a list that shows all): pressing it
+                      // rightly changes nothing, so it isn't tested.
+                      const cls = (typeof el.className === "string" ? el.className : "").toLowerCase();
+                      if (el.getAttribute("aria-pressed") === "true" || el.getAttribute("aria-selected") === "true" || el.getAttribute("aria-current") || el.getAttribute("data-state") === "active" || el.getAttribute("data-state") === "on" || /(^|[^a-z])(active|selected|is-active|current)([^a-z]|$)/.test(cls)) continue;
+                      const r = el.getBoundingClientRect();
+                      if (r.width < 12 || r.height < 12 || r.bottom < 0 || r.top > window.innerHeight * 1.5) continue;
+                      const t = (el.innerText || el.value || el.getAttribute("aria-label") || el.title || "").trim().split("\n")[0].trim();
+                      if (!t || t.length > 30 || seen.has(t)) continue;
+                      if (/log ?out|sign ?out|delete|remove|reset|clear all|disconnect|disable/i.test(t)) continue;
+                      seen.add(t);
+                      out.push(t);
+                    }
+                    return out.slice(0, 8);
+                  });
+                  for (const label of buttons) {
+                    try {
+                      await page.goto(url, { waitUntil: "load", timeout: 20000 });
+                      await page.waitForTimeout(WAIT * 500);
+                      // What a person would see change: the visible text (a number moves, a panel opens), how many
+                      // things are visible (a menu or dialog appears), the address, or which option is picked (a category
+                      // or tab that becomes the selected one only moves a highlight and a tick). A style that only flickers doesn't count.
+                      const sig = () => page.evaluate(() => {
+                        let shown = 0;
+                        let picked = "";
+                        let i = 0;
+                        for (const el of document.body.querySelectorAll("*")) {
+                          i++;
+                          const r = el.getBoundingClientRect();
+                          if (r.width > 1 && r.height > 1 && getComputedStyle(el).visibility !== "hidden" && Number(getComputedStyle(el).opacity) > 0.05) shown++;
+                          const cls = (typeof el.className === "string" ? el.className : "").toLowerCase();
+                          const on = ["aria-pressed", "aria-selected", "aria-checked", "aria-expanded", "aria-current", "data-state"].map((a) => el.getAttribute(a) || "").join(",");
+                          const chosen = /(^|[^a-z])(active|selected|is-active|current|checked|on)([^a-z]|$)/.test(cls) || el.checked === true;
+                          if (chosen || on.replace(/,/g, "")) picked += i + ":" + on + (chosen ? "+" : "") + ";";
+                        }
+                        return location.href + "|" + shown + "|" + picked + "|" + document.body.innerText;
+                      });
+                      const before = await sig();
+                      let dialog = false;
+                      page.once("dialog", (d) => { dialog = true; d.dismiss().catch(() => {}); });
+                      // A download or a new tab is something happening too.
+                      page.once("download", () => { dialog = true; });
+                      page.context().once("page", () => { dialog = true; });
+                      const target = page.getByRole("button", { name: label, exact: true }).first();
+                      if (await target.count()) await target.click({ timeout: 3000 });
+                      else await page.getByText(label, { exact: true }).first().click({ timeout: 3000 });
+                      await page.waitForTimeout(WAIT * 700);
+                      const after = await sig().catch(() => "navigated");
+                      const unseen = /copy|download|share|print|export|save as|install/i.test(label);
+                      report.clicks.push({ label, result: dialog || after !== before ? "works" : unseen ? "can't tell" : "does nothing" });
+                    } catch (e) {
+                      report.clicks.push({ label, result: "could not be pressed" });
+                    }
+                  }
+                } catch (e) {
+                  report.menu.push("desktop: the click test could not run (" + String(e.message).split("\n")[0] + ")");
+                }
+
+                // The refresh test: type a unique word into the first text box, add it, and see whether it shows on the
+                // page. If it does, open the app again in a NEW browser (no memory, no service worker), carrying over only
+                // what the app saved (cookies, localStorage, IndexedDB), and check the word is still there.
+                try {
+                  const MARK = "ghostcheck" + Math.floor(Math.random() * 90000 + 10000);
+                  await page.goto(url, { waitUntil: "load", timeout: 20000 });
+                  await page.waitForTimeout(WAIT * 600);
+                  // The first box that adds something: search, filter and find boxes are skipped (what is typed there
+                  // isn't saved data, so it rightly disappears after a refresh).
+                  const boxes = page.locator("input:not([type]), input[type='text'], textarea").filter({ visible: true });
+                  let box = boxes.first();
+                  let found = false;
+                  for (let b = 0; b < Math.min(await boxes.count(), 8); b++) {
+                    const isSearch = await boxes.nth(b).evaluate((el) => {
+                      const hint = ((el.placeholder || "") + " " + (el.getAttribute("aria-label") || "") + " " + (el.name || "") + " " + (el.id || "")).toLowerCase();
+                      // A sign-in box (email, user name) isn't somewhere to add things: typing there signs in as that name.
+                      const signIn = el.type === "email" || /^(email|username)$/.test(el.getAttribute("autocomplete") || "") || /e-?mail|user ?name|log ?in|sign ?in|password/.test(hint);
+                      return signIn || Boolean(el.closest("[role='search'], .search, .searchbox, .search-bar, .filters")) || /search|find|filter|look ?up/.test(hint);
+                    }).catch(() => false);
+                    if (!isSearch) { box = boxes.nth(b); found = true; break; }
+                  }
+                  if (!found) report.refresh = { result: "no text box to add something with" };
+                  else {
+                    const shows = async (p) => ((await p.evaluate(() => document.body.innerText).catch(() => "")).includes(MARK));
+                    await box.fill(MARK, { timeout: 3000 });
+                    await box.press("Enter").catch(() => {});
+                    await page.waitForTimeout(WAIT * 600);
+                    if (!(await shows(page))) {
+                      const add = page.getByRole("button", { name: /add|save|create|submit|post|send|plus|[+]/i }).filter({ visible: true }).first();
+                      if (await add.count()) { await add.click({ timeout: 3000 }).catch(() => {}); await page.waitForTimeout(WAIT * 600); }
+                    }
+                    if (!(await shows(page))) report.refresh = { result: "nothing typed showed up on the page" };
+                    else {
+                      await page.waitForTimeout(WAIT * 500);
+                      const saved = await context.storageState({ indexedDB: true });
+                      // An app with a server: restart it too, so data kept only in the server's memory doesn't count.
+                      let restarted = "";
+                      if (report.server && serverChild) {
+                        await stopServer();
+                        const again = await startServer();
+                        if (!again.url) { report.refresh = { result: "could not run (the server did not start again)" }; throw new Error("server restart"); }
+                        url = again.url;
+                        restarted = " (server restarted)";
+                      }
+                      const fresh = await browser.newContext({ viewport: { width, height }, storageState: saved, serviceWorkers: "block" });
+                      const again = await fresh.newPage();
+                      await again.goto(url, { waitUntil: "load", timeout: 20000 });
+                      await again.waitForTimeout(WAIT * 1200);
+                      report.refresh = { result: (await shows(again)) ? "kept" : "lost", word: MARK, server: Boolean(restarted) };
+                      await fresh.close();
+                      // The cross-browser test (apps with a server only; a separate result from the refresh test): is
+                      // what was added held by the server, or only by that browser? Open the app in a second, empty
+                      // browser (nothing carried over) and look for it there.
+                      if (restarted && report.refresh.result === "kept") {
+                        const other = await browser.newContext({ viewport: { width, height }, serviceWorkers: "block" });
+                        const op = await other.newPage();
+                        await op.goto(url, { waitUntil: "load", timeout: 20000 });
+                        await op.waitForTimeout(WAIT * 1200);
+                        // An app with accounts: the same person logs in on the other browser (their data is private).
+                        if (report.login && report.login.result === "ok" && (await askingPassword(op))) { await logIn(op, CREDS.pass); await op.waitForTimeout(WAIT * 800); }
+                        const seen = await shows(op);
+                        report.crossBrowser = { result: seen ? "seen" : (await signInScreen(op)) ? "private (the other browser is signed out)" : "not seen", word: MARK };
+                        await other.close();
+                      }
+                    }
+                  }
+                } catch (e) {
+                  if (!report.refresh || !/could not run/.test(report.refresh.result)) report.refresh = { result: "could not run (" + String(e.message).split("\n")[0] + ")" };
+                }
+              }
+            } catch (e) {
+              report.page.push(name + ": could not open the app (" + String(e.message).split("\n")[0] + ")");
+            }
+            await context.close();
+          }
+          await browser.close();
+          if (server) server.close();
+          await finish();
+
+          GHOST_SHOTS
+          cd "$RUNNER_TEMP/shots" && node shots.mjs
+      - name: Keep the screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghost-screenshots
+          path: ghost-screenshots/
+          retention-days: 3
+          if-no-files-found: ignore

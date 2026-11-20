@@ -1,0 +1,47 @@
+Add PHASE 2 to the existing Confirm & Remind app: AI suggestions with
+explicit user confirmation.
+
+RULES
+1. Save the original note first. AI runs afterward in a background job and
+   never blocks saving.
+2. AI may only SUGGEST tasks, dates and amounts. It can never schedule a
+   reminder, mark anything done, edit or delete the note, or call tools.
+3. All AI calls run on the server, using AI_BASE_URL, AI_API_KEY and
+   AI_EXTRACTION_MODEL from server environment variables. Users can't see
+   or change them, and the client can't pick a model or URL.
+4. The model returns validated JSON: title, tasks[{text, source_quote,
+   proposed_due, proposed_reminder, needs_clarification, ambiguity_note}].
+   The backend checks that each source_quote really exists in the note.
+   If the JSON is invalid, drop the suggestion and keep the note.
+   Do not use or show an AI "confidence percentage".
+5. Resolve relative dates ("tomorrow", "Friday") using the note's creation
+   time and the user's time zone, not the time the job runs.
+6. Do not invent deadlines. "Thursday afternoon" needs a time. "After payday"
+   stays unscheduled. "I paid rent yesterday" creates no reminder. Ambiguous
+   dates like 03/04 ask the user.
+7. Review screen: for each suggestion show the task, the exact source quote,
+   the FULL resolved date (never just "next Friday"), the proposed reminder
+   time and the time zone. Buttons: Confirm, Edit, Dismiss.
+8. Only a confirmation tap from the authenticated user creates the reminder.
+9. If a note is edited, discard stale suggestions, never change reminders the
+   user already confirmed, and show "This note changed. Review its linked
+   reminders?"
+10. Controls: AI on/off in Settings, with a plain explanation of what is sent.
+    Per-user and global quotas, a monthly budget cap, a note size limit, and
+    capped output tokens. Reserve budget before running concurrent jobs.
+    When the budget is gone, stop AI work only. Notes and manual reminders
+    keep working.
+11. Store usage and cost metadata in ai_usage, never the note content.
+
+TESTS
+- AI cannot schedule without a confirmation request.
+- Fake or missing source quotes are rejected.
+- Stale jobs can't overwrite a newer note version.
+- AI outage or budget exhaustion leaves notes and manual reminders working.
+- A set of 30 sample notes (rent, calls, appointments, ambiguous dates,
+  completed events, notes with no tasks) run against a mocked model with
+  the expected results listed in the test file.
+- No AI secret appears in the frontend bundle, source maps, logs or API
+  responses.
+
+Update the README. Commit to a branch and open a pull request. Do not touch main.
