@@ -1,0 +1,118 @@
+Build a responsive, installable web app called "Confirm & Remind".
+
+TAGLINE
+Write it down. Confirm what matters. Get reminded.
+
+WHAT IT IS
+A notes and reminders app for everyday life (bills, calls, appointments,
+errands). It works on phone, tablet and desktop browsers. In this first task
+I want PHASE 1 ONLY: dependable notes and manual reminders. Do NOT build any
+AI features yet. But design the data model so AI suggestions can be added in
+Phase 2 without a rewrite.
+
+STACK
+- Next.js (App Router) + TypeScript + Tailwind CSS
+- Supabase Auth and Postgres, with row-level security on every user table
+- IndexedDB for local draft recovery
+- Web Push (standards-based, VAPID) with a service worker
+- PWA manifest so it can be added to the Home Screen
+If a part of this stack can't run in your cloud sandbox, build it anyway,
+use a clear mock or fallback for testing, and tell me exactly what you could
+not test.
+
+SCREENS (mobile first, big tap targets, clean and calm, no dashboards or charts)
+1. Today: overdue tasks, today's reminders, a big "Add note" button.
+2. Notes: searchable list (Postgres text search), pinned notes, original text.
+3. Upcoming: list grouped by date, with a filter for done and not done.
+4. Settings: time zone, quiet hours, notification devices, export, delete account.
+5. Review: add the route and an empty-state screen only ("Nothing to review yet").
+   It is filled in Phase 2.
+
+CORE FEATURES
+1. Sign up and sign in (Supabase Auth). Each user sees only their own data.
+2. Fast capture. Open, type, save. Save must never wait on anything else.
+   Keep an IndexedDB draft so text isn't lost if the tab closes or the
+   network drops.
+3. Notes: create, edit, pin, delete. Keep the user's original text unchanged.
+   Keep a version history in note_versions.
+4. Tasks: create from a note or on their own. A task has a title, an optional
+   due date, and a status (open, done, dismissed).
+5. Manual reminders: attach a reminder time to a task. The due date and the
+   reminder time are SEPARATE fields.
+6. Done, snooze (10 min, 1 hour, tomorrow morning) and reschedule. These work
+   inside the app at all times.
+7. Server-side scheduling. A scheduled job picks up due reminder occurrences,
+   claims them with a lock, rechecks the reminder is still active, and
+   sends the push. Do NOT use browser timers as the reminder engine.
+8. Web Push: ask for permission only after the user taps "Enable
+   notifications", never on first load. Include a "Send test notification"
+   button. On iPhone Safari (not installed), do not show the browser prompt.
+   Show "Add to Home Screen, open it from the icon, then tap Enable".
+9. Default notification text is generic: "You have a reminder. Open Confirm
+   & Remind." Add a setting to show the task title instead.
+10. Tapping a notification opens that exact task.
+11. Export all notes and tasks as Markdown and JSON. Delete a single note, and
+    delete the whole account with all of its data.
+12. Honest status labels on reminders: Scheduled, Queued, Accepted by push
+    service, Failed, Completed. Show "Scheduled" ONLY after the server has
+    confirmed the save. If offline, show "Saved on this device. Reminder is
+    not scheduled yet."
+
+DATABASE (Supabase migration files, with RLS policies)
+profiles, notes, note_versions, tasks, reminders, reminder_occurrences,
+push_subscriptions, notification_attempts, audit_events, deletion_jobs.
+Also create an empty ai_suggestions table (id, note_id, note_version,
+user_id, task_text, source_quote, proposed_due_at, status, created_at) for
+Phase 2.
+- Store times as UTC plus the IANA time-zone name.
+- Use a unique dispatch key per reminder + occurrence + device so retries
+  never double-send.
+- Retry failed sends a limited number of times, and disable expired
+  push subscriptions.
+- Ignore expired reminders: don't send a late alert after its expiry window.
+
+SECURITY RULES (non-negotiable)
+- Never put real secrets in the code, the repo or the frontend bundle.
+- Create a .env.example with placeholders only:
+  SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (server only),
+  WEB_PUSH_VAPID_PUBLIC_KEY, WEB_PUSH_VAPID_PRIVATE_KEY (server only),
+  WEB_PUSH_CONTACT, APP_ORIGIN.
+  Also reserve AI_BASE_URL, AI_API_KEY, AI_EXTRACTION_MODEL and
+  AI_MONTHLY_BUDGET_USD for Phase 2. They must stay server-side only.
+- The service-role key is used only in server code, never in the browser.
+- Check ownership on every API route. Add a restrictive Content Security
+  Policy. Render note text as plain text (no raw HTML).
+- Add rate limits on the API routes.
+- Do not log note content.
+
+TESTS (write and run them)
+- Authorization: User A cannot read, update, delete or search User B's notes,
+  tasks, reminders or push subscriptions.
+- Confirming or creating the same reminder twice does not create duplicates.
+- A cancelled or completed reminder is never sent.
+- Snooze and reschedule update the right occurrence.
+- Time zones: a daily 8:00 reminder stays at 8:00 local time across a
+  daylight-saving change. A monthly reminder on the 31st has a documented
+  rule for short months.
+- Draft recovery works after a reload.
+- Export and account deletion remove or return the correct data.
+Then run the app in a real browser. Press every button, refresh, and check
+the data is still there.
+
+DOCUMENTATION
+Write a README.md with: the one-line description, features, setup steps
+(Supabase project, migrations, VAPID key generation, env variables, scheduler
+setup), how to test push on a real iPhone (Home Screen), Android and desktop,
+a "Known limits" section, and a "What's coming in Phase 2" section.
+Do not claim guaranteed notification delivery, exact-time alarms, or
+end-to-end encryption.
+
+DEFINITION OF DONE
+- Save -> manual reminder -> server dispatch -> open -> complete works end to end.
+- All tests pass and the build is green.
+- No secrets in the repo.
+- A short final report that lists what works, what you mocked, what you
+  could not test, and what I must do by hand (create the Supabase project,
+  add secrets, generate VAPID keys, test on a real phone).
+
+Commit to a branch and open a pull request. Do not touch main.
