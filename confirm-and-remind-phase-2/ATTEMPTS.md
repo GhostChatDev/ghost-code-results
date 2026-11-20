@@ -73,3 +73,24 @@ So the failure is **Ghost Code's output** (a test that doesn't compile or run on
 machine. Our stand-in only hid it, by skipping the workflow's typecheck step and database settings.
 **Machine:** Node v22.23.4; PostgreSQL 16.15 locally; checks use `postgres:16-alpine` (PostgreSQL 16.16), the
 image the attempt's own workflow names.
+
+## Attempt 13: did not pass (two items of four; the app itself is the best yet)
+
+28.6 minutes · 9 rounds · **$3.44** of its $5. Ghost Code said "The goal is met on commit `c000023`"; the
+judging below is ours, the same four steps as attempt 12, run on an untouched copy of its final code.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Passes.** The last check passed. All 4 database change files install on Postgres 17 with a row in 11 of 11 tables, and all 5 database functions run cleanly. Re-run through the fixed stand-in CI (the way its workflow asks): install, build, 64 tests (including the 30 sample notes) and `npm run typecheck` all pass. |
+| 2. Our review test, unchanged | **4 of 4 pass** ([adapter](tests/review-adapter.attempt13.ts); this app asks its model for exact times, so the cases' one date phrase, "tomorrow at 9am", is written as tomorrow 09:00 UTC, and any other phrase is refused). **And in production:** its Confirm runs inside Postgres (`confirm_ai_suggestion`); **ten** confirms of the same suggestion at the same moment on a real Postgres made exactly **one task, one reminder and one alert**, and all ten got that same reminder back. |
+| 3. A real save read back from a real database | **Fails: there is no such test.** Every test uses the in-memory stand-in, and its workflow starts no database. (Its database code is correct where we tested it, see items 2 and 4, but nothing in the app shows that.) |
+| 4. Money comes back after a crash | **Fails on the test; the code works.** On a real Postgres: a worker reserved $0.01, a second worker was refused while the first one's lease was live, and two minutes after the first "crashed" the reservation was released and a new worker took the job. Ten workers at once with budget for one: exactly one reservation. But the pass line asks for a test that stops a job mid-way, and the app has none. Also found: the release only happens when another job starts, and nothing re-runs a job whose worker died (no retry route), so that note's suggestions never arrive. |
+
+**What it exposed in Ghost Code:** Ghost Code's done rules already say "every database function the app calls
+has a real-database test" and "money comes back after a crash", but they are instructions to the model, not a
+check. The model read them, skipped both, and reported the goal met. The fix (before attempt 14): Ghost Code
+itself looks at the repository before it accepts "done", and refuses it while an app with database functions
+has no test that reaches a real database.
+
+**Machine:** Node v22.23.4; PostgreSQL 16.15 locally (where items 2 and 4 were tested); the database-change check
+uses `postgres:17-alpine`. Its workflow names no database image.
