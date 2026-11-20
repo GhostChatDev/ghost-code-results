@@ -23,3 +23,24 @@ with the stricter done rules, needs more than that. Ghost Code said plainly that
 
 **Next (attempt 11):** the same prompt, with the test runner tapping Continue at that pause the way a person
 would, inside the same $5 limit.
+
+## Attempt 11: did not pass (close: one item fully, two in part)
+
+35.4 minutes · 10 rounds · 20 commits · **$3.46** of its $5, of which about $0.15 was our own cache experiment
+on the same key (the guard counts the whole key). It ended early because of **a bug in our test runner**: after
+tapping Continue at Ghost Code's 150-step pause, the runner kept counting rounds from 10 instead of 1, so Ghost
+Code's per-message round limit ended the new message after one round. Fixed in the runner; it cost this attempt
+about $1.50 of its allowance.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Fails on one thing.** The last check passed, and the app's own tests pass (63, plus 1 that needs a local Supabase). But it added `0003_ai.sql` next to Phase 1's `0003_claim_due.sql`: Supabase records changes by that number, so the two clash when deployed (Ghost Code's check now catches this). With the new file renumbered, everything installs on Postgres 17 with a row in 11 of 11 tables, and all 7 database functions run without a code error. |
+| 2. Our review test, unchanged | **4 of 4 pass** through the in-memory path ([adapter](tests/review-adapter.attempt11.ts), the same four cases word for word): the job creates no reminder, someone else can't confirm yours, a dismissed suggestion doesn't come back, and **one tap makes one reminder**. **But production Confirm fails** whenever there is a reminder time: two confirms on a real Postgres both failed with `column "local_time" is of type time without time zone but expression is of type text`. No reminder is created, and the suggestion stays pending. (Its database lock and its one-key-per-suggestion design are right; it fails before it gets there.) |
+| 3. A real save read back from a real database | **Written, not run here.** `tests/database.integration.test.ts` saves and confirms through the app's real Supabase code, and the app's CI starts a local Supabase and requires that test. Our test machine's stand-in CI doesn't run that job, and starting a local Supabase here was blocked by our machine's safety rules. On GitHub this test would very likely have caught both problems above. |
+| 4. Money comes back after a crash | **Passes.** A 2-minute lease on each job; the expiry runs before every new reservation. Tested in memory by its own test ("releases a crashed worker's reserved budget") and by us on a real Postgres: a crashed worker's reservation went back to $0 and the job back to the queue. |
+
+**What it showed about Ghost Code's new checks:** the database check caught the duplicate table (round 3) and,
+with a row already in every table, a new required column with no default (`note_id … contains null values`,
+round 8); Ghost Code fixed both. **What they don't cover yet:** calling each database function with empty
+input stops at its first statement, so a type error deeper in (like the one above) needs a real call with real
+input: the app's own database test, which our stand-in CI doesn't run.
