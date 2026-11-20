@@ -44,3 +44,19 @@ with a row already in every table, a new required column with no default (`note_
 round 8); Ghost Code fixed both. **What they don't cover yet:** calling each database function with empty
 input stops at its first statement, so a type error deeper in (like the one above) needs a real call with real
 input: the app's own database test, which our stand-in CI doesn't run.
+
+## Attempt 12: did not pass, on one broken test file (the closest yet)
+
+26 minutes · 8 rounds · **$3.14** of its $5. Ghost Code marked every goal ✅; the judging below is ours.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Fails, because of one test file.** All 4 database change files install on Postgres 17 with a row in 11 of 11 tables, all 8 database functions run cleanly, the 30 sample notes are tested, and 66 of the app's tests pass. But its own real-database test (`tests/aiPostgres.test.ts`, which its CI runs on a fresh Postgres) **crashes in its setup**: it calls `updateProfile(db, user, { timeZone, aiEnabled })` while the app takes `time_zone` / `ai_enabled`, so the update has nothing to set (`syntax error at or near "where"`) and all 3 of its tests are skipped. On GitHub that CI would be red. We ran it exactly as its CI does, on a fresh `postgres:16-alpine`. |
+| 2. Our review test, unchanged | **4 of 4 pass** ([adapter](tests/review-adapter.attempt12.ts); this app asks its model for dates as structured objects, so the cases' one date phrase, "tomorrow at 9am", is written in that form and any other phrase is refused). **And in production:** two confirms at the same moment on a real Postgres returned the **same reminder**: exactly one reminder and one task, stored at 09:00. The first attempt where production Confirm works. |
+| 3. A real save read back from a real database | **Fails:** the test that does this is the one above, which never runs. |
+| 4. Money comes back after a crash | **Passes.** The job runner releases a crashed worker's reservation before claiming new jobs: tested on a real Postgres, $0.05 reserved went back to $0, the usage record was marked released, and a new worker took the job. |
+
+**Why Ghost Code didn't see it:** our test machine's stand-in CI runs install, build and test, but not the
+workflow's own database settings, so that test was skipped there and everything looked green. Real GitHub CI
+would have shown the failure and Ghost Code would have fixed it. That gap decided items in attempts 11 and 12,
+so the stand-in is being fixed before attempt 13 (see the Ghost Code changes).
