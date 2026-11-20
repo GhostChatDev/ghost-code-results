@@ -1,0 +1,14 @@
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+CREATE TYPE "Role" AS ENUM ('OWNER', 'CUSTOMER');
+CREATE TYPE "BookingStatus" AS ENUM ('ACTIVE', 'CANCELLED');
+CREATE TABLE "User" ("id" TEXT PRIMARY KEY, "name" TEXT NOT NULL, "email" TEXT NOT NULL UNIQUE, "passwordHash" TEXT NOT NULL, "role" "Role" NOT NULL DEFAULT 'CUSTOMER');
+CREATE TABLE "Session" ("id" TEXT PRIMARY KEY, "userId" TEXT NOT NULL REFERENCES "User"("id") ON DELETE CASCADE, "expiresAt" TIMESTAMPTZ(3) NOT NULL);
+CREATE TABLE "Studio" ("id" TEXT PRIMARY KEY DEFAULT 'studio', "name" TEXT NOT NULL, "timezone" TEXT NOT NULL, "currency" TEXT NOT NULL DEFAULT 'USD');
+CREATE TABLE "Service" ("id" TEXT PRIMARY KEY, "studioId" TEXT NOT NULL DEFAULT 'studio' REFERENCES "Studio"("id"), "name" TEXT NOT NULL, "duration" INTEGER NOT NULL CHECK ("duration" > 0), "price" INTEGER NOT NULL CHECK ("price" >= 0), "active" BOOLEAN NOT NULL DEFAULT true);
+CREATE TABLE "OpeningHour" ("id" TEXT PRIMARY KEY, "studioId" TEXT NOT NULL DEFAULT 'studio' REFERENCES "Studio"("id"), "weekday" INTEGER NOT NULL CHECK ("weekday" BETWEEN 1 AND 7), "opens" INTEGER NOT NULL, "closes" INTEGER NOT NULL, UNIQUE ("studioId", "weekday"), CHECK ("opens" >= 0 AND "closes" <= 1440 AND "opens" < "closes"));
+CREATE TABLE "Break" ("id" TEXT PRIMARY KEY, "studioId" TEXT NOT NULL DEFAULT 'studio' REFERENCES "Studio"("id"), "weekday" INTEGER NOT NULL CHECK ("weekday" BETWEEN 1 AND 7), "starts" INTEGER NOT NULL, "ends" INTEGER NOT NULL, CHECK ("starts" >= 0 AND "ends" <= 1440 AND "starts" < "ends"));
+CREATE TABLE "DayOff" ("id" TEXT PRIMARY KEY, "studioId" TEXT NOT NULL DEFAULT 'studio' REFERENCES "Studio"("id"), "date" TEXT NOT NULL, UNIQUE ("studioId", "date"));
+CREATE TABLE "Booking" ("id" TEXT PRIMARY KEY, "studioId" TEXT NOT NULL DEFAULT 'studio' REFERENCES "Studio"("id"), "userId" TEXT NOT NULL REFERENCES "User"("id"), "serviceId" TEXT NOT NULL REFERENCES "Service"("id"), "start" TIMESTAMPTZ(3) NOT NULL, "end" TIMESTAMPTZ(3) NOT NULL, "status" "BookingStatus" NOT NULL DEFAULT 'ACTIVE', CHECK ("start" < "end"));
+CREATE INDEX "Booking_userId_start_idx" ON "Booking"("userId", "start");
+ALTER TABLE "Booking" ADD CONSTRAINT "booking_no_overlap" EXCLUDE USING gist ("studioId" WITH =, tstzrange("start", "end", '[)') WITH &&) WHERE ("status" = 'ACTIVE');
+CREATE TABLE "RateLimit" ("key" TEXT PRIMARY KEY, "count" INTEGER NOT NULL, "expiresAt" TIMESTAMPTZ(3) NOT NULL);

@@ -1,0 +1,38 @@
+Build a responsive, installable web app called "SlotWise" for small studios (hair, fitness, tutoring)
+to take bookings.
+
+STACK
+- Next.js (App Router) + TypeScript + Tailwind CSS
+- Postgres through Prisma (DATABASE_URL), with migrations
+- Email/password sign-in with secure, httpOnly session cookies and hashed passwords
+
+ROLES
+- Owner: sets up the studio, services and opening hours, sees every booking.
+- Customer: signs up, books, reschedules and cancels their own bookings only.
+
+SCREENS (mobile first, big tap targets)
+1. Public studio page: services (name, duration, price) and a "Book" button.
+2. Booking: pick a service, then a day on a week calendar, then a free time slot.
+3. My bookings (customer): upcoming and past, with Reschedule and Cancel.
+4. Owner dashboard: today's and this week's bookings, with customer name and service.
+5. Owner settings: services, opening hours per weekday, breaks, and days off.
+
+RULES
+1. No double booking: two customers can never get overlapping slots, even if they
+   book at the same moment (enforce it in the database, not only in the UI).
+2. Slots come from opening hours minus breaks, days off and existing bookings,
+   in the studio's time zone. Store times in UTC.
+3. Customers cancel or reschedule up to 2 hours before the start; after that,
+   only the owner can.
+4. A customer never sees another customer's name, email or bookings.
+5. Rate-limit sign-in and booking.
+
+TESTS (write and run them)
+- Double booking is rejected, including two bookings at the same time.
+- Slots respect hours, breaks, days off and existing bookings across a DST change.
+- The 2-hour cancel rule.
+- Customer A cannot read, change or cancel customer B's bookings.
+
+DOCUMENTATION
+README with setup (database, env variables), how roles work, and known limits.
+Commit to a branch and open a pull request. Do not touch main.

@@ -22,8 +22,22 @@ These are our own tests, not a guarantee for every app.
 | App | Prompt | Result | Time | Rounds | Commits | AI cost |
 |---|---|---|---|---|---|---|
 | [Confirm & Remind, Phase 1](confirm-and-remind-phase-1/) | [PROMPT.txt](confirm-and-remind-phase-1/PROMPT.txt): notes, reminders, Supabase auth + RLS, Web Push, IndexedDB drafts, PWA, tests | **Passed**: build, tests and browser check | 22 min | 6 | 15 | ~$2.47 |
-| SlotWise booking app | sign-in, owner/customer roles, calendar slots, no double booking, tests | in progress | | | | |
-| Lantern Drift (original game) | canvas platformer, physics, 5 levels, enemies, touch controls, level editor, tests | in progress | | | | |
+| [SlotWise booking app](slotwise-booking/) | [PROMPT.txt](slotwise-booking/PROMPT.txt): email sign-in, owner/customer roles, week calendar slots, no double booking (enforced in the database), 2-hour cancel rule, Postgres + Prisma, tests | **Passed**: build, tests and browser check | 29 min | 8 | 12 | ~$2.36 |
+| [Lantern Drift (original game)](lantern-drift-game/) | [PROMPT.txt](lantern-drift-game/PROMPT.txt): canvas platformer, fixed-step physics, wind and floating, 5 levels, 2 enemies, touch controls, saved progress, Web Audio sounds, level editor, tests | **Passed**: build, tests and browser check | 27 min | 8 | 20 | ~$2.34 |
+
+**What the booking app proved, in its own words:** no overlapping bookings (including two at the same
+moment, enforced by the database), time-zone-aware slots and the cancellation rule are covered by passing
+tests; the full sign-in and booking flows in a browser were not clicked through end to end.
+
+The booking and game costs are split from one shared OpenRouter bill by the tokens each used (they ran at
+the same time).
+
+### Bugs the hard apps exposed (fixed)
+
+- **A model wrote its tool call as text** (`<|open|>tools…`), and that became the game's final answer.
+  Known tool-call markup is now cut before anything reaches the person.
+- Our own test machine: a full disk and an over-eager clean-up script broke one earlier booking run; it was
+  re-run from scratch for the result above.
 
 **What it can't test here** (as the prompt itself asked to note): real Supabase, real push delivery and
 real phones. The app runs in its documented mock mode for those; see its README.

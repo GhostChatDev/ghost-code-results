@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum Role {
+  OWNER
+  CUSTOMER
+}
+enum BookingStatus {
+  ACTIVE
+  CANCELLED
+}
+model User {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  passwordHash String
+  role Role @default(CUSTOMER)
+  sessions Session[]
+  bookings Booking[]
+}
+model Session {
+  id String @id
+  userId String
+  expiresAt DateTime @db.Timestamptz(3)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Studio {
+  id String @id @default("studio")
+  name String
+  timezone String
+  currency String @default("USD")
+  services Service[]
+  hours OpeningHour[]
+  breaks Break[]
+  daysOff DayOff[]
+  bookings Booking[]
+}
+model Service {
+  id String @id @default(cuid())
+  studioId String @default("studio")
+  name String
+  duration Int
+  price Int
+  active Boolean @default(true)
+  studio Studio @relation(fields: [studioId], references: [id])
+  bookings Booking[]
+}
+model OpeningHour {
+  id String @id @default(cuid())
+  studioId String @default("studio")
+  weekday Int
+  opens Int
+  closes Int
+  studio Studio @relation(fields: [studioId], references: [id])
+  @@unique([studioId, weekday])
+}
+model Break {
+  id String @id @default(cuid())
+  studioId String @default("studio")
+  weekday Int
+  starts Int
+  ends Int
+  studio Studio @relation(fields: [studioId], references: [id])
+}
+model DayOff {
+  id String @id @default(cuid())
+  studioId String @default("studio")
+  date String
+  studio Studio @relation(fields: [studioId], references: [id])
+  @@unique([studioId, date])
+}
+model Booking {
+  id String @id @default(cuid())
+  studioId String @default("studio")
+  userId String
+  serviceId String
+  start DateTime @db.Timestamptz(3)
+  end DateTime @db.Timestamptz(3)
+  status BookingStatus @default(ACTIVE)
+  studio Studio @relation(fields: [studioId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
+  @@index([userId, start])
+}
+model RateLimit {
+  key String @id
+  count Int
+  expiresAt DateTime @db.Timestamptz(3)
+}

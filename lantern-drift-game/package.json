@@ -1,0 +1,20 @@
+{
+  "name": "lantern-drift",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:browser": "node tests/game.smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.10",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
+  }
+}

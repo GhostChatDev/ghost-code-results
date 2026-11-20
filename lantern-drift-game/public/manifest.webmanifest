@@ -1,0 +1,27 @@
+{
+  "name": "Lantern Drift",
+  "short_name": "Lantern Drift",
+  "description": "Guide a paper lantern across a windy night city in five handmade rooftop journeys.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a1026",
+  "theme_color": "#0a1026",
+  "categories": ["games"],
+  "icons": [
+    {
+      "src": "./lantern-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./lantern-icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#090d1f" />
+    <meta name="description" content="Guide a paper lantern through a windy, hand-drawn night city." />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./lantern-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./lantern-icon.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Lantern Drift · A little light against the night</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="game-stage" aria-label="Lantern Drift game">
+        <canvas id="game-canvas" aria-label="A paper lantern floating above a moonlit city"></canvas>
+        <div class="canvas-shade" aria-hidden="true"></div>
+        <header id="hud" class="hud" hidden>
+          <div class="hud-journey"><span class="eyebrow">Night journey</span><strong id="hud-level">First Light</strong><small id="checkpoint-label">Find the checkpoint</small></div>
+          <div class="hud-flame"><div class="meter-label"><span>Flame</span><output id="flame-value">100%</output></div><div class="meter"><i id="flame-fill"></i></div><small id="wind-indicator">Calm air</small></div>
+          <div class="hud-stats"><span><small>Fireflies</small><strong id="hud-fireflies">0 / 5</strong></span><span><small>Time</small><strong id="hud-time">00:00.00</strong></span><button id="pause-button" class="icon-button" aria-label="Pause game"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14M17 5v14"/></svg></button></div>
+        </header>
+        <div id="touch-controls" class="touch-controls" aria-label="Touch controls">
+          <div class="touch-move"><button data-control="left" aria-label="Move left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><button data-control="right" aria-label="Move right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div>
+          <button data-control="jump" class="touch-jump" aria-label="Jump or hold to float"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 15 7-7 7 7M12 8v12"/></svg><span>Float</span></button>
+        </div>
+      </div>
+
+      <main id="screen-main">
+      <section id="title-screen" class="screen title-screen is-visible" aria-labelledby="game-title">
+        <div class="title-top"><a class="wordmark" href="./" aria-label="Lantern Drift home"><span class="mini-lantern" aria-hidden="true"></span>LANTERN DRIFT</a><span class="night-label">A NIGHT CITY TALE</span></div>
+        <div class="title-content">
+          <p class="eyebrow accent">A little light against the night</p>
+          <h1 id="game-title">Lantern<br><em>Drift</em></h1>
+          <p class="title-copy">Ride the restless wind. Gather lost fireflies. <br>Keep your small flame burning above a sleeping city.</p>
+          <nav aria-label="Main menu">
+            <div class="title-actions"><button id="continue-button" class="button primary">Begin the journey</button><button id="levels-button" class="button secondary">Choose a journey</button></div>
+            <div class="secondary-actions"><button id="editor-button" class="text-button">Level workshop</button><span>·</span><button id="settings-button" class="text-button">Settings</button></div>
+          </nav>
+          <p id="campaign-summary" class="quiet">Lighting the city maps…</p>
+        </div>
+        <div class="title-footer"><span class="desktop-hint">ARROWS / WASD <b>Move</b></span><span class="desktop-hint">SPACE <b>Jump & float</b></span><span class="desktop-hint">ESC <b>Pause</b></span><span class="mobile-hint">ON-SCREEN BUTTONS <b>Move, jump & float</b></span></div>
+      </section>
+
+      <section id="levels-screen" class="screen" hidden aria-labelledby="levels-title">
+        <div class="screen-panel wide"><div class="panel-heading"><div><p class="eyebrow accent">The city awaits</p><h2 id="levels-title">Choose your journey</h2></div><button class="icon-button close-button" data-title aria-label="Back to title">×</button></div><p id="progress-summary" class="quiet">0 / 5 journeys complete</p><div id="level-grid" class="level-grid"></div><p class="key-hint">Finish a journey to kindle the next rooftop.</p></div>
+      </section>
+
+      <section id="pause-screen" class="screen modal-screen" hidden aria-labelledby="pause-title">
+        <div class="screen-panel modal"><p class="eyebrow accent">Take a breath</p><h2 id="pause-title">Night, on hold</h2><p class="quiet">Your lantern will wait here.</p><div class="stack"><button id="resume-button" class="button primary">Return to the wind</button><button id="restart-button" class="button secondary">Restart journey</button><button id="pause-settings-button" class="button secondary">Settings</button><button id="quit-button" class="text-button">Level select</button></div></div>
+      </section>
+
+      <section id="complete-screen" class="screen modal-screen" hidden aria-labelledby="complete-title">
+        <div class="screen-panel modal"><div class="completion-mark" aria-hidden="true"><span class="mini-lantern"></span></div><p id="complete-kicker" class="eyebrow accent">Journey complete</p><h2 id="complete-title">Your light carries on.</h2><div class="result-grid"><div><small>Your time</small><strong id="complete-time">00:00.00</strong></div><div><small>Fireflies</small><strong id="complete-fireflies">0 / 0</strong></div><div class="best-result"><small>Personal best</small><strong id="complete-best">00:00.00</strong></div></div><div class="stack"><button id="next-level" class="button primary">Next journey <span aria-hidden="true">→</span></button><button id="retry-button" class="button secondary">Drift again</button><button id="complete-levels-button" class="text-button">All journeys</button></div></div>
+      </section>
+
+      <section id="settings-screen" class="screen modal-screen" hidden aria-labelledby="settings-title">
+        <div class="screen-panel modal"><p class="eyebrow accent">Make yourself comfortable</p><h2 id="settings-title">Settings</h2><div class="setting-row"><div><strong>Sound</strong><p>Synthesized chimes and night wind</p></div><label class="switch"><input id="sound-setting" type="checkbox" checked><span></span><b class="sr-only">Sound enabled</b></label></div><div class="setting-row"><div><strong>Reduced motion</strong><p>Calmer camera and fewer particles</p></div><label class="switch"><input id="motion-setting" type="checkbox"><span></span><b class="sr-only">Reduced motion enabled</b></label></div><button id="settings-back" class="button primary">Done</button><p class="key-hint">Settings are saved on this device.</p></div>
+      </section>
+
+      <section id="editor-screen" class="screen editor-screen" hidden aria-labelledby="editor-title"><div class="editor-shell"><div class="panel-heading"><div><p class="eyebrow accent">Make a little magic</p><h2 id="editor-title">Level workshop</h2></div><button class="button secondary compact" data-title>Back to title</button></div><div id="editor-root"></div></div></section>
+      </main>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {
+            // The game remains fully playable online when installation is unavailable.
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+Build an original browser game called "Lantern Drift": a 2D side-scrolling
+platformer in plain HTML5 canvas and TypeScript (Vite), installable as a PWA,
+that runs at 60 fps on phones and desktop.
+
+THE GAME
+You guide a small paper lantern through a windy night city. Wind gusts push you
+sideways; you can float (hold jump) but your flame shrinks while floating, and
+it refills on rooftop candles. If the flame goes out, you restart at the last
+checkpoint.
+
+MUST HAVE
+1. Physics: gravity, jumping, floating, wind zones, moving platforms, collisions
+   that never let you pass through walls at any frame rate (fixed time step).
+2. 5 handmade levels (as JSON files) that get harder, each with a checkpoint,
+   collectible fireflies and an exit.
+3. Enemies: 2 kinds with simple behaviour (a patrolling moth, a gust spirit).
+4. Controls: keyboard (arrows/WASD + space) and on-screen touch buttons on phones.
+5. Screens: title, level select (locked until the previous level is beaten),
+   pause, level complete (time, fireflies, best time), settings (sound on/off,
+   reduced motion).
+6. Progress (unlocked levels, best times, fireflies) saved in localStorage and
+   kept after a refresh.
+7. Sound effects made with the Web Audio API (no audio files needed).
+8. A level editor screen: place tiles, platforms, candles and enemies on a grid,
+   play-test it, and export/import the level as JSON.
+
+TESTS (write and run them with Vitest)
+- Collision: a fast fall never passes through a 1-tile floor.
+- The flame shrinks while floating and refills on a candle.
+- Level JSON loads and validates; a bad file shows an error instead of crashing.
+- Progress saves and reloads.
+
+Make all art with canvas drawing (no image files). Write a README with controls
+and how to add a level. Commit to a branch and open a pull request. Do not touch main.
