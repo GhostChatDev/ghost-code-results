@@ -60,3 +60,16 @@ input: the app's own database test, which our stand-in CI doesn't run.
 workflow's own database settings, so that test was skipped there and everything looked green. Real GitHub CI
 would have shown the failure and Ghost Code would have fixed it. That gap decided items in attempts 11 and 12,
 so the stand-in is being fixed before attempt 13 (see the Ghost Code changes).
+
+**Attempt 12, run again through the fixed stand-in CI** (it now runs a check the way the workflow asks: the
+workflow's own Postgres image with its settings, its database URL, and its own steps such as `npm run typecheck`).
+On a clean `postgres:16-alpine` the check is **red**, the way GitHub would show it:
+- `npm test`: its database test fails with `syntax error at or near "where"`; Postgres's own log shows the
+  statement `update profiles set  where id=$1` (the test passes `timeZone` where the app takes `time_zone`).
+- `npm run typecheck`: the same test file doesn't compile (`'timeZone' does not exist … did you mean 'time_zone'`,
+  and two errors about a `note` field that `Note` doesn't have).
+
+So the failure is **Ghost Code's output** (a test that doesn't compile or run on a clean machine), not our test
+machine. Our stand-in only hid it, by skipping the workflow's typecheck step and database settings.
+**Machine:** Node v22.23.4; PostgreSQL 16.15 locally; checks use `postgres:16-alpine` (PostgreSQL 16.16), the
+image the attempt's own workflow names.
