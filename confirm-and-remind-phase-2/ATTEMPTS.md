@@ -141,3 +141,16 @@ run is to settle it: **the same prompt, the same Phase 1 app, the same pass line
 script, a re-run through the stand-in CI, the four cases on its own adapter, real-Postgres tests of Confirm and
 of crash recovery), on Ghost Code as merged by #264. **Spending limit: $5 for the attempt** (a fresh budget, read
 from the real bill every 20 seconds; reaching it stops the attempt and counts as not passed). Published either way.
+
+**Attempt 16 result: void, our test machine's fault. Not a pass, and not a judgement of the build.**
+22 minutes · 11 rounds · **$4.80** of its $5. Our test machine had restarted shortly before the run and its
+Postgres (which the stand-in check uses to install the app's database changes) was not running. Every check failed
+with `connection to server at "127.0.0.1", port 5432 failed: Connection refused`, from the check's own step, not
+from the app. We missed it at the start (our pre-flight printed nothing and we went on).
+
+**What it exposed in Ghost Code anyway:** it changed the app five times for a failure that was the check's own
+computer, before stopping with "the same failure came back". Its stop rule for machine problems didn't know this
+message. Fixed: a database-change check that can't reach its own database is named an environment failure (stop
+after two checks and say so). And our runner now refuses to start, spending nothing, when its Postgres isn't
+answering. Attempt 15 stays the only attempt that passed all four items, with its 4-cent note; a clean
+confirmation run is still owed.
