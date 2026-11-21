@@ -249,3 +249,21 @@ checks have passed; never while items are open. Two tests now hold both shapes: 
 items open: keeps building) and attempt 18's (list done and green: one closing answer, no more steps).
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 19: $11.24.
+
+## Attempt 20: the confirmation run, fifth try (rules written before it starts)
+
+Same rules as attempts 16 to 19: the same prompt, the same Phase 1 app, the same four-item pass line and the same
+judging, **$5 for the attempt** from the real bill. Ghost Code's main as of #305 (commit `3440ec0`). The test
+machine's database and Docker were checked as answering before the start. Published either way.
+
+What changed in Ghost Code since attempt 19, and so what this run is the first to try:
+
+- The post-pass stop is fixed (#303): it fires only when the task list is done and the head commit's checks have
+  passed, never while items are open. **The question for this run: does it build past its first green commit, and
+  does it stop once the list is done and green?** Counted as: task-list items done at the end, and commits and
+  repeat checks after the list was done and green.
+- A round can end with one of four statuses (#302); only "blocked" and "needs an answer" stop automatic rounds.
+- A refused GitHub write is explained and, when only the person can fix it, stops the run (#304). The stand-in
+  GitHub accepts every write, so this should not come up.
+
+Judged on the four items, not on the total spent.
