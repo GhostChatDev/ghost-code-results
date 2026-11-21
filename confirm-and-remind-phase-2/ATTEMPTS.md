@@ -154,3 +154,9 @@ message. Fixed: a database-change check that can't reach its own database is nam
 after two checks and say so). And our runner now refuses to start, spending nothing, when its Postgres isn't
 answering. Attempt 15 stays the only attempt that passed all four items, with its 4-cent note; a clean
 confirmation run is still owed.
+
+## Attempt 17: the confirmation run again (rules written before it starts)
+
+Attempt 16 was void (our machine). Same rules as written for it: the same prompt, Phase 1 app, pass line and
+judging, on Ghost Code's main as of #265, **$5 for the attempt** from the real bill. The test machine's database
+was checked as answering before the start. Published either way.
