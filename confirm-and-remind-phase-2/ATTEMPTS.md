@@ -223,3 +223,29 @@ What changed in Ghost Code since attempt 18, and so what this run is the first t
 - A command that doesn't exist is "unverified", not a failure; reads wait out rate limits.
 
 Judged on the four items, not on the total spent.
+
+**Attempt 19 result: did not pass (0 of 4). Ghost Code stopped itself after the first of six task-list items.**
+8.0 minutes · 2 rounds · 14 steps · **$0.52** of its $5, on a healthy machine.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | Its one commit (`c000003`: a suggestion validator and its test) was green, but no database change for Phase 2 was written. **Fails.** |
+| 2. Our review test, unchanged | **Not run:** there is no confirm or review flow to test. |
+| 3. A real save read back from a real database | **Fails:** not built. |
+| 4. Money comes back after a crash | **Fails:** not built. |
+
+**Why it stopped: a fault in Ghost Code, added the same day.** Its new "post-pass stop" fired as soon as the head
+commit's checks had passed **while task-list items were still open**. A build that commits one part at a time is
+green after its first part, so the run ended there, with the message "Stopped after 14 steps: the branch head
+(c000003) already passed every check. 5 task-list items are still open". The rule was meant for attempt 18's case
+(finished, green work that goes on being polished) and was written the wrong way round; its tests covered a model
+that keeps going after a pass, never a build with real work left. This run is what showed it.
+
+**The question for this run** (did it stop once its checks passed?): yes, far too early. That answers it in the
+worst way: stopping on "green" is only right when the list is done.
+
+**Fix (Ghost Code pull request #303):** the stop fires only when the task list is done and the head commit's
+checks have passed; never while items are open. Two tests now hold both shapes: attempt 19's (green first commit,
+items open: keeps building) and attempt 18's (list done and green: one closing answer, no more steps).
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 19: $11.24.
