@@ -94,3 +94,22 @@ has no test that reaches a real database.
 
 **Machine:** Node v22.23.4; PostgreSQL 16.15 locally (where items 2 and 4 were tested); the database-change check
 uses `postgres:17-alpine`. Its workflow names no database image.
+
+## Attempt 14: did not pass (one item of four)
+
+29.6 minutes · 8 rounds · 144 steps · **$1.91** of its $5. Ghost Code said "Phase 2 is complete" and listed
+CI and the browser check as passing (true). It also said, correctly, that "real Supabase migration execution …
+still require[s] deployment-environment verification".
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Passes.** The last check passed on `c000021`. All 4 database change files install on Postgres 17 with a row in 11 of 11 tables, and 10 database functions run cleanly on empty input. 63 of the app's tests pass. |
+| 2. Our review test, unchanged | **4 of 4 pass** on its in-memory path ([adapter](tests/review-adapter.attempt14.ts); this app works the date out from the quote itself, so the cases' model answer goes in unchanged). **But production Confirm fails on every call:** on a real Postgres, `confirm_ai` stops with `column "local_time" is of type time without time zone but expression is of type text` (the same mistake as attempt 11). No task or reminder is ever created; ten taps at once made none. Calling the function with empty input (the database check) returns before that line, and the app's tests use the in-memory stand-in, so nothing showed it. |
+| 3. A real save read back from a real database | **Fails: there is no such test.** This is the test that would have caught item 2's bug. |
+| 4. Money comes back after a crash | **Fails on the test.** The code has a recovery step (`recover_ai`, run before every reservation), but no test stops a job mid-way. |
+
+**What it exposed in Ghost Code (again):** the done check added after attempt 13 (#258) never ran. It only looked
+at files changed in the *current round*, and the last round only touched page files; and its "Not shown yet"
+line was only added when the model had been sent back earlier in that round. The fix: the check looks at
+everything the task changed on its branch (not one round), and the line is added to any final answer of a
+database task that still lacks the proof.
