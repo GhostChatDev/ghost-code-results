@@ -172,3 +172,9 @@ exist, with no real-database test and no crash test yet. **Not a pass.**
 **Seen working:** the new red-build rule fired once ("errors 2 → 2 · undone") and the next commit went green.
 **Fixed in Ghost Code:** words on the screen aren't sign-in code: a text-only line or element no longer holds a
 commit; a password input or session cookie in a page still does. A clean confirmation run is still owed.
+
+## Attempt 18: the confirmation run, third try (rules written before it starts)
+
+Same rules as attempts 16 and 17: the same prompt, Phase 1 app, pass line and judging, on Ghost Code's main as of
+#267, **$5 for the attempt** from the real bill. The test machine's database and Docker were checked as answering
+before the start. Published either way.
