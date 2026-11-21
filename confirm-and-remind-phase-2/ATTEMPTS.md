@@ -133,3 +133,11 @@ attempt ended bring the night to **$20.04**: 4 cents past the $20 we published. 
 
 **Machine:** Node v22.23.4; PostgreSQL 16.15 locally (items 2 and 4); the stand-in CI used the workflow's own
 `postgres:16-alpine`; the database-change check uses `postgres:17-alpine`.
+
+## Attempt 16: confirmation run (rules written before it starts)
+
+Attempt 15 passed all four items, but the night's bill ended 4 cents over its $20 limit after late charges. This
+run is to settle it: **the same prompt, the same Phase 1 app, the same pass line and the same judging** (the judge
+script, a re-run through the stand-in CI, the four cases on its own adapter, real-Postgres tests of Confirm and
+of crash recovery), on Ghost Code as merged by #264. **Spending limit: $5 for the attempt** (a fresh budget, read
+from the real bill every 20 seconds; reaching it stops the attempt and counts as not passed). Published either way.
