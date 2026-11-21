@@ -160,3 +160,15 @@ confirmation run is still owed.
 Attempt 16 was void (our machine). Same rules as written for it: the same prompt, Phase 1 app, pass line and
 judging, on Ghost Code's main as of #265, **$5 for the attempt** from the real bill. The test machine's database
 was checked as answering before the start. Published either way.
+
+**Attempt 17 result: did not finish. Paused by a false privacy hold in Ghost Code (not the machine this time).**
+19 minutes · 6 rounds · 67 steps · **$1.42** of its $5. The machine was fine (database and Docker answering
+throughout). In round 6, after its check had just passed, Ghost Code stopped to ask the person's permission for "a
+change to sign-in": the line was a settings-page paragraph of plain text that mentions passwords ("…Passwords and
+reminder titles are never sent"). Our runner has no person to tap Apply, so the run ended there, about half built:
+the last check passed and the database changes install (4 files, 11 of 11 tables, 12 functions), but only 23 tests
+exist, with no real-database test and no crash test yet. **Not a pass.**
+
+**Seen working:** the new red-build rule fired once ("errors 2 → 2 · undone") and the next commit went green.
+**Fixed in Ghost Code:** words on the screen aren't sign-in code: a text-only line or element no longer holds a
+commit; a password input or session cookie in a page still does. A clean confirmation run is still owed.
