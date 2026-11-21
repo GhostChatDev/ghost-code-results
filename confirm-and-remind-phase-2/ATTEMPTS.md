@@ -113,3 +113,23 @@ at files changed in the *current round*, and the last round only touched page fi
 line was only added when the model had been sent back earlier in that round. The fix: the check looks at
 everything the task changed on its branch (not one round), and the line is added to any final answer of a
 database task that still lacks the proof.
+
+## Attempt 15: all four items pass (first time), with one note on the night limit
+
+35.3 minutes · 9 rounds · 139 steps · **$3.24** of its $5. It ran with the fix from attempt 14 (the done check
+looks at the whole task). It stopped at Ghost Code's 9-round limit for one message, saying plainly what was left
+(one README correction, not committed); it didn't claim to be done.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Passes.** The last check passed on `c000027` (CI with its PostgreSQL tests, and Ghost Screenshots). The final commit after it is the round-end save of one file, `README.md`; the app code is the same. Re-run through the fixed stand-in CI on the final code, with the workflow's own `postgres:16-alpine`: install, build, **67 of 67 tests** (including its 4 real-database tests) and `npm run typecheck` pass. All 4 database change files install on Postgres 17 with a row in 11 of 11 tables, and its 8 database functions run cleanly. |
+| 2. Our review test, unchanged | **4 of 4 pass** ([adapter](tests/review-adapter.attempt15.ts); this app asks its model for local wall times like "tomorrow at 3pm", so the cases' answer goes in unchanged). **And in production:** its Confirm runs in Postgres (`confirm_ai_suggestion`); **ten** confirms of one suggestion at the same moment made **one task, one reminder and one alert**: the first got `already: false`, the other nine `already: true`. |
+| 3. A real save read back from a real database | **Passes.** `tests/aiDatabase.test.ts` runs on the workflow's Postgres: it saves through the app's own database functions (the ones its server code calls, with matching parameter names) and reads back; 8 workers claiming one job at once get exactly 1 claim; a double confirm leaves exactly one task, one reminder and one alert; the recorded usage is the provider's cost with no note text in it. (It calls those functions directly, not through the app's TypeScript wrapper.) |
+| 4. Money comes back after a crash | **Passes.** Its test stops a job after it reserved (the provider fails) and shows the reservation released and the job queued again. A worker that dies without reporting is covered too, which we tested on a real Postgres: while its 2-minute lease is live a second worker is refused; after it, the second worker takes the job over and the money held stays at one reservation ($0.0006), never doubled. (That crash case is our test, not the app's.) |
+
+**Note on the night limit:** the guard reads the real bill every 20 seconds. Its last reading as the attempt ended
+was $3.06 for the attempt and **$19.86 for the night**, so it never stopped the run. Charges that posted after the
+attempt ended bring the night to **$20.04**: 4 cents past the $20 we published. We're stating it as it is.
+
+**Machine:** Node v22.23.4; PostgreSQL 16.15 locally (items 2 and 4); the stand-in CI used the workflow's own
+`postgres:16-alpine`; the database-change check uses `postgres:17-alpine`.
