@@ -205,3 +205,21 @@ stand-in to report a pull request's files like GitHub does.
 commit went green.
 
 Attempt 15 remains the only attempt that passed all four items.
+
+## Attempt 19: the confirmation run, fourth try (rules written before it starts)
+
+Same rules as attempts 16 to 18: the same prompt, the same Phase 1 app, the same four-item pass line and the same
+judging, **$5 for the attempt** from the real bill. Ghost Code's main as of #301 (commit `feafd02`). The test
+machine's database and Docker were checked as answering before the start. Published either way.
+
+What changed in Ghost Code since attempt 18, and so what this run is the first to try:
+
+- It remembers across rounds that the task changed the database, so the done check can ask for a real-database test
+  even when the last rounds only touch tests (attempt 18's miss). Our stand-in GitHub also reports a pull request's
+  files now.
+- A commit whose checks already passed isn't checked again, and once the checks of the head commit have passed
+  with task-list items still open, it stops (the post-pass stop). **The question for this run is the same as for
+  attempt 18: did it stop once its checks passed?** Counted as: commits and repeat checks after the first green.
+- A command that doesn't exist is "unverified", not a failure; reads wait out rate limits.
+
+Judged on the four items, not on the total spent.
