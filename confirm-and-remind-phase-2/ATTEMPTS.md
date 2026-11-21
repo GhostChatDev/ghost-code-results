@@ -178,3 +178,30 @@ commit; a password input or session cookie in a page still does. A clean confirm
 Same rules as attempts 16 and 17: the same prompt, Phase 1 app, pass line and judging, on Ghost Code's main as of
 #267, **$5 for the attempt** from the real bill. The test machine's database and Docker were checked as answering
 before the start. Published either way.
+
+**Attempt 18 result: did not pass (2 of 4). It finished inside its limit, on a healthy machine.**
+28.8 minutes · 9 rounds · 145 steps · **$4.50** of its $5. Ghost Code said "Done means: met."
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Passes.** The last check passed on its final commit `c000027`; 4 database change files install with rows in 11 of 11 tables; 8 database functions run cleanly; 62 tests pass. |
+| 2. Our review test, unchanged | **Not run:** with items 3 and 4 already decided, we did not write its adapter. |
+| 3. A real save read back from a real database | **Fails: no such test,** and its CI starts no database. |
+| 4. Money comes back after a crash | An in-memory test stops a job after it reserved (`tests/ai.test.ts`); not on a real database. |
+
+**Did it stop once its checks passed?** (the question asked of this run) Its checks first went green at 24m16s
+(`c000023`). After that it made two more commits (both green: `c000025`, `c000027`), then asked for the same
+commit's result three more times across two rounds before stopping at 28m47s. So: about 4.5 minutes and two
+commits after the first green, and three repeat checks of a commit it already knew was green.
+
+**Why Ghost Code's done check didn't send it back for item 3:** the check learns "this task changed the database"
+from the files changed in the current round, or else from the pull request's file list. The last rounds only
+touched tests and the README, and **our stand-in GitHub answers the pull request's file list with nothing**. On
+real GitHub the list would have been there. So this miss is our test rig's, on top of a fragile design: the fix
+is for Ghost Code to remember across rounds that the task touched the database (no lookup needed), and for the
+stand-in to report a pull request's files like GitHub does.
+
+**Seen working:** the red-build rule undid a commit that raised the errors ("errors 2 → 3 · undone"); the next
+commit went green.
+
+Attempt 15 remains the only attempt that passed all four items.
