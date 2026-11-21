@@ -267,3 +267,32 @@ What changed in Ghost Code since attempt 19, and so what this run is the first t
   GitHub accepts every write, so this should not come up.
 
 Judged on the four items, not on the total spent.
+
+**Attempt 20 result: did not pass (0 of 4). It built for seven rounds, then Ghost Code stopped itself again, for a
+new reason.**
+25.1 minutes · 7 rounds · 126 steps · 18 commits · **$2.81** of its $5, on a healthy machine.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | The last commit that was checked (`c00001f`) was green, the four database change files install on a real Postgres, and the app's own 23 tests pass. But one more commit was made after that and never checked. **Not met: the final commit is unchecked.** |
+| 2. Our review test, unchanged | **Fails:** it could not start. It imports `src/lib/server/aiJobs`, which this build does not have. |
+| 3. A real save read back from a real database | **Fails:** no test uses a real database. |
+| 4. Money comes back after a crash | **Fails:** the recovery code is there, but no test stops a job after it reserved. |
+
+**The question for this run** (does it build past its first green commit, and does it stop once the list is done and
+green?): the first half is yes. It kept building through seven rounds and 18 commits, where attempt 19 stopped after
+one. The second half was never reached.
+
+**Why it stopped: a second fault in Ghost Code from the same day.** Round 7 ran out of steps, and its closing answer
+ended with the status line "BLOCKED: step limit reached before committing tests, fixing the production SQL contract,
+updating documentation, and running final verification". A "blocked" status stops automatic rounds (#302), so the
+build ended there with work left and said "Ghost Code stopped here instead of trying again by itself". Running into
+a round's own limit is not being blocked; the next round should have carried on. Its own closing answer listed what
+was left: an uncommitted test file, a database function that still uses Phase 1 column names, the README, and the
+final verification.
+
+**Fix (Ghost Code, pull request to follow #308):** a "blocked" in an answer that Ghost Code itself forced (the
+round's last step, or its time running out) is kept as "not finished yet" and the next round carries on. Said at an
+ending the model chose, "blocked" still stops. A test holds attempt 20's exact ending, through the whole loop.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 20: $14.05.
