@@ -415,3 +415,25 @@ attempt 22 would not.
 
 **Known limit, unchanged:** the stand-in runs one job per check file. A green from it is not taken as item 1; the
 judging checks the rest by hand.
+
+**Attempt 23 result: did not pass, and it answered none of its questions. It was stopped at round 3 by a check that needs a person, and the second reviewer never ran.**
+10.2 minutes · 3 rounds · 48 steps · 5 commits · **$1.10** of its $5, on a healthy machine.
+
+**What stopped it.** In round 3 the build changed the line that connects the app's server to its database with the
+service key (`createClient(url, serviceKey, …)` in `src/lib/server/supabaseDb.ts`). Ghost Code never commits a
+change to sign-in or to who can see what by itself: it pauses and asks the person ("Paused: this needs your
+permission, not a retry"). On our test machine there is nobody to tap. The stop did what it is for; the run ended
+there with the work half done (a database change file added, no routes or review screen yet).
+
+| Question | Answer |
+|---|---|
+| 1. Did the review run? | **No.** The build never reached "about to be called done". |
+| 2. How many points did the builder act on? | Nothing to count. |
+| 3. The four items | Not reached. The build was unfinished at the stop, so it was not judged on them. |
+
+**A fault of ours that this run exposed, in the reviewer itself.** Reading why it had not run, we found it would
+have been skipped anyway in a common case: it asked "did this *round* commit anything?", and a task's last round
+often only reads the checks (attempt 22's did). It now asks whether the *task* has committed. That fix has a test
+and goes out in the next pull request. It was live with this fault for about an hour.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 23: $19.52.
