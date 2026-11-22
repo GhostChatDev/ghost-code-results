@@ -48,7 +48,7 @@ Ghost Code skipped it (fixed since), and A5 never reached an ending.
 
 ### What the test changed in Ghost Code
 
-Nine gaps were found in Ghost Code itself and six are fixed (table at the end of this page). The test ran Ghost
+Nine gaps were found in Ghost Code itself and seven are fixed (table at the end of this page). The test ran Ghost
 Code as it was when the test started, so none of those fixes helped a build here.
 
 ---
@@ -333,6 +333,6 @@ The test runs Ghost Code as it was when the test started (`bd53448`), so none of
 | A2 | The browser check counted a form's send button as dead when a required field was empty | Merged (#348) |
 | A1, A2, A3 | The second review did not run when a build ended on the "stop now" ending | Merged (#348) |
 | A4 | "Not shown yet: a test that reaches a real database" said of a build that had four | Merged (#350) |
-| A5 | The browser check passes when the app's own menu leads to a 404 | Not fixed yet |
+| A5 | The browser check passes when the app's own menu leads to a 404 | Merged (#351) |
 | A3, A5 | Nothing runs an app's own tests unless the builder adds a check for them | Not fixed yet |
 | A3 | A builder said tests were "included" when none exist | Not fixed yet (the second review, now run on that ending, is the step meant to catch it; untested) |
