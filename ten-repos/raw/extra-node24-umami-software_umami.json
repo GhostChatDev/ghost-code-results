@@ -1,0 +1,38 @@
+[
+ {
+  "repo": "umami-software_umami",
+  "step": "install try 1: pnpm install",
+  "command": "pnpm install",
+  "exit": 0,
+  "seconds": 10.3,
+  "verdict": "passed",
+  "tail": "+ immer 11.1.21\n+ ipaddr.js 2.5.0\n+ is-ci 4.1.0\n+ is-docker 4.0.0\n+ is-localhost-ip 3.0.1\n+ isbot 5.2.2\n+ jsonwebtoken 9.0.3\n+ jszip 3.10.2\n+ kafkajs 2.2.4\n+ lucide-react 1.53.0\n+ maxmind 5.0.7\n+ motion 14.0.0\n+ next 16.4.2\n+ next-intl 4.14.9\n+ node-fetch 3.3.2\n+ npm-run-all 4.1.5\n+ otplib 13.5.0\n+ papaparse 5.7.0\n+ prisma 7.10.0\n+ prop-types 15.8.1\n+ punycode 2.3.1\n+ qrcode 1.5.4\n+ react 19.3.1\n+ react-dom 19.3.1\n+ react-error-boundary 6.1.6\n+ react-resizable-panels 4.14.3\n+ react-simple-maps 5.0.5\n+ react-window 2.3.3\n+ redis 6.3.0\n+ rrweb 2.1.7\n+ rrweb-player 2.1.7\n+ semver 7.8.5\n+ serialize-error 13.0.2\n+ thenby 1.4.1\n+ ua-parser-js 2.0.10\n+ uuid 14.0.2\n+ zod 4.6.7\n+ zustand 5.0.15\n\ndevDependencies:\n+ @biomejs/biome 2.5.15\n+ @eloqnt/cli 0.6.33\n+ @netlify/plugin-nextjs 5.16.2\n+ @rollup/plugin-commonjs 29.0.3\n+ @rollup/plugin-node-resolve 16.0.3\n+ @rollup/plugin-replace 6.0.3\n+ @rollup/plugin-terser 1.0.0\n+ @rollup/plugin-typescript 12.3.0\n+ @testing-library/jest-dom 7.0.1\n+ @testing-library/react 16.3.3\n+ @testing-library/user-event 14.6.7\n+ @types/jest 30.0.0\n+ @types/node 26.6.4\n+ @types/qrcode 1.5.6\n+ @types/react 19.3.0\n+ @types/react-dom 19.3.0\n+ babel-plugin-react-compiler 19.1.0-rc.2\n+ jsdom 30.1.2\n+ msw 3.0.2\n+ openapi-typescript 7.13.0\n+ postcss 8.5.29\n+ postcss-flexbugs-fixes 5.0.2\n+ postcss-preset-env 11.6.1\n+ rollup 4.64.3\n+ tar 7.5.22\n+ tsup 8.5.1\n+ tsx 4.23.15\n+ typescript 6.0.3\n+ vite 8.3.4\n+ vitest 5.0.3\n+ zod-openapi 6.0.2\n\nDone in 7.8s using pnpm v12.3.4\n"
+ },
+ {
+  "repo": "umami-software_umami",
+  "step": "pnpm run lint",
+  "command": "pnpm run lint",
+  "exit": 1,
+  "seconds": 3.9,
+  "verdict": "failed",
+  "tail": "  i To resolve this issue, replace the unknown property with a valid CSS property.\n  \n\nsrc/assets/visitor.svg:1:70 lint/correctness/noUnknownProperty \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n  \u00d7 Unknown property is not allowed.\n  \n  > 1 \u2502 ...rg/2000/svg\" viewBox=\"0 0 512 512\" style=\"enable-background:new 0 0 512 512\" xml:space=\"preserve\"><p...\n      \u2502                                              ^^^^^^^^^^^^^^^^^\n  \n  i See CSS Specifications and browser specific properties for more details.\n  \n  i To resolve this issue, replace the unknown property with a valid CSS property.\n  \n\nsrc/assets/website.svg:1:69 lint/correctness/noUnknownProperty \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n  \u00d7 Unknown property is not allowed.\n  \n  > 1 \u2502 ...org/2000/svg\" xml:space=\"preserve\" style=\"enable-background:new 0 0 511.999 511.999\" viewBox=\"0 0 51...\n      \u2502                                              ^^^^^^^^^^^^^^^^^\n  \n  i See CSS Specifications and browser specific properties for more details.\n  \n  i To resolve this issue, replace the unknown property with a valid CSS property.\n  \n\nThe number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.\nDiagnostics not shown: 4.\nChecked 1752 files in 1075ms. No fixes applied.\nFound 6 errors.\nFound 9 warnings.\nFound 9 infos.\nlint \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n  \u00d7 Some errors were emitted while running checks.\n  \n\n[ELIFECYCLE] Command failed with exit code 1.\n"
+ },
+ {
+  "repo": "umami-software_umami",
+  "step": "pnpm run test",
+  "command": "pnpm run test",
+  "exit": 1,
+  "seconds": 3.6,
+  "verdict": "failed",
+  "tail": "$ pnpm generate:db:client\n$ prisma generate\nFailed to load config file \"/home/user/tenrun/work/umami-software_umami\" as a TypeScript/JavaScript module. Error: PrismaConfigEnvError: Cannot resolve environment variable: DATABASE_URL.\n[ELIFECYCLE] Command failed with exit code 1.\n[ELIFECYCLE] Command failed with exit code 1.\n"
+ },
+ {
+  "repo": "umami-software_umami",
+  "step": "pnpm run build",
+  "command": "pnpm run build",
+  "exit": 1,
+  "seconds": 3.0,
+  "verdict": "failed",
+  "tail": "$ npm-run-all check:env build:db check:db build:tracker build:recorder build:geo build:openapi build:packages build:app\n$ node scripts/check-env.js\nThe following environment variables are not defined:\n -  DATABASE_URL\n[ELIFECYCLE] Command failed with exit code 1.\nERROR: \"check:env\" exited with 1.\n[ELIFECYCLE] Command failed with exit code 1.\n"
+ }
+]

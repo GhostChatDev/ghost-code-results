@@ -1,0 +1,42 @@
+[
+ {
+  "repo": "skidding_flatris",
+  "step": "install try 1: yarn install",
+  "command": "yarn install",
+  "exit": 0,
+  "seconds": 30.4,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "yarn install v1.22.22\n[1/4] Resolving packages...\n[2/4] Fetching packages...\n[3/4] Linking dependencies...\nwarning \"firebase-admin > @firebase/database > @firebase/auth-interop-types@0.1.4\" has unmet peer dependency \"@firebase/app-types@0.x\".\nwarning \" > babel-loader@8.1.0\" has unmet peer dependency \"webpack@>=2\".\nwarning \" > css-loader@3.5.3\" has unmet peer dependency \"webpack@^4.0.0 || ^5.0.0\".\nwarning \" > eslint-plugin-import@2.20.2\" has incorrect peer dependency \"eslint@2.x - 6.x\".\nwarning \"eslint-plugin-jest > @typescript-eslint/experimental-utils > @typescript-eslint/typescript-estree > tsutils@3.17.1\" has unmet peer dependency \"typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta\".\nwarning \" > html-webpack-plugin@4.3.0\" has unmet peer dependency \"webpack@>=4.0.0 < 6.0.0\".\nwarning \" > jest-puppeteer@4.4.0\" has unmet peer dependency \"puppeteer@>= 1.5.0 < 3\".\nwarning \"react-cosmos > webpack-dev-middleware@3.7.2\" has unmet peer dependency \"webpack@^4.0.0\".\nwarning \" > style-loader@1.2.1\" has unmet peer dependency \"webpack@^4.0.0 || ^5.0.0\".\n[4/4] Building fresh packages...\nDone in 30.19s.\n"
+ },
+ {
+  "repo": "skidding_flatris",
+  "step": "yarn run lint",
+  "command": "yarn run lint",
+  "exit": 0,
+  "seconds": 2.8,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "yarn run v1.22.22\n$ eslint '**/*.js'\nBrowserslist: caniuse-lite is outdated. Please run:\nnpx browserslist@latest --update-db\nDone in 2.57s.\n"
+ },
+ {
+  "repo": "skidding_flatris",
+  "step": "yarn run test",
+  "command": "yarn run test",
+  "exit": 0,
+  "seconds": 1.7,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "yarn run v1.22.22\n$ jest\nBrowserslist: caniuse-lite is outdated. Please run:\nnpx browserslist@latest --update-db\nPASS shared/utils/timeout-bumper.test.js\n  \u2713 handlers are called sequentially (4 ms)\n  \u2713 handlers are not called while bumping (2 ms)\n  \u2713 handlers are canceled\n\nTest Suites: 1 passed, 1 total\nTests:       3 passed, 3 total\nSnapshots:   0 total\nTime:        0.905 s\nRan all test suites.\nDone in 1.48s.\n"
+ },
+ {
+  "repo": "skidding_flatris",
+  "step": "yarn run build",
+  "command": "yarn run build",
+  "exit": 1,
+  "seconds": 0.3,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "yarn run v1.22.22\n$ env-cmd next build web\nError: Failed to find .env file at default paths: [./.env,./.env.js,./.env.json]\n    at getEnvFile (/home/user/tenrun/work/skidding_flatris/node_modules/env-cmd/dist/get-env-vars.js:58:11)\n    at async Object.EnvCmd (/home/user/tenrun/work/skidding_flatris/node_modules/env-cmd/dist/env-cmd.js:39:15)\n    at async Object.CLI (/home/user/tenrun/work/skidding_flatris/node_modules/env-cmd/dist/env-cmd.js:19:16)\nerror Command failed with exit code 1.\ninfo Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+ }
+]

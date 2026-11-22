@@ -1,0 +1,32 @@
+[
+ {
+  "repo": "ether_etherpad-lite",
+  "step": "install try 1: pnpm install",
+  "command": "pnpm install",
+  "exit": 0,
+  "seconds": 6.3,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "Scope: all 7 workspace projects\n? Verifying lockfile against supply-chain policies (1210 entries)...\nPackages are hard linked from the content-addressable store to the virtual store.\n  Content-addressable store is at: /root/.local/share/pnpm/store/v11\n  Virtual store is at:             node_modules/.pnpm\nDownloading @rolldown/binding-linux-x64-gnu@1.2.18: 0.00 B/8.83 MB\nDownloading @typescript/typescript-linux-x64@7.0.2: 0.00 B/9.66 MB\nProgress: resolved 1098, reused 373, downloaded 722, added 1077\n\u2713 Lockfile passes supply-chain policies (1210 entries in 3.4s)\nLockfile is up to date, resolution step is skipped\nPackages: +1098\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 1098, reused 373, downloaded 724, added 1098, done\nIgnored build scripts: esbuild@0.28.2.\nRun \"pnpm approve-builds\" to pick which dependencies should be allowed to run scripts.\n\ndependencies:\n+ ep_etherpad-lite link:src\n\ndevDependencies:\n+ admin link:admin\n+ docs link:doc\n+ ui link:ui\n\nDone in 3.7s using pnpm v12.4.2\n"
+ },
+ {
+  "repo": "ether_etherpad-lite",
+  "step": "pnpm run lint",
+  "command": "pnpm run lint",
+  "exit": 1,
+  "seconds": 0.7,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "$ pnpm --filter ep_etherpad-lite run lint\n$ eslint .\n\nOops! Something went wrong! :(\n\nESLint: 10.15.0\n\nESLint couldn't find an eslint.config.* file.\n\nFrom ESLint v9.0.0, the default configuration file is now eslint.config.*.\nIf you are using a .eslintrc.* file, please follow the migration guide\nto update your configuration file to the new format:\n\nhttps://eslint.org/docs/latest/use/configure/migration-guide\n\nIf you still have problems after following the migration guide, please stop by\nhttps://eslint.org/chat/help to chat with the team.\n\n[ELIFECYCLE] Command failed with exit code 2.\nError: ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL\n\n  \u00d7 \"pnpm recursive run\" failed in /home/user/tenrun/work/ether_etherpad-lite/\n  \u2502 src\n\n[ELIFECYCLE] Command failed with exit code 1.\n"
+ },
+ {
+  "repo": "ether_etherpad-lite",
+  "step": "pnpm run test",
+  "command": "pnpm run test",
+  "exit": 1,
+  "seconds": 2.7,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "mWarning: Cannot find any files matching pattern \"../node_modules/ep_*/static/tests/backend/specs\"\u001b[39m\n\u001b[33m[2026-11-22T05:18:17.495] [WARN] settings - \u001b[39mCan't get git version for server header\nENOENT: no such file or directory, lstat '/home/user/tenrun/work/ether_etherpad-lite/.git'\n\u001b[33m[2026-11-22T05:18:17.496] [WARN] settings - \u001b[39mNo settings file found in /home/user/tenrun/work/ether_etherpad-lite/settings.json. Continuing using defaults!\n\u001b[32m[2026-11-22T05:18:17.497] [INFO] settings - \u001b[39mNo credentials file found in /home/user/tenrun/work/ether_etherpad-lite/credentials.json. Ignoring.\n\u001b[33m[2026-11-22T05:18:17.497] [WARN] settings - \u001b[39mloglevel: INFO\n\u001b[33m[2026-11-22T05:18:17.497] [WARN] settings - \u001b[39mlogLayoutType: colored\n\u001b[33m[2026-11-22T05:18:17.497] [WARN] settings - \u001b[39mNo \"skinName\" parameter found. Please check out settings.json.template and update your settings.json. Falling back to the default \"colibris\".\n\u001b[32m[2026-11-22T05:18:17.497] [INFO] settings - \u001b[39mUsing skin \"colibris\" in dir: /home/user/tenrun/work/ether_etherpad-lite/src/static/skins/colibris\n\u001b[33m[2026-11-22T05:18:17.497] [WARN] settings - \u001b[39mFile location: /home/user/tenrun/work/ether_etherpad-lite/var/rusty.db\n\u001b[32m[2026-11-22T05:18:17.498] [INFO] settings - \u001b[39mString used for versioning assets: c7f40c36\n\u001b[32m[2026-11-22T05:18:18.856] [INFO] settings - \u001b[39mUsing proxy: http://127.0.0.1:35683\n\u001b[91m[2026-11-22T05:18:18.857] [ERROR] settings - \u001b[39mRunning Etherpad on Node v22.23.4 is not supported. Please upgrade at least to Node 24.0.0\n[ELIFECYCLE] Test failed. See above for more details.\nError: ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL\n\n  \u00d7 \"pnpm recursive run\" failed in /home/user/tenrun/work/ether_etherpad-lite/\n  \u2502 src\n\n[ELIFECYCLE] Test failed. See above for more details.\n"
+ }
+]

@@ -1,0 +1,42 @@
+[
+ {
+  "repo": "pcottle_learnGitBranching",
+  "step": "install try 1: yarn install",
+  "command": "yarn install",
+  "exit": 0,
+  "seconds": 12.8,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "yarn install v1.22.22\n$ node scripts/check-package-manager.js\n[1/5] Validating package.json...\n[2/5] Resolving packages...\nwarning Resolution field \"esbuild@0.28.1\" is incompatible with requested version \"esbuild@^0.14.14\"\n[3/5] Fetching packages...\n[4/5] Linking dependencies...\nwarning Workspaces can only be enabled in private projects.\nwarning Workspaces can only be enabled in private projects.\n[5/5] Building fresh packages...\nDone in 12.58s.\n"
+ },
+ {
+  "repo": "pcottle_learnGitBranching",
+  "step": "yarn run lint",
+  "command": "yarn run lint",
+  "exit": 0,
+  "seconds": 2.3,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "yarn run v1.22.22\n$ eslint src __tests__ scripts vite.config.mjs eslint.config.js\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/fetchRebase.js\n  781:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/lockedMain.js\n  435:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/mergeManyFeatures.js\n  292:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/push.js\n  365:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/pushArgs.js\n  589:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/pushArgs2.js\n  556:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/pushManyFeatures.js\n  439:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/sourceNothing.js\n  443:5  warning  Duplicate key 'es_MX'  no-dupe-keys\n\n/home/user/tenrun/work/pcottle_learnGitBranching/src/levels/remote/tracking.js\n  3352:5  warning  Duplicate key 'te_IN'  no-dupe-keys\n\n\u2716 9 problems (0 errors, 9 warnings)\n\nDone in 2.09s.\n"
+ },
+ {
+  "repo": "pcottle_learnGitBranching",
+  "step": "yarn run test",
+  "command": "yarn run test",
+  "exit": 0,
+  "seconds": 1.0,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "yarn run v1.22.22\n$ node scripts/generate.js\nGenerated /home/user/tenrun/work/pcottle_learnGitBranching/src/levels/generated/manifest.js (36 levels, 33 KB)\nGenerated 29 locale string modules (275 KB total) in /home/user/tenrun/work/pcottle_learnGitBranching/src/js/intl/generated\n$ jasmine\nStarted\n..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n\n\n498 specs, 0 failures\nFinished in 0.458 seconds\nDone in 0.87s.\n"
+ },
+ {
+  "repo": "pcottle_learnGitBranching",
+  "step": "yarn run build",
+  "command": "yarn run build",
+  "exit": 0,
+  "seconds": 2.2,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": ":  25.92 kB\nbuild/assets/branching-CudzDCFm.js               82.33 kB \u2502 gzip:  27.54 kB\nbuild/assets/relativeRefs-SJVHEERE.js            82.99 kB \u2502 gzip:  27.62 kB\nbuild/assets/pushArgs-Di7HYccz.js                89.92 kB \u2502 gzip:  29.86 kB\nbuild/assets/multipleParents-BnjwfOdT.js         92.91 kB \u2502 gzip:  25.90 kB\nbuild/assets/interactiveRebase-C1wvINd1.js       93.08 kB \u2502 gzip:  32.49 kB\nbuild/assets/remoteBranches-CmphCJPa.js          93.84 kB \u2502 gzip:  32.04 kB\nbuild/assets/clone-D8moqNOw.js                  100.08 kB \u2502 gzip:  35.01 kB\nbuild/assets/merging-D5_IF9kr.js                103.37 kB \u2502 gzip:  33.11 kB\nbuild/assets/fetch-CJdyKpKW.js                  108.73 kB \u2502 gzip:  34.13 kB\nbuild/assets/fetchArgs-Cj5JMDI0.js              146.77 kB \u2502 gzip:  43.92 kB\nbuild/assets/tracking-B8cJYC5g.js               154.67 kB \u2502 gzip:  43.46 kB\nbuild/assets/fetchRebase-DEmGk3EX.js            164.95 kB \u2502 gzip:  48.54 kB\nbuild/assets/index-BCzmNhXX.js                  439.49 kB \u2502 gzip: 137.34 kB\nbuild/assets/vendor-Bp8ZQ7s5.js                 500.08 kB \u2502 gzip: 159.03 kB\n\n\u001b[33m[plugin builtin:vite-reporter] \n(!) Some chunks are larger than 500 kB after minification. Consider:\n- Using dynamic import() to code-split the application\n- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m\n\u001b[33m\u001b[33m[INEFFECTIVE_DYNAMIC_IMPORT] \u001b[0msrc/js/intl/generated/en_US.js is dynamically imported by src/js/intl/generated/loaders.js but also statically imported by src/js/intl/index.js, dynamic import will not move module into another chunk.\n\u001b[39m\n\u001b[32m\u2713 built in 613ms\u001b[39m\nCopied assets/ into build/\nCopied generatedDocs/ into build/\nDone in 2.06s.\n"
+ }
+]

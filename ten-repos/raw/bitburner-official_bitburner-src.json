@@ -1,0 +1,82 @@
+[
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "install (as picked)",
+  "command": "npm install and pip install -r requirements.txt",
+  "exit": null,
+  "seconds": 0,
+  "limit": 240,
+  "verdict": "not runnable as written",
+  "tail": "Two commands joined with the word \"and\". Not run as written; its two halves are run below."
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "install try 1: npm install",
+  "command": "npm install",
+  "exit": 1,
+  "seconds": 26.8,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "npm warn EBADENGINE Unsupported engine {\nnpm warn EBADENGINE   package: 'bitburner@3.0.2',\nnpm warn EBADENGINE   required: { node: '>=24' },\nnpm warn EBADENGINE   current: { node: 'v22.23.4', npm: '10.9.9' }\nnpm warn EBADENGINE }\nnpm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation\nnpm warn deprecated @material-ui/styles@4.11.5: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.\nnpm warn deprecated @material-ui/core@4.12.4: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.\n\n> bitburner@3.0.2 preinstall\n> node ./tools/engines-check/engines-check.js\n\nIncorrect node version\n'package.json' specifies \">=24\", you are currently running \"v22.23.4\".\nnpm error code 1\nnpm error path /home/user/tenrun/work/bitburner-official_bitburner-src\nnpm error command failed\nnpm error command sh -c node ./tools/engines-check/engines-check.js\nnpm error A complete log of this run can be found in: /root/.npm/_logs/2026-11-22T05_21_56_831Z-debug-0.log\n"
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "install try 1: pip install -r requirements.txt",
+  "command": "pip install -r requirements.txt",
+  "exit": 1,
+  "seconds": 3.8,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "t-packages/setuptools/_distutils/cmd.py\", line 318, in run_command\n          self.distribution.run_command(command)\n          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n        File \"/usr/lib/python3/dist-packages/setuptools/dist.py\", line 1233, in run_command\n          super().run_command(command)\n          ~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n        File \"/usr/lib/python3/dist-packages/setuptools/_distutils/dist.py\", line 987, in run_command\n          cmd_obj.ensure_finalized()\n          ~~~~~~~~~~~~~~~~~~~~~~~~^^\n        File \"/usr/lib/python3/dist-packages/setuptools/_distutils/cmd.py\", line 111, in ensure_finalized\n          self.finalize_options()\n          ~~~~~~~~~~~~~~~~~~~~~^^\n        File \"/usr/lib/python3/dist-packages/setuptools/command/install_lib.py\", line 17, in finalize_options\n          self.set_undefined_options('install',('install_layout','install_layout'))\n          ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        File \"/usr/lib/python3/dist-packages/setuptools/_distutils/cmd.py\", line 296, in set_undefined_options\n          setattr(self, dst_option, getattr(src_cmd_obj, src_option))\n                                    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n        File \"/usr/lib/python3/dist-packages/setuptools/_distutils/cmd.py\", line 107, in __getattr__\n          raise AttributeError(attr)\n      AttributeError: install_layout. Did you mean: 'install_platlib'?\n      [end of output]\n  \n  note: This error originates from a subprocess, and is likely not a problem with pip.\n  ERROR: Failed building wheel for sphinxcontrib-newsfeed\n  Running setup.py clean for sphinxcontrib-newsfeed\nFailed to build sphinxcontrib-newsfeed\nERROR: Could not build wheels for sphinxcontrib-newsfeed, which is required to install pyproject.toml-based projects\n"
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "npm run typecheck",
+  "command": "npm run typecheck",
+  "exit": 0,
+  "seconds": 23.7,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "\n> bitburner@3.0.2 typecheck\n> tsc --noEmit -p test/tsconfig.json && tsc --noEmit -p tsconfig.declarationCheck.json && tsc --noEmit\n\n"
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "npm run lint",
+  "command": "npm run lint",
+  "exit": 0,
+  "seconds": 40.6,
+  "limit": 240,
+  "verdict": "passed",
+  "tail": "\n> bitburner@3.0.2 lint\n> eslint --fix --ext js,mjs,jsx,ts,mts,tsx --max-warnings 0 src test\n\n"
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "npm test",
+  "command": "npm test",
+  "exit": 1,
+  "seconds": 66.0,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "Corporation.test.ts:66:37)\n\nFAIL test/jest/Netscript/Sleeve.test.ts\n  \u25cf Cost \u203a getMemoryUpgradeCost\n\n    expect(received).toStrictEqual(expected) // deep equality\n\n    Expected: 305129711679036.4\n    Received: 305129711679036.3\n\n    \u001b[0m \u001b[90m 52 |\u001b[39m     expect(\u001b[33mPlayer\u001b[39m\u001b[33m.\u001b[39msleeves[\u001b[35m0\u001b[39m]\u001b[33m.\u001b[39mgetMemoryUpgradeCost(\u001b[35m1\u001b[39m))\u001b[33m.\u001b[39mtoStrictEqual(\u001b[35m1e12\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 53 |\u001b[39m     expect(\u001b[33mPlayer\u001b[39m\u001b[33m.\u001b[39msleeves[\u001b[35m0\u001b[39m]\u001b[33m.\u001b[39mgetMemoryUpgradeCost(\u001b[35m10\u001b[39m))\u001b[33m.\u001b[39mtoStrictEqual(\u001b[35m1.0949720999737857e13\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 54 |\u001b[39m     expect(\u001b[33mPlayer\u001b[39m\u001b[33m.\u001b[39msleeves[\u001b[35m0\u001b[39m]\u001b[33m.\u001b[39mgetMemoryUpgradeCost(\u001b[35m99\u001b[39m))\u001b[33m.\u001b[39mtoStrictEqual(\u001b[35m3.051297116790364e14\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 55 |\u001b[39m     \u001b[33mPlayer\u001b[39m\u001b[33m.\u001b[39msleeves[\u001b[35m0\u001b[39m]\u001b[33m.\u001b[39mmemory \u001b[33m=\u001b[39m \u001b[35m50\u001b[39m\u001b[33m;\u001b[39m\n     \u001b[90m 56 |\u001b[39m     expect(\u001b[33mPlayer\u001b[39m\u001b[33m.\u001b[39msleeves[\u001b[35m0\u001b[39m]\u001b[33m.\u001b[39mgetMemoryUpgradeCost(\u001b[35m0\u001b[39m))\u001b[33m.\u001b[39mtoStrictEqual(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 57 |\u001b[39m     expect(\u001b[33mPlayer\u001b[39m\u001b[33m.\u001b[39msleeves[\u001b[35m0\u001b[39m]\u001b[33m.\u001b[39mgetMemoryUpgradeCost(\u001b[35m1\u001b[39m))\u001b[33m.\u001b[39mtoStrictEqual(\u001b[35m2.6388117932094194e12\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.toStrictEqual (test/jest/Netscript/Sleeve.test.ts:54:56)\n\n\nSnapshot Summary\n \u203a 40 snapshots failed from 1 test suite. Inspect your code changes or run `npm test -- -u` to update them.\n\nTest Suites: 2 failed, 57 passed, 59 total\nTests:       2 failed, 4 skipped, 4577 passed, 4583 total\nSnapshots:   40 failed, 101 passed, 141 total\nTime:        65.265 s\nRan all test suites.\n"
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "npm run build",
+  "command": "npm run build",
+  "exit": 1,
+  "seconds": 0.4,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "\n> bitburner@3.0.2 build\n> bash ./tools/build.sh production\n\nfatal: not a git repository (or any of the parent directories): .git\n[webpack-cli] \u2716 Error: Command failed: git rev-parse --short HEAD\nfatal: not a git repository (or any of the parent directories): .git\n\n    at genericNodeError (node:internal/errors:983:15)\n    at wrappedFn (node:internal/errors:537:14)\n    at checkExecSyncError (node:child_process:916:11)\n    at Object.execSync (node:child_process:988:15)\n    at module.exports (/home/user/tenrun/work/bitburner-official_bitburner-src/webpack.config.js:51:47)\n    at loadConfigByPath (/home/user/tenrun/work/bitburner-official_bitburner-src/node_modules/webpack-cli/lib/webpack-cli.js:2177:37)\n    at async WebpackCLI.loadConfig (/home/user/tenrun/work/bitburner-official_bitburner-src/node_modules/webpack-cli/lib/webpack-cli.js:2219:38)\n    at async WebpackCLI.createCompiler (/home/user/tenrun/work/bitburner-official_bitburner-src/node_modules/webpack-cli/lib/webpack-cli.js:2468:24)\n    at async WebpackCLI.runWebpack (/home/user/tenrun/work/bitburner-official_bitburner-src/node_modules/webpack-cli/lib/webpack-cli.js:2561:20)\n    at async Command.action (/home/user/tenrun/work/bitburner-official_bitburner-src/node_modules/webpack-cli/lib/webpack-cli.js:1456:17) {\n  status: 128,\n  signal: null,\n  output: [\n    null,\n    <Buffer >,\n    <Buffer 66 61 74 61 6c 3a 20 6e 6f 74 20 61 20 67 69 74 20 72 65 70 6f 73 69 74 6f 72 79 20 28 6f 72 20 61 6e 79 20 6f 66 20 74 68 65 20 70 61 72 65 6e 74 20 ... 19 more bytes>\n  ],\n  pid: 12372,\n  stdout: <Buffer >,\n  stderr: <Buffer 66 61 74 61 6c 3a 20 6e 6f 74 20 61 20 67 69 74 20 72 65 70 6f 73 69 74 6f 72 79 20 28 6f 72 20 61 6e 79 20 6f 66 20 74 68 65 20 70 61 72 65 6e 74 20 ... 19 more bytes>\n}\n"
+ },
+ {
+  "repo": "bitburner-official_bitburner-src",
+  "step": "python -m pytest",
+  "command": "python -m pytest",
+  "exit": 5,
+  "seconds": 0.7,
+  "limit": 240,
+  "verdict": "failed",
+  "tail": "============================= test session starts ==============================\nplatform linux -- Python 3.13.18, pytest-9.2.0, pluggy-1.7.0\nrootdir: /home/user/tenrun/work/bitburner-official_bitburner-src\nplugins: anyio-4.15.1\ncollected 0 items\n\n============================ no tests ran in 0.27s =============================\n"
+ }
+]

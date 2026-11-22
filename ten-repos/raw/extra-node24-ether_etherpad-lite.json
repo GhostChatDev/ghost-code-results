@@ -1,0 +1,29 @@
+[
+ {
+  "repo": "ether_etherpad-lite",
+  "step": "install try 1: pnpm install",
+  "command": "pnpm install",
+  "exit": 0,
+  "seconds": 4.2,
+  "verdict": "passed",
+  "tail": "npm warn Unknown project config \"strict-dep-builds\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\nnpm warn Unknown project config \"package-import-method\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\nScope: all 7 workspace projects\n\u2713 Lockfile passes supply-chain policies (verified 31m ago)\nLockfile is up to date, resolution step is skipped\nPackages are hard linked from the content-addressable store to the virtual store.\n  Content-addressable store is at: /root/.local/share/pnpm/store/v11\n  Virtual store is at:             node_modules/.pnpm\nProgress: resolved 797, reused 797, downloaded 0, added 794\nPackages: +1098\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 1098, reused 1098, downloaded 0, added 1098, done\nIgnored build scripts: esbuild@0.28.2.\nRun \"pnpm approve-builds\" to pick which dependencies should be allowed to run scripts.\n\ndependencies:\n+ ep_etherpad-lite link:src\n\ndevDependencies:\n+ admin link:admin\n+ docs link:doc\n+ ui link:ui\n\nDone in 2.1s using pnpm v12.4.2\n"
+ },
+ {
+  "repo": "ether_etherpad-lite",
+  "step": "pnpm run lint",
+  "command": "pnpm run lint",
+  "exit": 1,
+  "seconds": 3.3,
+  "verdict": "failed",
+  "tail": "npm warn Unknown project config \"strict-dep-builds\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\nnpm warn Unknown project config \"package-import-method\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\n$ pnpm --filter ep_etherpad-lite run lint\n$ eslint .\n\nOops! Something went wrong! :(\n\nESLint: 10.15.0\n\nESLint couldn't find an eslint.config.* file.\n\nFrom ESLint v9.0.0, the default configuration file is now eslint.config.*.\nIf you are using a .eslintrc.* file, please follow the migration guide\nto update your configuration file to the new format:\n\nhttps://eslint.org/docs/latest/use/configure/migration-guide\n\nIf you still have problems after following the migration guide, please stop by\nhttps://eslint.org/chat/help to chat with the team.\n\n[ELIFECYCLE] Command failed with exit code 2.\nError: ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL\n\n  \u00d7 \"pnpm recursive run\" failed in /home/user/tenrun/work/ether_etherpad-lite/\n  \u2502 src\n\n[ELIFECYCLE] Command failed with exit code 1.\n"
+ },
+ {
+  "repo": "ether_etherpad-lite",
+  "step": "pnpm run test",
+  "command": "pnpm run test",
+  "exit": 0,
+  "seconds": 51.2,
+  "verdict": "passed",
+  "tail": "[32m\u2714\u001b[39m authz fail, authzFailure handles\n\u001b[32m[2026-11-22T05:50:22.237] [INFO] http - \u001b[39mSuccessful authentication from IP ANONYMOUS for user user\n      \u001b[32m\u2714\u001b[39m authz fail, authFailure handles\n\u001b[32m[2026-11-22T05:50:22.240] [INFO] http - \u001b[39mSuccessful authentication from IP ANONYMOUS for user user\n      \u001b[32m\u2714\u001b[39m authzFailure trumps authFailure\n\n\u001b[32m[2026-11-22T05:50:22.241] [INFO] server - \u001b[39mExiting...\n\u001b[32m[2026-11-22T05:50:22.241] [INFO] server - \u001b[39mStopping Etherpad...\n\u001b[32m[2026-11-22T05:50:22.241] [INFO] http - \u001b[39mClosing HTTP server...\n\u001b[32m[2026-11-22T05:50:22.241] [INFO] socket.io - \u001b[39mClosing socket.io engine...\n\u001b[32m[2026-11-22T05:50:22.241] [INFO] socket.io - \u001b[39mAll socket.io clients have disconnected\n\u001b[32m[2026-11-22T05:50:22.245] [INFO] ueberDB - \u001b[39mDatabase closed\n\u001b[32m[2026-11-22T05:50:22.245] [INFO] http - \u001b[39mHTTP server closed\n\u001b[32m[2026-11-22T05:50:22.245] [INFO] server - \u001b[39mEtherpad stopped\n\u001b[32m[2026-11-22T05:50:22.245] [INFO] server - \u001b[39mWaiting for Node.js to exit...\n\n  2086 passing (41s)\n  22 pending\n\n\u001b[91m[2026-11-22T05:50:27.246] [ERROR] server - \u001b[39mSomething that should have been cleaned up during the shutdown hook (such as a timer, worker thread, or open connection) is preventing Node.js from exiting\n\u001b[91m[2026-11-22T05:50:27.246] [ERROR] server - \u001b[39mEnable `dumpOnUncleanExit` setting to get a dump of objects preventing a clean exit\n\u001b[91m[2026-11-22T05:50:27.246] [ERROR] server - \u001b[39mForcing an unclean exit...\n"
+ }
+]
