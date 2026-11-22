@@ -41,7 +41,27 @@ answers are in [second-review/](second-review/).
 
 Trial cost in all: about $0.75.
 
+## It was live and never ran: two faults of ours
+
+It went live in Ghost Code on November 22, 2026, and in the first two real runs with it (attempts 23 and 24 in
+[ATTEMPTS.md](ATTEMPTS.md)) it did not run once.
+
+1. **It asked whether the round had committed, not the task.** A task's last round often only reads its checks.
+   Fixed the same day.
+2. **It needed 150 seconds left in a 285-second round.** A task nearly always calls itself done later in its round
+   than that. Attempt 24 finished its build on a green check and the reviewer was skipped without a word. Fixed:
+   a review that has no time left is owed, and the task gets one more round that starts with it.
+
+Run by hand on attempt 24's finished build ($0.09), it named the unbuilt review screen and the recovery function
+nothing calls: the two things that build fails on. We checked five of its claims against the files; all five hold,
+one with a wrong detail (it said a page does not exist; the page exists, empty).
+
+| Build | Our own judging | What the reviewer said | Cost |
+|---|---|---|---|
+| Attempt 24 | Failed (1 of 4). The review screen is the untouched Phase 1 file; nothing calls the job recovery. | **Named both.** | $0.09 |
+
 ## What is still not shown
 
 Whether Ghost Code, told these things in the middle of a task, actually fixes them, and whether that changes the
-result on the four-item pass line. That is attempt 23.
+result on the four-item pass line. Three builds that failed, three times the reviewer named why, and zero times so
+far has a builder been told during its task. That is attempt 25.

@@ -457,3 +457,44 @@ commits, not the round's; pull request #330, in its check as this is written). C
 ended attempt 23 (a change to sign-in waits for a person) can end this one the same way; we have not changed it,
 and will not approve it on the builder's behalf. If it does, that is the result. A pass on all four items would
 surprise us.
+
+**Attempt 24 result: did not pass (1 of 4). The build finished and its check was green. The second reviewer did not run, and that was our fault again.**
+26.2 minutes · 7 rounds · 119 steps · 17 commits · **$2.57** of its $5, on a healthy machine.
+
+| Question | Answer |
+|---|---|
+| 1. Did the review run? | **No.** The build reached "done on green checks" in round 7, with less time left in the round than the reviewer was allowed to start with. It was skipped, silently. |
+| 2. How many points did the builder act on? | Nothing to count. |
+| 3. The four items | **1 of 4**, below. |
+
+| Item | Result |
+|---|---|
+| 1. Checks, database, own tests | **Pass.** Last check passed on the final commit. All 4 database change files install on top of each other, with rows in 11 of 11 tables before the last one. 68 of the app's own tests pass. |
+| 2. The review test (4 cases) | **Fail.** Our test could not load this build without an adapter, so we looked by hand: `src/app/review/page.tsx` is byte for byte the Phase 1 file ("Phase 1: nothing to review"). There are routes to confirm and dismiss a suggestion, and no screen that shows one. |
+| 3. A write sent twice, against a real database | **Fail.** No test uses a real database. |
+| 4. A job that dies after reserving | **Not passed.** There is a test that stops a job after it reserved, and a function that recovers such jobs (`recoverAiJobs`), but nothing in the app calls it. |
+
+The builder's own list said "Implement suggestion review, confirmation, editing, settings, and stale-note handling"
+was done. The review screen was not touched.
+
+**The fault in the reviewer, and the fix.** It was only allowed to start with 150 seconds left in a 285-second
+round. A task nearly always calls itself done later in its round than that, so in practice it never ran: not in
+attempt 24, and it would not have in most real tasks. It was live like this for about half a day. The fix
+(pull request #332): a review that is wanted and has no time is *owed*, and the task gets one more round that
+starts with it. It has a test built from this run's exact ending.
+
+**What the reviewer says about this build, run afterwards by hand** ($0.09, raw answer in
+[second-review/attempt24.json](second-review/attempt24.json)). Five findings and two missing pieces. We checked
+five claims against the files:
+
+- "The Review screen was never built … only API routes exist." **True**, with one detail wrong: it says the page
+  does not exist; it exists, unchanged from Phase 1 and empty.
+- The "This note changed" banner shows on any note edited once, AI or not. **True** (`note.version > 1`).
+- The database refuses to confirm a task with no date, while the in-memory path the tests use allows it. **True.**
+- Jobs left running after a crash are only recovered by `recoverAiJobs`, "which no route or cron calls". **True.**
+- The retry route starts the job and returns without waiting for it. **True.**
+
+So on this build too, the reviewer names from the diff alone the thing that fails item 2 and the thing that fails
+item 4. What is still not shown is the only thing that matters for the product: what the builder does when told.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 24: $22.09.

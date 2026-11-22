@@ -1,0 +1,64 @@
+{
+ "model": "anthropic/claude-sonnet-5.5",
+ "files": 23,
+ "left": 0,
+ "diffChars": 90881,
+ "costUsd": 0.093826,
+ "tokens": {
+  "in": 41298,
+  "out": 1123,
+  "thinking": 0,
+  "finish": "stop"
+ },
+ "review": {
+  "verdict": "FINDINGS",
+  "findings": [
+   {
+    "file": "src/lib/core/ai.ts",
+    "line": 97,
+    "problem": "The Review screen was never built: no page under src/app (for example /review) is in the diff. Nothing in the UI lists suggestions or offers Confirm, Edit or Dismiss. Only API routes exist.",
+    "scenario": "A user saves a note with AI on. No screen shows the suggestions. The note's link to /review points at a page that does not exist, so nobody can confirm anything."
+   },
+   {
+    "file": "src/app/notes/page.tsx",
+    "line": 40,
+    "problem": "The 'This note changed. Review its linked reminders?' banner shows whenever note.version > 1. It does not check for stale suggestions or linked reminders, and it links to /review, which is not in the diff.",
+    "scenario": "A user fixes a typo in a note that has no AI. The banner appears permanently and links to a missing page."
+   },
+   {
+    "file": "src/lib/core/suggestions.ts",
+    "line": 30,
+    "problem": "The production confirm path (confirm_ai_suggestion) raises 'time required' when both due and reminder are null. The MemoryDb path allows it. The Postgres function raises a plain exception that check() turns into a generic error. A stale suggestion is converted to 'stale' and then the exception rolls the update back.",
+    "scenario": "A user confirms a task with no date. In production it fails with a database error, while the tests pass. A stale confirm returns a 500 rather than the 409 'This note changed' message."
+   },
+   {
+    "file": "src/lib/core/ai.ts",
+    "line": 128,
+    "problem": "Usage is settled before the extraction is validated, and then failJob releases the reservation. A job with invalid JSON is marked failed and is never retried or re-queued. That is acceptable. However, ai_jobs rows left 'running' after a crash are only requeued by recoverAiJobs, which no route or cron calls.",
+    "scenario": "The server dies mid-job. The job stays 'running' forever, the reservation is never released, and quota and budget stay consumed."
+   },
+   {
+    "file": "src/app/api/ai/jobs/[id]/route.ts",
+    "line": 6,
+    "problem": "The retry route fires runAiJob with void and returns 202, with no after(). Serverless runtimes may freeze the function before the job finishes. Also, runAiJob only handles 'queued' jobs, so failed jobs can never be retried.",
+    "scenario": "A user triggers a retry on a failed job. Nothing happens, or the work is cut off."
+   }
+  ],
+  "missing": [
+   {
+    "asked": "Review screen: for each suggestion show the task, the exact source quote, the FULL resolved date (never just \"next Friday\"), the proposed reminder time and the time zone. Buttons: Confirm, Edit, Dismiss.",
+    "problem": "No UI component or page for reviewing suggestions is added; only the API routes and a banner link exist."
+   },
+   {
+    "asked": "No AI secret appears in the frontend bundle, source maps, logs or API responses.",
+    "problem": "No test scans the bundle, source maps, logs or API responses for AI secrets. The only related check is a test that an error message does not contain a key."
+   }
+  ],
+  "dropped": 0,
+  "notChecked": [
+   "The remainder of the migration (the end of 0004_ai_suggestions.sql was cut off)",
+   "Whether the ai.* rate-limit names are registered in the api helper",
+   "Whether the supabase-mode note update path calls mark_note_changed or the service-level stale update"
+  ]
+ }
+}
