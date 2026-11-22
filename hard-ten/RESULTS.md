@@ -26,3 +26,19 @@ raised 2 points:
 So: one false alarm, disproved by a test; one real bug, fixed with tests. Not played for fun; not tried on a phone.
 
 ![Lantern Keep, desktop](builds/g1-tower-desktop.jpg)
+
+## G2 Moss & Copper (platformer, Ghost Gamer): **passed, 4 of 4**
+
+14 minutes · 4 rounds · 9 commits · **$1.46** of its $4.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000015`). |
+| 2. Browser | **Pass.** No console errors, failed requests, blank page or sideways scroll; it clicked "Begin the journey" and "Choose a world", and both worked. |
+| 3. Own tests, covering the hard part | **Pass.** 14 of 14 pass. They are about exactly the hard part: a swept collision that catches a thin floor at falling speeds up to 60,000 px/s, ceilings and walls at speed, no false landing beside a platform, standing still for 600 steps; coyote time and jump buffering at 100 ms (in real steps: a coyote jump works at step 6 and not at 7); a held jump higher than a tap; wall slide and wall jump. The tests run the game's own physics code, read out of `index.html`. |
+| 4. Hard part, by hand | **Pass.** A four-second fall, accelerating, onto a 2-pixel ledge: it lands on top (y 4964 for a 36-px player on a ledge at 5000), it doesn't pass through. The game runs a fixed 1/60 s step. Three levels as data ("The overgrown way", "The fernworks", "The copper canopy"), moving platforms, checkpoints, gears, level select, best times saved, and on-screen left / right / jump buttons on a phone. |
+
+The second reviewer ran and found no problems. Not played to the end; not tried on a real phone.
+
+![Moss & Copper, playing](builds/g2-platformer-play.jpg)
+

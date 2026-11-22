@@ -1,0 +1,33 @@
+name: Game checks
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: game-checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser tooling
+        run: npm install --no-audit --no-fund
+      - name: Physics unit tests
+        run: npm test
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Gameplay browser tests
+        run: npm run test:browser
+      - name: Save screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-screenshots
+          path: artifacts/
+          if-no-files-found: ignore

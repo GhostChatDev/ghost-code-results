@@ -1,0 +1,12 @@
+{
+  "name": "moss-and-copper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An original, self-contained canvas platform adventure",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test tests/physics.test.cjs",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "devDependencies": { "playwright": "1.51.1" }
+}
