@@ -623,7 +623,7 @@ passes, that is the first sign the reviewer changes a result. If it answers in w
 reviewer is a report for the person and not a fix, and we will say that.
 
 **Reviewer trial result: the reviewer ran in the loop, and the builder acted on 5 of its 6 points with commits. The build stayed green. It is still not a pass (item 3), and that was expected.**
-About 11 minutes · 4 rounds · 76 steps · 5 commits · **$1.79** of its $3.
+About 11 minutes · 4 rounds · 76 steps · 6 commits · **$1.79** of its $3.
 
 | Question | Answer |
 |---|---|
