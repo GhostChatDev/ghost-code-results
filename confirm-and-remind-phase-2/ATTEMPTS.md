@@ -573,7 +573,7 @@ stop running whole builds to reach it and test it on a finished build instead, a
 29.6 minutes · 9 rounds · 150 steps · 28 commits · about **$3.75** of its $5, on a healthy machine. (The bill moved
 $3.97 during the run; about $0.22 of that was four unrelated model calls we made while it ran.)
 
-No stop of ours ended this one. It built the review screen and the routes (3 of its 5 list items done), then spent
+No stop of ours ended this one. It built the review screen and the routes (3 of its 6 list items done), then spent
 its last three rounds on a build that would not go green: 13 failed checks in the run, and its last three fixes
 were each undone by Ghost Code's rule that a change must lower the error count (8 → 9, 8 → 10, 8 → 8). It was
 paused at the step limit. Not judged on the four items: unfinished and red.
