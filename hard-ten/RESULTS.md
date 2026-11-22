@@ -147,9 +147,9 @@ own list items still open.
 
 | Item | Result |
 |---|---|
-| 1. Checks | **Pass.** Last check passed on the final commit (`c000018`). The test job failed four times on the way (the test database had no tables, then a cleanup order) and passed on the fifth. |
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000018`). The test job failed three times on the way and passed on the fourth. |
 | 2. Browser | **Not passed.** During the build it was green, but on an error screen (our machine gave it no database, as with A1). Run again by us with a database it fails on one thing, and that thing is a false alarm. See below. |
-| 3. Own tests, covering the hard part | **Pass.** 6 of 6, with a real Postgres: equal, exact and percentage splits that keep every cent; conversion at a rate; the fewest payments (including a case where the obvious greedy answer is one payment too many); unbalanced input refused; the same expense sent twice stored once. |
+| 3. Own tests, covering the hard part | **Pass.** 6 of 6, with a real Postgres: equal, exact and percentage splits that keep every cent; conversion at a rate; the fewest payments, checked against an exhaustive answer for every group of up to five people with balances from -3 to 3; unbalanced input and groups over 12 people refused; the same expense sent twice stored once. |
 | 4. Hard part, by hand | **Pass.** Through the running server with a real database: $10.00 three ways is stored as 334 + 333 + 333 cents; 5,000 random equal splits never lost or invented a cent; percentages that don't add to 100 and exact shares that don't add to the total are refused; an amount with more than two decimals is refused (no floats anywhere: amounts are whole cents as big integers, rates are a fraction); EUR 7.00 at 1.0837 is stored as 759 cents and refused until the group enters a rate; the same expense sent 40 times at once is stored once; balances always sum to zero. Settle-up against our own exhaustive answer on 400 random groups of 3 to 8 people: **0** left a balance, **0** used more payments than the fewest possible. In a real browser: record a suggested payment and the suggestion disappears; the CSV export has every expense; no console errors. |
 
 **Item 2, what happened.**
