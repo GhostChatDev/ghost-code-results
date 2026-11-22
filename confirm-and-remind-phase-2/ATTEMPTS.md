@@ -621,3 +621,36 @@ middle of its own task knows more.
 We do not know what the builder does with them: that is the question. If it builds the review screen and item 2
 passes, that is the first sign the reviewer changes a result. If it answers in words and changes nothing, the
 reviewer is a report for the person and not a fix, and we will say that.
+
+**Reviewer trial result: the reviewer ran in the loop, and the builder acted on 5 of its 6 points with commits. The build stayed green. It is still not a pass (item 3), and that was expected.**
+About 11 minutes · 4 rounds · 76 steps · 5 commits · **$1.79** of its $3.
+
+| Question | Answer |
+|---|---|
+| 1. Did the review run in the loop? | **Yes**, 34 seconds into the first round: **6 points** (4 findings with a file and line, 2 missing pieces quoted from the request). |
+| 2. What did the builder do with each? | Below: **4 fixed with a commit to the named file, 1 partly, 1 not done** (named in its answer as still to do). None ignored. |
+| 3. Did the build stay green? | Red twice on the way (a database function declared to return nothing returned a value; a test used a name that no longer existed), **green on its last commit**. |
+| 4. Judged again | Item 1 **passes** (last check green, 4 database change files install with rows in 11 of 11 tables, 68 of its own tests pass). Item 3 still **fails**: no test uses a real database. So it cannot pass, whatever items 2 and 4 are. By hand, the two things attempt 24 failed on are no longer there (see 5 and 2 below). Our item 2 test still needs an adapter for this build's file names, so item 2 is not counted either way. |
+
+The six points, and what happened to each:
+1. **Every AI job fails unless the provider reports its own cost; the price settings are never read.** Fixed: a
+   commit to `src/lib/core/ai.ts` computes cost from token counts.
+2. **The job recovery (`recoverAiJobs`) is never called.** Fixed: the scheduled route
+   `src/app/api/cron/dispatch/route.ts` now calls it.
+3. **The "This note changed" banner shows on any note edited once, and links to a page that shows nothing.**
+   Partly: the link now opens the review screen for that note. The banner still shows whenever a note was edited.
+4. **Confirming twice behaves differently in the test path and the real database path.** Fixed: both now go
+   through one confirm that returns the first result on a second tap (`src/lib/core/suggestions.ts`, `db.ts`, the
+   migration, a test).
+5. **The review screen was never built.** Fixed: `src/app/review/page.tsx` (59 lines, was the empty Phase 1 page)
+   and a new `src/components/SuggestionReview.tsx` show the task, the exact quote, the full date and reminder time,
+   the time zone, and Confirm, Edit and Dismiss.
+6. **No test looks for an AI key in the built app or its responses.** Not done. The builder listed it as still to
+   do when the 4 rounds ran out.
+
+**What this shows, both ways.**
+- On this build, the reviewer turned into work, not words: the missing screen it named got built, and the recovery
+  it named got wired up. That is the first time we have seen the reviewer change what a build contains.
+- It does not show the reviewer makes a build pass. Item 3 (a real-database test) was not among its six points,
+  and the build still fails it. The reviewer reads the request and the diff; it does not run anything.
+- One build, one run, a builder that started without its own earlier conversation. Not a measurement.
