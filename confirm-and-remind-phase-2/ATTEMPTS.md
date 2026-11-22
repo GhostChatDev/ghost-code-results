@@ -505,8 +505,7 @@ November 22, 2026. Same rules as attempts 16 to 24: the same prompt, the same Ph
 line and the same judging, **$5 for the attempt** from the real bill. The test machine's database and Docker were
 checked as answering before the start. Published either way.
 
-**Ghost Code under test:** main as of pull request #332 (head `8a2e908`, in its check as this is written). The attempt
-starts only after that pull request has passed and is merged.
+**Ghost Code under test:** main as of pull request #332, which passed its check and is merged: commit `2768277`.
 
 **The one thing that changed since attempt 24:** a second review that has no time left in its round is no longer
 skipped. The task gets one more round, and that round starts with the review.
