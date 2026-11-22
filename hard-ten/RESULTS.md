@@ -214,6 +214,33 @@ Smaller things, not counted:
   for "tested/passes" with nothing run, not for "included" with nothing there. The second reviewer reads the request
   against the diff and is the step meant to catch "asked for, not in the change"; it did not run on this build.
 
+## A4 Quillstack (notes, Ghost Coded): **passed, 4 of 4**
+
+15 minutes · 4 rounds · 8 commits · **$1.30** of its $4. The first app in this test that got the second review
+(it ended the ordinary way, not on the "stop now" ending): the reviewer raised one point, a real bug (a comma typed
+in the tags box could not be deleted), and the builder fixed it and added a test for it.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000010`): the app's own build-and-test job, with a Postgres it starts itself, and Ghost Code's browser check. |
+| 2. Browser | **Pass.** With a database: no console errors, failed requests, blank page or sideways scroll; "+ New note", "Save note" and "Version history" worked; what it typed was kept after a refresh and seen from a second browser. One button ("Pin note") could not be pressed by the check, which is a warning, not a failure. |
+| 3. Own tests, covering the hard part | **Pass.** 6 of 6 against a real Postgres: ranked search with highlighted words; every save keeps a version and a restore makes a new one; a save over a newer version is refused and nothing is overwritten; both exports; and two tests for the tags box. |
+| 4. Hard part, by hand | **Pass.** Search is PostgreSQL's own (a stored `tsvector` column with a GIN index; the database's plan uses the index): "lemon" finds lemon and lemons, ranked, with the words marked; "run" finds "Running"; `lemon -tart` and a quoted phrase work; odd input (`'); drop table notes; --`, `(((`) is answered normally. **Two browser tabs on the same note: the first saves, the second is refused, told "Another tab saved a newer version. Your changes were not overwritten", and shown both versions side by side with "Keep editing / Use latest / Save my version".** 20 saves from the same version at the same moment: 1 saved, 19 refused. Restoring version 1 makes version 3; history keeps all three. One note exports as a .md file, all notes as a zip with one file each. |
+
+![Two tabs saved the same note: Quillstack shows both versions](builds/a4-notes-conflict.png)
+
+Smaller things, not counted:
+
+- Ranking counts how often and how densely the word appears, so a note with "lemon" three times in its body came
+  above a note with "Lemon" in its title. Ranked, as asked; a person might expect the title to win.
+
+### One more finding about Ghost Code, from this build
+
+- Ghost Code ended this build's answer with "⚠️ Not shown yet: a test that reaches a real database; a database in
+  the app's CI." **Both are there.** Its rule looks for a database address or driver named in the test file, and for
+  a `services:` block in the check file. This build's tests reach the database through the app's own code, and its
+  check starts Postgres with `docker run`. A false alarm, to be fixed.
+
 ### Fixes to Ghost Code made while the test ran
 
 The test runs Ghost Code as it was when the test started (`bd53448`), so none of these helped a build here.
@@ -223,5 +250,5 @@ The test runs Ghost Code as it was when the test started (`bd53448`), so none of
 | G1 to G5 | A "web game" was not recognised as a web build, so four of five game repositories never got Ghost Code's browser check | Merged (ghost-chat #346) |
 | A1 | The browser check was green on an error screen while the app's own server answered 5xx | Merged (#347) |
 | A1 | The browser check counted drag handles as buttons that do nothing | Merged (#347) |
-| A2 | The browser check counted a form's send button as dead when a required field was empty | In review (#348) |
-| A1, A2 | The second review did not run when a build ended on the "stop now" ending | In review (#348) |
+| A2 | The browser check counted a form's send button as dead when a required field was empty | Merged (#348) |
+| A1, A2, A3 | The second review did not run when a build ended on the "stop now" ending | Merged (#348) |
