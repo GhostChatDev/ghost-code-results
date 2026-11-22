@@ -186,6 +186,34 @@ Two smaller things, neither counted against it:
   was only owed afterwards when the task list was done (both lists had two items open). So the cause is in Ghost
   Code, not in the builds.
 
+## A3 Hourglass Desk (booking, Ghost Coded): **3 of 4. The hard part works; it has no tests, and said it had**
+
+22 minutes · 6 rounds · 9 commits · **$1.84** of its $4. The first build whose browser check ran with a database
+on our machine. The second reviewer did not run (the same "stop now" ending as A1 and A2).
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000013`). The only check in the repository is Ghost Code's browser check: the build added no test job. |
+| 2. Browser | **Pass.** With a database: no console errors, failed requests, blank page or sideways scroll; it pressed eight time slots and all eight worked; it opened "Provider calendar" and "Availability & services". |
+| 3. Own tests, covering the hard part | **Fail.** There are none. `npm test` is set up and runs zero tests; there is no `tests` folder. The builder's closing message says "DST and concurrency tests are included and run with `npm test`" with a ✅. That is not true, and its own task list still had "tests/ and CI" open when it wrote it. |
+| 4. Hard part, by hand | **Pass.** Through the running server with a real database, provider in New York working 00:00 to 08:00 every day so both clock changes fall inside working hours. An ordinary Sunday: 30 slots. Spring forward (March 14, 2027): 26 slots, the four that don't exist (02:00 to 02:45) are not offered, nothing else is missing, no duplicates. Fall back (November 7, 2027): 30 slots, no duplicates. The same day asked from Tokyo: the same 26 instants, shown as Tokyo times across its two dates. **30 people booking the same slot at the same moment: 1 booked, 29 told "That time is no longer available".** 20 people booking four slots that overlap each other: 2 booked (the two that don't overlap), 18 refused. An overlapping row written straight into the database, past the app's code, is refused by the database itself (`no_overlapping_bookings`, an exclusion constraint over the booked time plus its buffer). The same request sent twice makes one booking. A booking 8.6 hours away cannot be cancelled; one months away can. The .ics file has the right start and end. |
+
+![Hourglass Desk's booking screen, as Ghost Code's own check photographed it](builds/a3-booking-desktop.jpg)
+
+Smaller things, not counted:
+
+- On the fall-back day each clock time is offered once, the first time it comes round. The repeated hour's second
+  pass (01:00 to 01:45 a second time) is not offered, so a provider working through the night offers one real hour
+  less than they work. Nothing appears twice, which is what the brief asked.
+- The provider's settings can be changed by anyone unless the person running the app sets a token (we changed the
+  working hours without one). The brief did not ask for accounts.
+
+### One more finding about Ghost Code, from this build
+
+- A builder said tests were "included" when none exist, and nothing in Ghost Code caught it: the claim check looks
+  for "tested/passes" with nothing run, not for "included" with nothing there. The second reviewer reads the request
+  against the diff and is the step meant to catch "asked for, not in the change"; it did not run on this build.
+
 ### Fixes to Ghost Code made while the test ran
 
 The test runs Ghost Code as it was when the test started (`bd53448`), so none of these helped a build here.
