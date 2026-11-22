@@ -1,0 +1,57 @@
+[
+ {
+  "repo": "smogon_pokemon-showdown",
+  "step": "install try 1: npm install",
+  "command": "npm install",
+  "exit": 0,
+  "seconds": 87.4,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported\nnpm warn deprecated npmlog@6.0.2: This package is no longer supported.\nnpm warn deprecated @npmcli/move-file@1.1.2: This functionality has been moved to @npmcli/fs\nnpm warn deprecated are-we-there-yet@3.0.1: This package is no longer supported.\nnpm warn deprecated gauge@4.0.4: This package is no longer supported.\n\nadded 330 packages, and audited 331 packages in 1m\n\n60 packages are looking for funding\n  run `npm fund` for details\n\n25 vulnerabilities (3 low, 6 moderate, 15 high, 1 critical)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force\n\nRun `npm audit` for details.\n"
+ },
+ {
+  "repo": "smogon_pokemon-showdown",
+  "step": "npm run tsc",
+  "command": "npm run tsc",
+  "exit": 0,
+  "seconds": 7.8,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "\n> pokemon-showdown@0.11.11 tsc\n> tsc\n\n"
+ },
+ {
+  "repo": "smogon_pokemon-showdown",
+  "step": "npm run lint",
+  "command": "npm run lint",
+  "exit": 0,
+  "seconds": 30.6,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "\n> pokemon-showdown@0.11.11 lint\n> oxlint\n\n"
+ },
+ {
+  "repo": "smogon_pokemon-showdown",
+  "step": "npm test",
+  "command": "npm test",
+  "exit": 0,
+  "seconds": 49.7,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": ".........................................\n  ........................................................\n  .......,................................................\n  ........................................................\n  ................................................,,......\n  ................................,.......................\n  ........................................................\n  .,...........,.,.........................,..............\n  ........................................................\n  ........................................................\n  ........................................................\n  ........................................................\n  ............................,...........................\n  ........................................................\n  ........................................................\n  ..............,............................,............\n  ............................,.......................,...\n  ..........,..............,,.............................\n  ........................,.,.............................\n  ........................................................\n  ........................................................\n  ........................................................\n  ....................................................,,,,\n  ,.......................................,,..............\n  ........................................................\n  ........................................................\n  ........................................................\n  ........................................................\n  ........................................................\n  ..........................................,,............\n  ........\n\n  2571 passing (14s)\n  69 pending\n\n"
+ },
+ {
+  "repo": "smogon_pokemon-showdown",
+  "step": "npm run build",
+  "command": "npm run build",
+  "exit": 0,
+  "seconds": 2.6,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "\n> pokemon-showdown@0.11.11 build\n> node build\n\n"
+ }
+]

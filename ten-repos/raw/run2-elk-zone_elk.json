@@ -1,0 +1,57 @@
+[
+ {
+  "repo": "elk-zone_elk",
+  "step": "install try 1: pnpm install",
+  "command": "pnpm install",
+  "exit": 0,
+  "seconds": 16.2,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": ". postinstall: [INFO] Successfully set the pre-commit with command: npx nano-staged\n. postinstall: [INFO] Successfully set all git hooks\n. postinstall: |\n. postinstall: *  Types generated in .nuxt.\n. postinstall: Done\n. prepare$ node scripts/prepare-translation-status.ts && node scripts/prepare.ts\n. prepare: Comparing ar-EG... \u0627\u0644\u0639\u0631\u0628\u064a\u0629\n. prepare: Comparing ca-ES... Catal\u00e0\n. prepare: Comparing ca-valencia... Valenci\u00e0\n. prepare: Comparing ckb... \u06a9\u0648\u0631\u062f\u06cc\u06cc \u0646\u0627\u0648\u06d5\u0646\u062f\u06cc\n. prepare: Comparing cs-CZ... \u010cesky\n. prepare: Comparing cy... Cymraeg\n. prepare: Comparing de-DE... Deutsch\n. prepare: Comparing el-GR... \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac\n. prepare: Comparing en-CA... English (Canada)\n. prepare: Comparing en-GB... English (UK)\n. prepare: Comparing eo... Esperanto\n. prepare: Comparing es-419... Espa\u00f1ol (Latinoam\u00e9rica)\n. prepare: Comparing es-ES... Espa\u00f1ol (Espa\u00f1a)\n. prepare: Comparing eu-ES... Euskara\n. prepare: Comparing fa-IR... \u0641\u0627\u0631\u0633\u06cc\n. prepare: Comparing fi... Suomi\n. prepare: Comparing fr-FR... Fran\u00e7ais\n. prepare: Comparing gl-ES... Galego\n. prepare: Comparing he... \u05e2\u05d1\u05e8\u05d9\u05ea\n. prepare: Comparing hu-HU... Magyar\n. prepare: Comparing id-ID... Indonesia\n. prepare: Comparing it-IT... Italiano\n. prepare: Comparing ja-JP... \u65e5\u672c\u8a9e\n. prepare: Comparing ko-KR... \ud55c\uad6d\uc5b4\n. prepare: Comparing nl-NL... Nederlands\n. prepare: Comparing pl-PL... Polski\n. prepare: Comparing pt-BR... Portugu\u00eas (Brasil)\n. prepare: Comparing pt-PT... Portugu\u00eas (Portugal)\n. prepare: Comparing ru-RU... \u0420\u0443\u0441\u0441\u043a\u0438\u0439\n. prepare: Comparing sv... Svenska\n. prepare: Comparing th-TH... \u0e44\u0e17\u0e22\n. prepare: Comparing tl-PH... Tagalog\n. prepare: Comparing tr-TR... T\u00fcrk\u00e7e\n. prepare: Comparing uk-UA... \u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430\n. prepare: Comparing vi-VN... Ti\u1ebfng Vi\u1ec7t\n. prepare: Comparing zh-CN... \u7b80\u4f53\u4e2d\u6587\n. prepare: Comparing zh-TW... \u7e41\u9ad4\u4e2d\u6587\n. prepare: Done\nDone in 15.7s using pnpm v11.6.0\n"
+ },
+ {
+  "repo": "elk-zone_elk",
+  "step": "pnpm run typecheck",
+  "command": "pnpm run typecheck",
+  "exit": 0,
+  "seconds": 23.7,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": "$ nuxt typecheck\n"
+ },
+ {
+  "repo": "elk-zone_elk",
+  "step": "pnpm run lint",
+  "command": "pnpm run lint",
+  "exit": 0,
+  "seconds": 15.2,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": "$ eslint --cache .\n"
+ },
+ {
+  "repo": "elk-zone_elk",
+  "step": "pnpm run test",
+  "command": "pnpm run test",
+  "exit": 1,
+  "seconds": 15.1,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "failed",
+  "tail": "\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\nSerialized Error: { errno: -3008, code: 'ENOTFOUND', syscall: 'getaddrinfo', hostname: 'm.webtoo.ls' }\n\n\u23af\u23af\u23af\u23af Unhandled Rejection \u23af\u23af\u23af\u23af\u23af\nTypeError: fetch failed\nThis error originated in \"tests/unit/hashtag-suggestion.test.ts\" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.\nCaused by: Error: getaddrinfo ENOTFOUND m.webtoo.ls\n \u276f GetAddrInfoReqWrap.onlookupall [as oncomplete] node:dns:123:26\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\nSerialized Error: { errno: -3008, code: 'ENOTFOUND', syscall: 'getaddrinfo', hostname: 'm.webtoo.ls' }\n\n\u23af\u23af\u23af\u23af Unhandled Rejection \u23af\u23af\u23af\u23af\u23af\nTypeError: fetch failed\nThis error originated in \"tests/unit/permalinks.test.ts\" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.\nCaused by: Error: getaddrinfo ENOTFOUND m.webtoo.ls\n \u276f GetAddrInfoReqWrap.onlookupall [as oncomplete] node:dns:123:26\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\nSerialized Error: { errno: -3008, code: 'ENOTFOUND', syscall: 'getaddrinfo', hostname: 'm.webtoo.ls' }\n\n\u23af\u23af\u23af\u23af Unhandled Rejection \u23af\u23af\u23af\u23af\u23af\nTypeError: fetch failed\nThis error originated in \"tests/nuxt/html-to-text.test.ts\" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.\nCaused by: Error: getaddrinfo ENOTFOUND m.webtoo.ls\n \u276f GetAddrInfoReqWrap.onlookupall [as oncomplete] node:dns:123:26\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\nSerialized Error: { errno: -3008, code: 'ENOTFOUND', syscall: 'getaddrinfo', hostname: 'm.webtoo.ls' }\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n\n Test Files  7 passed (7)\n      Tests  53 passed (53)\n     Errors  7 errors\n   Start at  06:32:48\n   Duration  10.36s (transform 15.97s, setup 19.59s, import 2.32s, tests 357ms, environment 3.36s)\n\n[ELIFECYCLE] Test failed. See above for more details.\n"
+ },
+ {
+  "repo": "elk-zone_elk",
+  "step": "pnpm run build",
+  "command": "pnpm run build",
+  "exit": 1,
+  "seconds": 56.0,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "failed",
+  "tail": "loudflare-kv-http] Missing required option `accountId`.\n  at createRequiredError (node_modules/.pnpm/unstorage@1.17.5_@upstash+redis@1.35.4_@vercel+kv@3.0.0_db0@0.3.4_better-sqlite3@12.4.1__idb-keyval@6.2.2_ioredis@5.11.1/node_modules/unstorage/drivers/utils/index.mjs:27:10)\n  at node_modules/.pnpm/unstorage@1.17.5_@upstash+redis@1.35.4_@vercel+kv@3.0.0_db0@0.3.4_better-sqlite3@12.4.1__idb-keyval@6.2.2_ioredis@5.11.1/node_modules/unstorage/drivers/cloudflare-kv-http.mjs:11:11\n  at node_modules/.cache/nuxt/.nuxt/prerender/chunks/nitro/nitro.mjs:2817:37\n  at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n  at async node:internal/modules/esm/loader:647:26\n  at async prerender (node_modules/.pnpm/nitropack@2.13.4_@upstash+redis@1.35.4_@vercel+kv@3.0.0_better-sqlite3@12.4.1_idb-keyva_9b000f23c807745fdecdb0fc1f8b8b26/node_modules/nitropack/dist/core/index.mjs:2019:44)\n  at async Array.<anonymous> (node_modules/.pnpm/@nuxt+nitro-server@4.4.7_@babel+plugin-syntax-typescript@7.29.7_@babel+core@7.29.0__@up_4130e1036e95c5e6e35694994ac53e50/node_modules/@nuxt/nitro-server/dist/index.mjs:892:4)\n  at async build (node_modules/.pnpm/nuxt@4.4.7_@babel+plugin-syntax-jsx@7.29.7_@babel+core@7.29.0__@babel+plugin-syntax-typ_e8b640e1caaf3efe6d0479dcd7b77cdf/node_modules/nuxt/dist/index.mjs:8597:3)\n  at async Object.run (node_modules/.pnpm/@nuxt+cli@3.35.2_@nuxt+schema@4.4.7_cac@6.7.14_magicast@0.5.5/node_modules/@nuxt/cli/dist/build-DWst0L5A.mjs:92:4)\n  at async runCommand (node_modules/.pnpm/citty@0.2.2/node_modules/citty/dist/index.mjs:228:47)\n  at async runCommand (node_modules/.pnpm/citty@0.2.2/node_modules/citty/dist/index.mjs:217:5)\n  at async runMain (node_modules/.pnpm/citty@0.2.2/node_modules/citty/dist/index.mjs:394:10) \n\n[ELIFECYCLE] Command failed with exit code 1.\n"
+ }
+]

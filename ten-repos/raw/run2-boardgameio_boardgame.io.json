@@ -1,0 +1,46 @@
+[
+ {
+  "repo": "boardgameio_boardgame.io",
+  "step": "install try 1: pnpm install",
+  "command": "pnpm install",
+  "exit": 0,
+  "seconds": 3.9,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "lve 16.0.3\n+ @rollup/plugin-replace 6.0.3\n+ @rollup/plugin-terser 1.0.0\n+ @testing-library/jest-dom 7.0.0\n+ @testing-library/react 16.3.2\n+ @testing-library/svelte 5.4.2\n+ @types/cors 2.8.19\n+ @types/jest 30.0.0\n+ @types/js-cookie 3.0.6\n+ @types/koa__cors 5.0.1\n+ @types/node 26.1.1\n+ @types/react 19.2.17\n+ @types/react-dom 19.2.3\n+ @types/supertest 7.2.1\n+ @typescript-eslint/eslint-plugin 8.65.0\n+ @typescript-eslint/parser 8.65.0\n+ babel-plugin-module-resolver 5.0.3\n+ benchmark 2.1.4\n+ cross-env 10.1.0\n+ docsify-cli 5.0.0\n+ eslint 9.39.5\n+ eslint-config-prettier 10.1.8\n+ eslint-plugin-jest 29.16.0\n+ eslint-plugin-prettier 5.5.6\n+ eslint-plugin-react 7.37.5\n+ eslint-plugin-unicorn 56.0.1\n+ globals 17.8.0\n+ husky 9.1.7\n+ identity-obj-proxy 3.0.0\n+ jest 30.4.1\n+ jest-date-mock 1.0.10\n+ jest-environment-jsdom 30.4.1\n+ lint-staged 17.2.0\n+ node-persist 4.0.4\n+ nodemon 3.1.14\n+ npm-run-all 4.1.5\n+ prettier 3.9.6\n+ publint 0.3.22\n+ raf 3.4.1\n+ react 19.2.8\n+ react-dom 19.2.8\n+ rollup 4.62.2\n+ rollup-plugin-svelte 7.2.3\n+ rollup-plugin-typescript2 0.37.0\n+ shelljs 0.10.0\n+ supertest 7.2.2\n+ svelte 5.56.8\n+ tempy 1.0.1\n+ ts-jest 29.4.12\n+ typescript 6.0.3\n\n\u256d Warning \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502                                                                              \u2502\n\u2502   Ignored build scripts: core-js, docsify, unrs-resolver.                    \u2502\n\u2502   Run \"pnpm approve-builds\" to pick which dependencies should be allowed     \u2502\n\u2502   to run scripts.                                                            \u2502\n\u2502                                                                              \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n\n. prepare$ husky\n. prepare: Done\nDone in 3.3s using pnpm v10.16.0\n"
+ },
+ {
+  "repo": "boardgameio_boardgame.io",
+  "step": "pnpm run lint",
+  "command": "pnpm run lint",
+  "exit": 0,
+  "seconds": 9.9,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "\n> boardgame.io@0.50.2 lint /home/user/tenrun/work/boardgameio_boardgame.io\n> eslint .\n\n"
+ },
+ {
+  "repo": "boardgameio_boardgame.io",
+  "step": "pnpm run test",
+  "command": "pnpm run test",
+  "exit": 0,
+  "seconds": 23.8,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "\n> boardgame.io@0.50.2 pretest /home/user/tenrun/work/boardgameio_boardgame.io\n> pnpm run lint\n\n\n> boardgame.io@0.50.2 lint /home/user/tenrun/work/boardgameio_boardgame.io\n> eslint .\n\n\n> boardgame.io@0.50.2 test /home/user/tenrun/work/boardgameio_boardgame.io\n> cross-env NODE_ENV=test jest\n\n\nTest Suites: 43 passed, 43 total\nTests:       1 todo, 910 passed, 911 total\nSnapshots:   1 passed, 1 total\nTime:        13.136 s, estimated 20 s\nRan all test suites.\n"
+ },
+ {
+  "repo": "boardgameio_boardgame.io",
+  "step": "pnpm run build",
+  "command": "pnpm run build",
+  "exit": 0,
+  "seconds": 30.2,
+  "limit": 240,
+  "node": "node22",
+  "verdict": "passed",
+  "tail": "\n> boardgame.io@0.50.2 build /home/user/tenrun/work/boardgameio_boardgame.io\n> cross-env BABEL_ENV=rollup rollup --config rollup.config.js  --silent\n\nbabelHelpers: 'bundled' option was used by default. It is recommended to configure this option explicitly, read more here: https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers\nbabelHelpers: 'bundled' option was used by default. It is recommended to configure this option explicitly, read more here: https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers\nbabelHelpers: 'bundled' option was used by default. It is recommended to configure this option explicitly, read more here: https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers\n(node:6247) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/user/tenrun/work/boardgameio_boardgame.io/rollup.config.js is not specified and it doesn't parse as CommonJS.\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\nTo eliminate this warning, add \"type\": \"module\" to /home/user/tenrun/work/boardgameio_boardgame.io/package.json.\n(Use `node --trace-warnings ...` to show where the warning was created)\nDestination: dist/boardgameio.min.js\nBundle Size: 548.79 KB\nMinified Size: 156.03 KB\nGzipped Size: 52.16 KB\nBrotli size: 46.25 KB\n"
+ }
+]

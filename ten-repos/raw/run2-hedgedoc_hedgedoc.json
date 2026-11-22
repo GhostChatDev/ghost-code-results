@@ -1,0 +1,46 @@
+[
+ {
+  "repo": "hedgedoc_hedgedoc",
+  "step": "install try 1: pnpm install",
+  "command": "pnpm install",
+  "exit": 0,
+  "seconds": 14.2,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": "on@^11.0.0: found 10.4.22\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer @nestjs/websockets@^11.0.0: found 10.4.22\n\u251c\u2500\u252c @nestjs/platform-fastify 11.2.3\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer @nestjs/common@^11.0.0: found 10.4.22\n\u251c\u2500\u252c @nestjs/swagger 8.1.1\n\u2502 \u251c\u2500\u2500 \u2715 unmet peer @nestjs/core@\"^9.0.0 || ^10.0.0\": found 11.1.18\n\u2502 \u251c\u2500\u2500 \u2715 unmet peer @fastify/static@\"^6.0.0 || ^7.0.0\": found 10.1.3\n\u2502 \u2514\u2500\u252c @nestjs/mapped-types 2.0.6\n\u2502   \u2514\u2500\u2500 \u2715 unmet peer class-validator@\"^0.13.0 || ^0.14.0\": found 0.15.1\n\u251c\u2500\u252c @nestjs/websockets 10.4.22\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer @nestjs/core@^10.0.0: found 11.1.18\n\u251c\u2500\u252c @nestjs/testing 10.4.22\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer @nestjs/core@^10.0.0: found 11.1.18\n\u251c\u2500\u252c @nestjs/event-emitter 2.1.1\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer @nestjs/core@\"^8.0.0 || ^9.0.0 || ^10.0.0\": found 11.1.18\n\u2514\u2500\u252c @nestjs/schedule 4.1.2\n  \u2514\u2500\u2500 \u2715 unmet peer @nestjs/core@\"^8.0.0 || ^9.0.0 || ^10.0.0\": found 11.1.18\n\nfrontend\n\u251c\u2500\u252c vega-lite 6.4.3\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer vega@^6.0.0: found 5.30.0\n\u251c\u2500\u252c @testing-library/react-hooks 8.0.1\n\u2502 \u251c\u2500\u2500 \u2715 unmet peer react@\"^16.9.0 || ^17.0.0\": found 18.3.1\n\u2502 \u251c\u2500\u2500 \u2715 unmet peer react-dom@\"^16.9.0 || ^17.0.0\": found 18.3.1\n\u2502 \u2514\u2500\u2500 \u2715 unmet peer react-test-renderer@\"^16.9.0 || ^17.0.0\": found 18.3.1\n\u2514\u2500\u252c react-diff-viewer 3.1.1\n  \u251c\u2500\u2500 \u2715 unmet peer react@\"^15.3.0 || ^16.0.0\": found 18.3.1\n  \u2514\u2500\u2500 \u2715 unmet peer react-dom@\"^15.3.0 || ^16.0.0\": found 18.3.1\n\nPackages: +1912\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 1815, reused 333, downloaded 0, added 0\nProgress: resolved 1815, reused 1679, downloaded 0, added 6\nProgress: resolved 1815, reused 1679, downloaded 0, added 478\nProgress: resolved 1815, reused 1679, downloaded 0, added 1375\nProgress: resolved 1815, reused 1679, downloaded 0, added 1912\nProgress: resolved 1815, reused 1679, downloaded 0, added 1912, done\nDone in 13.9s using pnpm v10.28.0\n"
+ },
+ {
+  "repo": "hedgedoc_hedgedoc",
+  "step": "pnpm run lint",
+  "command": "pnpm run lint",
+  "exit": 0,
+  "seconds": 19.2,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": "Finished in 1.5s on 17 files with 110 rules using 4 threads.\n@hedgedoc/markdown-it-plugins:lint: Found 0 warnings and 0 errors.\n@hedgedoc/markdown-it-plugins:lint: Finished in 1.2s on 13 files with 110 rules using 4 threads.\n@hedgedoc/commons:lint: Found 0 warnings and 0 errors.\n@hedgedoc/commons:lint: Finished in 1.9s on 126 files with 110 rules using 4 threads.\n@hedgedoc/docs:lint: Summary: 0 issues in 0 files\n@hedgedoc/markdown-it-plugins:build: \ud83e\udd94 > Compile to ESM..\n@hedgedoc/database:build: \ud83e\udd94 > Compile to ESM..\n@hedgedoc/markdown-it-plugins:build: \ud83e\udd94 > Fix CJS package.json..\n@hedgedoc/markdown-it-plugins:build: \ud83e\udd94 > Fix ESM package.json..\n@hedgedoc/markdown-it-plugins:build: \ud83e\udd94 > Done!\n@hedgedoc/database:build: \ud83e\udd94 > Fix CJS package.json..\n@hedgedoc/database:build: \ud83e\udd94 > Fix ESM package.json..\n@hedgedoc/database:build: \ud83e\udd94 > Done!\n@hedgedoc/backend:lint: cache miss, executing fb1fc5cec2b73c63\n@hedgedoc/backend:lint: \n@hedgedoc/backend:lint: > @hedgedoc/backend@2.0.0-alpha.3 lint /home/user/tenrun/work/hedgedoc_hedgedoc/backend\n@hedgedoc/backend:lint: > ../node_modules/.bin/oxlint src test\n@hedgedoc/backend:lint: \n@hedgedoc/frontend:lint: cache miss, executing e17e9e33b6dfce9c\n@hedgedoc/frontend:lint: \n@hedgedoc/frontend:lint: > @hedgedoc/frontend@2.0.0-alpha.3 lint /home/user/tenrun/work/hedgedoc_hedgedoc/frontend\n@hedgedoc/frontend:lint: > ../node_modules/.bin/oxlint src oxlint-rules\n@hedgedoc/frontend:lint: \n@hedgedoc/backend:lint: Found 0 warnings and 0 errors.\n@hedgedoc/backend:lint: Finished in 3.9s on 269 files with 111 rules using 4 threads.\n@hedgedoc/frontend:lint: Found 0 warnings and 0 errors.\n@hedgedoc/frontend:lint: Finished in 4.6s on 931 files with 182 rules using 4 threads.\n\n Tasks:    11 successful, 11 total\nCached:    0 cached, 11 total\n  Time:    18.628s \n\n"
+ },
+ {
+  "repo": "hedgedoc_hedgedoc",
+  "step": "pnpm run test",
+  "command": "pnpm run test",
+  "exit": 0,
+  "seconds": 28.4,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": "c/components/editor-page/editor-pane/tool-bar/table-picker/create-markdown-table.spec.ts\n@hedgedoc/frontend:test: PASS src/components/global-dialogs/motd-modal/fetch-motd.spec.ts\n@hedgedoc/frontend:test: PASS src/components/editor-page/sidebar/specific-sidebar-entries/revisions-sidebar-entry/revisions-modal/invert-unified-patch.spec.ts\n@hedgedoc/frontend:test: PASS src/components/markdown-renderer/extensions/_base-classes/code-block-markdown-extension/find-language-by-code-block-name.spec.ts\n@hedgedoc/frontend:test: PASS src/redux/print-mode/slice.spec.ts\n@hedgedoc/frontend:test: PASS src/components/common/number-range/number-range.spec.ts\n@hedgedoc/frontend:test: PASS src/components/editor-page/synced-scroll/cursor-line-scroll-state.spec.ts\n@hedgedoc/frontend:test: PASS src/redux/note-details/calculate-line-start-indexes.spec.ts\n@hedgedoc/frontend:test: PASS src/components/editor-page/editor-pane/tool-bar/formatters/replace-selection.spec.ts\n@hedgedoc/frontend:test: PASS src/components/markdown-renderer/extensions/_base-classes/code-block-markdown-extension/code-block-parameters.spec.ts\n@hedgedoc/frontend:test: PASS src/api/common/api-response.spec.ts\n@hedgedoc/frontend:test: PASS src/utils/update-objects.spec.ts\n@hedgedoc/frontend:test: PASS src/components/editor-page/sidebar/specific-sidebar-entries/export-sidebar-menu/entries/export-gist-sidebar-entry/validate-token.spec.ts\n@hedgedoc/frontend:test: \n@hedgedoc/frontend:test: Test Suites: 128 passed, 128 total\n@hedgedoc/frontend:test: Tests:       582 passed, 582 total\n@hedgedoc/frontend:test: Snapshots:   191 passed, 191 total\n@hedgedoc/frontend:test: Time:        13.423 s, estimated 15 s\n@hedgedoc/frontend:test: Ran all test suites.\n\n Tasks:    9 successful, 9 total\nCached:    4 cached, 9 total\n  Time:    27.779s \n\n"
+ },
+ {
+  "repo": "hedgedoc_hedgedoc",
+  "step": "pnpm run build",
+  "command": "pnpm run build",
+  "exit": 0,
+  "seconds": 114.8,
+  "limit": 240,
+  "node": "node24",
+  "verdict": "passed",
+  "tail": "\n@hedgedoc/frontend:build: \u251c \u0192 /n/[noteId]                          184 kB          812 kB\n@hedgedoc/frontend:build: \u251c \u0192 /new                                 3.21 kB         283 kB\n@hedgedoc/frontend:build: \u251c \u0192 /new-user                            3.67 kB         305 kB\n@hedgedoc/frontend:build: \u251c \u0192 /p/[noteId]                          10.4 kB         283 kB\n@hedgedoc/frontend:build: \u251c \u0192 /preferences                         160 B           117 kB\n@hedgedoc/frontend:build: \u251c \u0192 /preferences/[tab]                   16.9 kB         325 kB\n@hedgedoc/frontend:build: \u251c \u0192 /register                            5.76 kB         691 kB\n@hedgedoc/frontend:build: \u251c \u0192 /render                              22.3 kB         639 kB\n@hedgedoc/frontend:build: \u2514 \u0192 /s/[noteId]                          6.44 kB         321 kB\n@hedgedoc/frontend:build: + First Load JS shared by all            117 kB\n@hedgedoc/frontend:build:   \u251c chunks/22364-f7f102f66856e428.js     32 kB\n@hedgedoc/frontend:build:   \u251c chunks/618f8807-1af31feb2b54c866.js  53.7 kB\n@hedgedoc/frontend:build:   \u251c chunks/webpack-70b660f5f849615a.js   31.2 kB\n@hedgedoc/frontend:build:   \u2514 other shared chunks (total)          279 B\n@hedgedoc/frontend:build: \n@hedgedoc/frontend:build: \n@hedgedoc/frontend:build: \u25cb  (Static)   prerendered as static content\n@hedgedoc/frontend:build: \u0192  (Dynamic)  server-rendered on demand\n@hedgedoc/frontend:build: \n@hedgedoc/frontend:build: \ud83e\udd94 > Bundling\n@hedgedoc/frontend:build: \ud83e\udd94 > Remove public directory because this is a production build\n@hedgedoc/frontend:build: \ud83e\udd94 > Done! You can run the build by going into the dist directory and executing `node frontend/server.js`\n@hedgedoc/frontend:build: \ud83e\udd94 > Moving Mock API files back\n\n Tasks:    6 successful, 6 total\nCached:    4 cached, 6 total\n  Time:    1m53.455s \n\n"
+ }
+]
