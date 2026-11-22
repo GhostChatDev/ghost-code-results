@@ -437,3 +437,23 @@ often only reads the checks (attempt 22's did). It now asks whether the *task* h
 and goes out in the next pull request. It was live with this fault for about an hour.
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 23: $19.52.
+
+## Attempt 24: the second reviewer in the loop, second try (rules written before it starts)
+
+November 22, 2026. Same rules as attempts 16 to 23: the same prompt, the same Phase 1 app, the same four-item pass
+line and the same judging, **$5 for the attempt** from the real bill. The test machine's database and Docker were
+checked as answering before the start. Published either way.
+
+**Ghost Code under test:** main as of #329, plus the fix found in attempt 23 (the reviewer counts the task's
+commits, not the round's; pull request #330, in its check as this is written). Commit `68398c6`.
+
+**The questions are attempt 23's, which it could not answer:**
+1. Did the review run (yes or no), at which round, and how many points did it raise?
+2. Of those points, how many did the builder act on (a commit that changes the named file) and how many did it
+   answer in words only?
+3. The four items, as always.
+
+**Said beforehand:** the review should run this time if the build reaches "done on green checks". The stop that
+ended attempt 23 (a change to sign-in waits for a person) can end this one the same way; we have not changed it,
+and will not approve it on the builder's behalf. If it does, that is the result. A pass on all four items would
+surprise us.
