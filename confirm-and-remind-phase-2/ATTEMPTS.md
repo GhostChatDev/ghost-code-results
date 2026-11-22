@@ -315,3 +315,33 @@ ended the run.
 
 Attempts 19 and 20 were each ended early by a fault in Ghost Code that was added the same day. This is the first
 run with both fixed. Judged on the four items, not on the total spent.
+
+**Attempt 21 result: did not pass (1 of 4). It ran to its own end for the first time since attempt 18, but on a
+green that our test machine should not have given.**
+31.2 minutes · 9 rounds · 123 steps · 24 commits · **$2.83** of its $5, on a healthy machine.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Passes as our machine measures it:** the final commit's build, type check, 62 tests and browser check passed, and the four database change files install on a real Postgres with rows in the tables. **But see the note below:** the build's own second check job fails when run by hand. |
+| 2. Our review test, unchanged | **3 of 4 pass** ([adapter](tests/review-adapter.attempt21.ts)). The fourth, "one tap, one reminder", fails with **no reminder at all**: a plain Confirm is refused with "Check the task and time zone". The Confirm button only sends a title when the person has tapped Edit first, and both the in-memory code and the database function refuse a confirm without one. So in this build, Confirm does not work unless you edit first. |
+| 3. A real save read back from a real database | **Fails: written but never shown.** The build has the right test (`tests/phase2-data-layer.ts`: save a note twice through its own data code, read one back), in a second check job with a real Postgres. That job cannot pass: its own setup step inserts a profile that the database already created by itself (a trigger on new users), and stops on "duplicate key". Run by hand, statement by statement as the workflow would, it stops there. |
+| 4. Money comes back after a crash | **Fails: written but never shown.** The recovery is in the code (claiming a job releases an expired reservation first) and `tests/phase2-postgres.sql` has the right case (a worker that dies after reserving). The file stops at its 12th line on the same duplicate profile, before any case runs. |
+
+**The questions for this run** (does it keep going past a round that runs out of steps, and does it stop once the
+list is done and green?): yes to both. It went through eight round endings and stopped at round 9 with its task
+list done and its last check green, with no commits after that check. Both faults that ended attempts 19 and 20 are
+gone.
+
+**The note on item 1, and what our machine got wrong.** Our stand-in for GitHub runs a build's install, type check,
+tests, build and browser check. It does not run a second job that starts its own database containers, and it
+reported the whole check as passed. On real GitHub that job would have been red, and Ghost Code would have gone on
+fixing it. Here it was told "passed", so its final answer says "real-Postgres data-layer tests also passed", which
+nothing showed. That sentence is our machine's fault as much as the build's. The fix is on our side: the stand-in
+must run every job of a workflow, or report the ones it cannot run as not run. Until then a green from it means
+"the first job is green".
+
+**One thing in the adapter to know about.** This build runs no AI job until the person has turned AI on in
+Settings, which records consent. The cases' setup writes `ai_enabled: true` straight into the table. The adapter
+turns AI on the way the app's own Settings route does (`updateProfile`), and nothing else; it says so at its top.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 21: $16.88.
