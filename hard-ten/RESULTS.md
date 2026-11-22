@@ -1,7 +1,59 @@
 # Hard ten: results
 
-Rules, written before the first build: [RULES.md](RULES.md). Each build's final files are in [builds/](builds/).
-Running total of the test is kept at the bottom.
+## The result: 6 of 10 passed all four points
+
+November 22, 2026. Ten builds from empty repositories, one task each, judged by the [rules written beforehand](RULES.md).
+The test's bill: **$18.41** of the $42 allowed; no build reached its $4 limit (the dearest was $3.06).
+
+| # | Build | Checks | Browser | Own tests | Hard part by hand | Result | Cost |
+|---|---|---|---|---|---|---|---|
+| G1 | Lantern Keep, tower defense | ✅ | ✅ | ✅ | ✅ | **Passed** | $2.08 |
+| G2 | Moss & Copper, platformer | ✅ | ✅ | ✅ | ✅ | **Passed** | $1.46 |
+| G3 | Ashen Stair, roguelike | ✅ | ✅ | ✅ | ✅ | **Passed** | $1.74 |
+| G4 | Tidepool Tiles, match-3 | ✅ | ✅ | ✅ | ✅ | **Passed** | $1.35 |
+| G5 | Static Bloom, arena shooter | ✅ | ✅ | ✅ | ✅ | **Passed** | $2.25 |
+| A1 | Corkline, kanban | ✅ | ❌ | ✅ | ✅ | 3 of 4 | $1.28 |
+| A2 | Evenstep, shared expenses | ✅ | ❌ | ✅ | ✅ | 3 of 4 | $1.91 |
+| A3 | Hourglass Desk, booking | ✅ | ✅ | ❌ | ✅ | 3 of 4 | $1.84 |
+| A4 | Quillstack, notes | ✅ | ✅ | ✅ | ✅ | **Passed** | $1.30 |
+| A5 | Tallyroom, point of sale | ✅ | ✅ | ❌ | ✅ | 3 of 4, unfinished | $3.06 |
+
+**Every one of the ten got its named hard part right when we tried it by hand.** That is the column we expected to
+be the worst.
+
+What the four misses were:
+
+- **A1 and A2 (browser):** mostly our own tools. Our test machine ran their browser check without a database, and
+  Ghost Code's check then raised false alarms when we ran it properly (drag handles and a required form field
+  counted as dead buttons). A2 has nothing wrong that we found. A1 has one real flaw: a status label built as a
+  button that does nothing.
+- **A3 (tests):** real. It has no tests, and its closing message says it has.
+- **A5 (tests, and unfinished):** real. 4 of its 11 tests fail, and it ran out of steps with the report page, the
+  receipt and the styling not committed.
+
+### Against what we said beforehand
+
+| We said | What happened |
+|---|---|
+| The apps will do worse than the games | **Right.** Games 5 of 5, apps 1 of 5. |
+| Most games will miss at least one named hard part | **Wrong.** None did. |
+| A pass on more than five of ten would surprise us | **It did:** six. |
+
+### What we could not check
+
+No phone was tried. Nothing was played for fun: a game that passes here is correct, not necessarily good. Our test
+machine is a stand-in for GitHub, and for builds 6 and 7 it ran the browser check without a database (our fault,
+said in those two results). The second review ran on six builds (the five games and A4); on A1 to A3 a fault in
+Ghost Code skipped it (fixed since), and A5 never reached an ending.
+
+### What the test changed in Ghost Code
+
+Nine gaps were found in Ghost Code itself and six are fixed (table at the end of this page). The test ran Ghost
+Code as it was when the test started, so none of those fixes helped a build here.
+
+---
+
+Each build's final files are in [builds/](builds/). The ten results follow in the order they ran.
 
 ## G1 Lantern Keep (tower defense, Ghost Gamer): **passed, 4 of 4**
 
@@ -225,7 +277,7 @@ in the tags box could not be deleted), and the builder fixed it and added a test
 | 1. Checks | **Pass.** Last check passed on the final commit (`c000010`): the app's own build-and-test job, with a Postgres it starts itself, and Ghost Code's browser check. |
 | 2. Browser | **Pass.** With a database: no console errors, failed requests, blank page or sideways scroll; "+ New note", "Save note" and "Version history" worked; what it typed was kept after a refresh and seen from a second browser. One button ("Pin note") could not be pressed by the check, which is a warning, not a failure. |
 | 3. Own tests, covering the hard part | **Pass.** 6 of 6 against a real Postgres: ranked search with highlighted words; every save keeps a version and a restore makes a new one; a save over a newer version is refused and nothing is overwritten; both exports; and two tests for the tags box. |
-| 4. Hard part, by hand | **Pass.** Search is PostgreSQL's own (a stored `tsvector` column with a GIN index; the database's plan uses the index): "lemon" finds lemon and lemons, ranked, with the words marked; "run" finds "Running"; `lemon -tart` and a quoted phrase work; odd input (`'); drop table notes; --`, `(((`) is answered normally. **Two browser tabs on the same note: the first saves, the second is refused, told "Another tab saved a newer version. Your changes were not overwritten", and shown both versions side by side with "Keep editing / Use latest / Save my version".** 20 saves from the same version at the same moment: 1 saved, 19 refused. Restoring version 1 makes version 3; history keeps all three. One note exports as a .md file, all notes as a zip with one file each. |
+| 4. Hard part, by hand | **Pass.** Search is PostgreSQL's own (a stored `tsvector` column with a GIN index, which the database's plan uses when told not to read the whole table): "lemon" finds lemon and lemons, ranked, with the words marked; "run" finds "Running"; `lemon -tart` and a quoted phrase work; odd input (`'); drop table notes; --`, `(((`) is answered normally. **Two browser tabs on the same note: the first saves, the second is refused, told "Another tab saved a newer version. Your changes were not overwritten", and shown both versions side by side with "Keep editing / Use latest / Save my version".** 20 saves from the same version at the same moment: 1 saved, 19 refused. Restoring version 1 makes version 3; history keeps all three. One note exports as a .md file, all notes as a zip with one file each. |
 
 ![Two tabs saved the same note: Quillstack shows both versions](builds/a4-notes-conflict.png)
 
@@ -241,6 +293,34 @@ Smaller things, not counted:
   a `services:` block in the check file. This build's tests reach the database through the app's own code, and its
   check starts Postgres with `docker run`. A false alarm, to be fixed.
 
+## A5 Tallyroom (point of sale, Ghost Coded): **3 of 4, and unfinished. The money and stock logic is exact; the app around it is not done**
+
+27 minutes · 9 rounds · 29 commits (8 of them Ghost Code undoing a fix that didn't lower the error count) · **$3.06**
+of its $4, the most of any build. It ended **paused at 150 steps**, the most one task can take on its own, with two
+of its six list items open. A pause waits for a person, and by this test's rules nobody answers, so it is judged as
+it stood. No second review (it never reached an ending).
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000033`). The only check is Ghost Code's browser check: the build added no test job, so nothing ever ran its tests. |
+| 2. Browser | **Pass, with a warning that should have been a failure.** No uncaught errors, no blank page, no sideways scroll. But the app's own menu has "Reports", and that page does not exist (404); every "receipt" link is a 404 too. The check lists those as warnings. |
+| 3. Own tests, covering the hard part | **Fail.** 7 of 11 pass. Three of the four database tests fail with "Request key is required": the sale function gained a required key after the tests were written, and they were never run again. One money test expects a tax of 1869 cents where the right answer, and the code's, is 671. The tests are about the right things (totals, the ledger, a failed sale); they are just not true. |
+| 4. Hard part, by hand | **Pass.** Stock is a view over an append-only ledger: there is no stock column to edit, and the database refuses to change or delete a movement. A sale of 3 + 7 + 2 items with a $10.01 discount: subtotal 6565, tax 426, total 5990 cents, identical to our own whole-cent arithmetic; the line discounts add up to the discount and the line totals to the total. A sale whose second line asks for more than there is: refused, **0** stock movements and **0** sales left behind. 15 tills selling the last 3 units at the same moment: 3 sold, 12 refused, 0 left. The same sale sent twice is one sale. Refund one item, then the rest: 5990 of 5990 cents and all 426 of tax returned, stock back to what it was; a third refund is refused. |
+
+What is missing or unfinished on the final commit: the daily report page and the printable receipt (both in the
+brief, both marked done on the builder's list, neither committed), the styling (the screen below is the app with
+no stylesheet), and its setup README.
+
+![Tallyroom's sale screen, unstyled, as Ghost Code's own check photographed it](builds/a5-pos-desktop.jpg)
+
+### Two more findings about Ghost Code, from this build
+
+- The browser check passes an app whose own menu leads to a page that does not exist. A 404 on the app's own
+  link should fail.
+- Nothing runs an app's own tests unless the builder adds a check for them. Two of five app builds (A3, A5) never
+  did: one had no tests and said it had, one had tests that were wrong. Ghost Code's own check should run
+  `npm test` when the app has one.
+
 ### Fixes to Ghost Code made while the test ran
 
 The test runs Ghost Code as it was when the test started (`bd53448`), so none of these helped a build here.
@@ -252,3 +332,7 @@ The test runs Ghost Code as it was when the test started (`bd53448`), so none of
 | A1 | The browser check counted drag handles as buttons that do nothing | Merged (#347) |
 | A2 | The browser check counted a form's send button as dead when a required field was empty | Merged (#348) |
 | A1, A2, A3 | The second review did not run when a build ended on the "stop now" ending | Merged (#348) |
+| A4 | "Not shown yet: a test that reaches a real database" said of a build that had four | Merged (#350) |
+| A5 | The browser check passes when the app's own menu leads to a 404 | Not fixed yet |
+| A3, A5 | Nothing runs an app's own tests unless the builder adds a check for them | Not fixed yet |
+| A3 | A builder said tests were "included" when none exist | Not fixed yet (the second review, now run on that ending, is the step meant to catch it; untested) |
