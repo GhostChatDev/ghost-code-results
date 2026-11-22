@@ -138,3 +138,46 @@ part asks, and the parts of this result that are wrong are mostly ours.
 - Ghost Code's browser check passes when the app's own server answers 5xx on its first screen. It should fail.
 - Ghost Code's browser check counts a drag handle as "a button that does nothing". It should not press handles.
 
+
+## A2 Evenstep (shared expenses, Ghost Coded): **3 of 4 by the letter. We found nothing wrong with the app; the browser item fails on a false alarm in our check**
+
+19 minutes · 6 rounds · 13 commits (three of them Ghost Code undoing a fix that didn't lower the error count) ·
+**$1.91** of its $4. The second reviewer did not run, for the same reason as A1: the builder ended with two of its
+own list items still open.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000018`). The test job failed four times on the way (the test database had no tables, then a cleanup order) and passed on the fifth. |
+| 2. Browser | **Not passed.** During the build it was green, but on an error screen (our machine gave it no database, as with A1). Run again by us with a database it fails on one thing, and that thing is a false alarm. See below. |
+| 3. Own tests, covering the hard part | **Pass.** 6 of 6, with a real Postgres: equal, exact and percentage splits that keep every cent; conversion at a rate; the fewest payments (including a case where the obvious greedy answer is one payment too many); unbalanced input refused; the same expense sent twice stored once. |
+| 4. Hard part, by hand | **Pass.** Through the running server with a real database: $10.00 three ways is stored as 334 + 333 + 333 cents; 5,000 random equal splits never lost or invented a cent; percentages that don't add to 100 and exact shares that don't add to the total are refused; an amount with more than two decimals is refused (no floats anywhere: amounts are whole cents as big integers, rates are a fraction); EUR 7.00 at 1.0837 is stored as 759 cents and refused until the group enters a rate; the same expense sent 40 times at once is stored once; balances always sum to zero. Settle-up against our own exhaustive answer on 400 random groups of 3 to 8 people: **0** left a balance, **0** used more payments than the fewest possible. In a real browser: record a suggested payment and the suggestion disappears; the CSV export has every expense; no console errors. |
+
+**Item 2, what happened.**
+
+1. *Our test machine's fault again* (the last build affected). No database during the build, so the picture the
+   builder was shown is "Unable to load your ledger" ([as checked](builds/a2-splitter-as-checked.jpg)). The check
+   was green on it. This time the builder did not call it done: its closing message says "The browser screenshot,
+   however, showed a database error, so the end-to-end experience is not yet verified", with two ❌ on its own list.
+2. *Run again by us with a database*, Ghost Code's check (both as it was and with the two fixes from A1) **fails**
+   with one line: "this button does nothing when pressed: 'Create group'". It pressed "Create group" with the name
+   box empty. The box is a required field, so the browser itself shows "Please fill out this field" and stops:
+   correct behaviour, drawn by the browser where our check cannot see it. **A third false alarm in our check**, to
+   be fixed. Nothing else: no console errors, no failed requests, no sideways scroll, and what it typed was kept
+   after a refresh and seen from a second browser.
+
+By the letter that is 3 of 4. The app itself passed everything we threw at it.
+
+![Evenstep's settle-up screen with our test data](builds/a2-splitter-settle.png)
+
+Two smaller things, neither counted against it:
+
+- The suggested payments are the fewest possible, but can route through a person: here "Bo → Ann 10.76" and
+  "Cy → Bo 1.61" when Bo owes 9.15 and Cy owes 1.61. Two payments either way; a person would expect Bo and Cy to
+  each pay Ann what they owe. The screen says so in small print ("can temporarily overpay an intermediary").
+- The README is still the empty repository's two lines; the app has no accounts (the Settings screen says so).
+
+### One more finding about Ghost Code, from this build
+
+- Ghost Code's browser check counts a form's submit button as "does nothing" when a required field is empty. The
+  browser's own "fill out this field" message is the response; the check should see that the form is asking for
+  input, or fill the field in first.

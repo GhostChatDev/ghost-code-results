@@ -1,0 +1,19 @@
+{
+  "name": "evenstep",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "migrate": "node scripts/migrate.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "next": "^15.5.0",
+    "pg": "^8.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
