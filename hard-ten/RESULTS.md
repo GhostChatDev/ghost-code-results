@@ -100,3 +100,41 @@ afterwards. **On real GitHub, the repositories of G2, G3 and G4 would run the bu
 and G5's would run only its own tests.** The games are not worse for it; our check was simply not there. To be
 fixed in Ghost Code after this test (the five apps say "web app" and are not affected).
 
+## A1 Corkline (kanban, Ghost Coded): **3 of 4. The app works; the browser item does not pass, and our own tools are part of why**
+
+20 minutes · 6 rounds · 8 commits · **$1.28** of its $4. The second reviewer did not run: the builder ended with two
+of its own list items still open ("fix issues discovered", "run checks and inspect"), and the review only runs when
+the list is done.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000011`). |
+| 2. Browser | **Not passed.** Two things happened, both worth more than the verdict. See below. |
+| 3. Own tests, covering the hard part | **Pass.** 6 of 6, with a real Postgres: moves within and between columns, undo and redo (a new edit clears redo), the database refusing the same change twice, the offline queue sending changes once and in order, and a failed request staying queued with the same id. |
+| 4. Hard part, by hand | **Pass.** With a real database: the same change sent twice makes one card, and sent five times at the same moment makes one card. In a real browser: a card dragged by its handle is stored on the server; Ctrl+Z puts it back on the server; a drag made offline does not reach the server, and arrives once when back online; no console errors. |
+
+**Item 2, what happened.**
+
+1. *Our test machine's fault.* During the build, our machine ran the browser check **without a database** for the
+   app (the real check starts one). So every picture the builder was shown, and the final one, is the app saying
+   "Could not load board. Check the database connection." ([as checked](builds/a1-kanban-as-checked.jpg)). The
+   check passed anyway, and the builder called the work done having looked at that screen twice. From build 8 on,
+   our machine gives the app a database; **builds 6 and 7 ran without one.**
+2. *A gap in Ghost Code's check.* A check that is green on "Could not load board" is wrong: the app's own server
+   answered 503 on every screen, and the check lists that as a warning. To be fixed.
+3. *Run again by us with a database*, Ghost Code's real check **fails** this build: "these buttons do nothing when
+   pressed". Three of the four are drag handles (pressing a handle is not how it is used: **a false alarm in our
+   check**, to be fixed) and one is the "All changes saved" status, built as a button that does nothing (a small,
+   real flaw in the app). No console errors, no failed requests, the board loads.
+
+By the letter of the rules that is a fail on item 2, so 3 of 4. In plain words: the app does what the brief's hard
+part asks, and the parts of this result that are wrong are mostly ours.
+
+![Corkline with a database](builds/a1-kanban-board.png)
+
+### Three more findings about Ghost Code and our test, from this build
+
+- Our test machine did not give an app's server a database during the browser check (fixed from build 8).
+- Ghost Code's browser check passes when the app's own server answers 5xx on its first screen. It should fail.
+- Ghost Code's browser check counts a drag handle as "a button that does nothing". It should not press handles.
+
