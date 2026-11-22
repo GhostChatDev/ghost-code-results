@@ -1,0 +1,14 @@
+{
+  "name": "ashen-stair",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A self-contained seeded turn-based dungeon roguelike",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test tests/unit.test.cjs",
+    "pretest:browser": "node -e \"const fs=require('node:fs');const {chromium}=require('@playwright/test');const paths=[process.env.CHROME_PATH,chromium.executablePath(),'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome','/opt/google/chrome/chrome'];if(!paths.some(p=>p&&fs.existsSync(p))){const r=require('node:child_process').spawnSync(process.execPath,[require.resolve('playwright/cli'),'install','--with-deps','chromium'],{stdio:'inherit'});process.exit(r.status??1)}\"", 
+    "test:browser": "node tests/browser.cjs",
+    "start": "python3 -m http.server ${PORT:-3000} --bind 0.0.0.0"
+  },
+  "devDependencies": { "@playwright/test": "1.58.2" }
+}

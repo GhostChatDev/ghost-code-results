@@ -42,3 +42,18 @@ The second reviewer ran and found no problems. Not played to the end; not tried 
 
 ![Moss & Copper, playing](builds/g2-platformer-play.jpg)
 
+## G3 Ashen Stair (roguelike, Ghost Gamer): **passed, 4 of 4**
+
+20 minutes · 5 rounds · 10 commits · **$1.74** of its $4.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c00001a`). |
+| 2. Browser | **Pass.** No console errors, failed requests, blank page or sideways scroll; "Sound" and "Begin descent" both worked. |
+| 3. Own tests, covering the hard part | **Pass.** 6 of 6 pass. 250 seeds × 5 floors all fully connected with the stairs reachable; the same seed gives the same floor, monsters and loot; line of sight stops at the first wall; combat math (defense subtracted, at least 1 damage, whole numbers). The tests run the game's own rules, read out of `index.html`. |
+| 4. Hard part, by hand | **Pass.** With our own reachability check (not the build's), 2,000 random seeds across floors 1 to 5: **0** floors with an unreachable tile or unreachable stairs, and **2,000 of 2,000** identical when generated again from the same seed. Four monster kinds (Cinder rat, Ash wraith, Iron husk, Ember knight) and the boss, the Cinder Regent, on floor 5. Fog of war ("dim = explored"), potions and two weapons, tap-to-move, best run saved. |
+
+The second reviewer ran and found no problems. Not played to the end; not tried on a real phone.
+
+![Ashen Stair, start of a run](builds/g3-roguelike-play.jpg)
+
