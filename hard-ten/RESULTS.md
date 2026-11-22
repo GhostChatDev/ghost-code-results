@@ -181,3 +181,19 @@ Two smaller things, neither counted against it:
 - Ghost Code's browser check counts a form's submit button as "does nothing" when a required field is empty. The
   browser's own "fill out this field" message is the response; the check should see that the form is asking for
   input, or fill the field in first.
+- Why neither app got the second review, found afterwards: both ended on Ghost Code's "you have looked at the app
+  as often as allowed, and the checks are green: stop now" ending. That ending skipped the review, and the review
+  was only owed afterwards when the task list was done (both lists had two items open). So the cause is in Ghost
+  Code, not in the builds.
+
+### Fixes to Ghost Code made while the test ran
+
+The test runs Ghost Code as it was when the test started (`bd53448`), so none of these helped a build here.
+
+| Found in | Gap | Fix |
+|---|---|---|
+| G1 to G5 | A "web game" was not recognised as a web build, so four of five game repositories never got Ghost Code's browser check | Merged (ghost-chat #346) |
+| A1 | The browser check was green on an error screen while the app's own server answered 5xx | Merged (#347) |
+| A1 | The browser check counted drag handles as buttons that do nothing | Merged (#347) |
+| A2 | The browser check counted a form's send button as dead when a required field was empty | In review (#348) |
+| A1, A2 | The second review did not run when a build ended on the "stop now" ending | In review (#348) |
