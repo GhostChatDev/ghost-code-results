@@ -479,8 +479,8 @@ was done. The review screen was not touched.
 
 **The fault in the reviewer, and the fix.** It was only allowed to start with 150 seconds left in a 285-second
 round. A task nearly always calls itself done later in its round than that, so in practice it never ran: not in
-attempt 24, and it would not have in most real tasks. It was live like this for about half a day. The fix
-(pull request #332): a review that is wanted and has no time is *owed*, and the task gets one more round that
+attempt 24, and it would not have in most real tasks. It has been live like this since it shipped (pull request #329), until the fix is
+merged. The fix (pull request #332): a review that is wanted and has no time is *owed*, and the task gets one more round that
 starts with it. It has a test built from this run's exact ending.
 
 **What the reviewer says about this build, run afterwards by hand** ($0.09, raw answer in
