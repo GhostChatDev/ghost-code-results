@@ -387,3 +387,31 @@ ever fired during the build (how many times, on which commit, and whether Ghost 
 **What this attempt shows.** Ghost Code's own checks were green and it stopped. Its tests exercised the service code in memory, never through a route a person would use, and never against a database. Nothing it ran could see that the screen, the routes and the tables were missing. That is the gap a reader with no stake in the work is for: see [SECOND-REVIEW.md](SECOND-REVIEW.md), where a second reviewer, shown only the request and this build's diff, names the missing screen and routes.
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 22: $18.42.
+
+## Attempt 23: the first run with the second reviewer in the loop (rules written before it starts)
+
+November 22, 2026. Same rules as attempts 16 to 22: the same prompt, the same Phase 1 app, the same four-item pass
+line and the same judging, **$5 for the attempt** from the real bill. The test machine's database and Docker were
+checked as answering before the start. Published either way.
+
+**Ghost Code under test:** main as of #328, plus the second reviewer (pull request #329, in its check as this is
+written) and one change to our test machine so its stand-in for GitHub can hand the reviewer a diff. Commit `2e51156`.
+
+**The one thing that changed since attempt 22:** when the build is about to be called done on green checks, a
+second reviewer that never saw the conversation reads the request and the diff, and what it finds goes back to the
+builder once. See [SECOND-REVIEW.md](SECOND-REVIEW.md) for what it found on three earlier builds, attempt 22
+included.
+
+**The questions for this run, counted:**
+1. Did the review run (yes or no), at which round, and how many points did it raise?
+2. Of those points, how many did the builder act on (a commit that changes the named file) and how many did it
+   answer in words only?
+3. The four items, as always. Attempt 22 ended with no screen, no routes and no tables for the feature: does this
+   one have them?
+
+**What we expect, said beforehand:** the review will run and raise 3 to 7 points. We do not know whether the
+builder will fix them: that is the question. A pass on all four items would surprise us; fewer missing pieces than
+attempt 22 would not.
+
+**Known limit, unchanged:** the stand-in runs one job per check file. A green from it is not taken as item 1; the
+judging checks the rest by hand.
