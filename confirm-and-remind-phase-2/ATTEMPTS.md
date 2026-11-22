@@ -498,3 +498,27 @@ So on this build too, the reviewer names from the diff alone the thing that fail
 item 4. What is still not shown is the only thing that matters for the product: what the builder does when told.
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 24: $22.09.
+
+## Attempt 25: the second reviewer in the loop, third try (rules written before it starts)
+
+November 22, 2026. Same rules as attempts 16 to 24: the same prompt, the same Phase 1 app, the same four-item pass
+line and the same judging, **$5 for the attempt** from the real bill. The test machine's database and Docker were
+checked as answering before the start. Published either way.
+
+**Ghost Code under test:** main as of pull request #332 (head `8a2e908`, in its check as this is written). The attempt
+starts only after that pull request has passed and is merged.
+
+**The one thing that changed since attempt 24:** a second review that has no time left in its round is no longer
+skipped. The task gets one more round, and that round starts with the review.
+
+**The questions are the same ones, unanswered twice:**
+1. Did the review run (yes or no), at which round, and how many points did it raise?
+2. Of those points, how many did the builder act on (a commit that changes the named file) and how many did it
+   answer in words only?
+3. The four items, as always.
+
+**Said beforehand:** if the build reaches "done on green checks" before round 9, the review runs. If it reaches it
+only in round 9, the last round allowed, with under a minute left, there is no round left for the review and it
+will not run: that is a limit we know about and have not changed. The stop on sign-in changes that ended attempt 23 can end this one too;
+we will not approve it on the builder's behalf. We do not know whether the builder will fix what it is told. A pass
+on all four items would surprise us.
