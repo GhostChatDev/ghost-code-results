@@ -296,3 +296,22 @@ round's last step, or its time running out) is kept as "not finished yet" and th
 ending the model chose, "blocked" still stops. A test holds attempt 20's exact ending, through the whole loop.
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 20: $14.05.
+
+## Attempt 21: the confirmation run, sixth try (rules written before it starts)
+
+Same rules as attempts 16 to 20: the same prompt, the same Phase 1 app, the same four-item pass line and the same
+judging, **$5 for the attempt** from the real bill. Ghost Code's main as of #311 (commit `657845e`). The test
+machine's database and Docker were checked as answering before the start. Published either way.
+
+What changed in Ghost Code since attempt 20, and so what this run is the first to try:
+
+- A round that runs out of steps or time is no longer taken as "blocked" (#310): its closing answer is kept as
+  "not finished yet" and the next round carries on. That is what ended attempt 20 at round 7.
+- Whether work is done is worked out from the checks, not from the model's status line (#307).
+
+**The questions for this run:** does it keep going past a round that runs out of steps, and does it stop once the
+task list is done and the head commit is green? Counted as: rounds run, task-list items done at the end, and what
+ended the run.
+
+Attempts 19 and 20 were each ended early by a fault in Ghost Code that was added the same day. This is the first
+run with both fixed. Judged on the four items, not on the total spent.
