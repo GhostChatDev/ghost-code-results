@@ -1,0 +1,7 @@
+Build an original tower-defense web game called "Lantern Keep" (one HTML page with a canvas; plain JavaScript files are fine).
+- A 16x10 grid map. Enemies walk the shortest path from the gate to the keep, found with A* each time the player places or sells a tower; a tower may never be placed where it would block every path (refuse it and say why).
+- 3 tower types (fast/weak, slow/strong splash, slowing) with 2 upgrade levels each, and a sell button that returns 70%.
+- 10 waves with 3 enemy types (normal, fast, armored) and a boss on wave 10; gold for each kill; 20 lives.
+- Start screen, pause, speed x1/x2, game over and win screens, restart. Best wave reached is saved.
+- Works with mouse AND touch on a phone in landscape; the board scales to the screen.
+- A fixed-step game loop. Unit tests for the pathfinding (including the "can't block the path" rule) and the wave/gold logic, run with npm test.

@@ -1,0 +1,7 @@
+Build a shared-expenses web app called "Evenstep": Next.js with a PostgreSQL database.
+- Groups with members; expenses paid by one member and split equally, by exact amounts, or by percentages (which must add up to 100).
+- Several currencies per group with exchange rates entered by the group; balances shown in the group's main currency. All money is stored in integer minor units (cents), never floats.
+- "Settle up": the smallest set of payments that clears every balance, computed and shown; recording a payment updates balances.
+- An activity history and a CSV export of all expenses.
+- Database changes as SQL migration files.
+- Tests for the split rules (rounding never loses or invents a cent), currency conversion, and the settle-up algorithm, run with npm test.

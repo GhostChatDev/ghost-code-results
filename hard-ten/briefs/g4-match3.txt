@@ -1,0 +1,7 @@
+Build an original match-3 puzzle web game called "Tidepool Tiles".
+- An 8x8 board of 6 tile kinds. Swap two neighbours by drag or tap-tap; a swap that makes no match swaps back.
+- Matches of 3 clear; cascades fill from the top and chain; a match of 4 makes a line-clearing tile, a match of 5 makes a colour-bomb tile, and both work when matched or swapped.
+- The board never starts with a match and is reshuffled when no move is possible.
+- 12 levels with goals (score, or clear N tiles of a kind) in a limited number of moves; stars per level; progress saved.
+- Smooth animations for swaps, clears and falling tiles; works on a phone in portrait.
+- The board logic is separate from the drawing and takes a seed; unit tests for match finding, cascades, the special tiles and "no move left", run with npm test.

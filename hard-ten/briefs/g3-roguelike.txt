@@ -1,0 +1,7 @@
+Build an original turn-based roguelike web game called "Ashen Stair" (canvas or DOM grid, plain JavaScript or TypeScript).
+- Each floor is generated from a seed: rooms joined by corridors, always fully connected (prove it in a test), stairs down on every floor; the same seed always makes the same floor.
+- Field of view with fog of war (seen tiles stay dimmed).
+- Turn-based combat with 4 monster types that chase the player when they see them; health, attack, defense; potions and 2 weapon types in a small inventory.
+- 5 floors and a final boss; death is permanent; a run summary at the end (floor reached, kills, seed) and the best run saved.
+- Keyboard (arrows/WASD) and tap-to-move on phones.
+- Unit tests for the floor generator (connected, seeded) and the combat math, run with npm test.

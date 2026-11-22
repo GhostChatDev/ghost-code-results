@@ -1,0 +1,7 @@
+Build a team kanban web app called "Corkline": Next.js (App Router) with a PostgreSQL database.
+- Boards with columns and cards; drag and drop cards between columns and reorder them (mouse and touch); the order is stored and survives a reload.
+- Cards have a title, a description, a due date, labels and a checklist.
+- Undo and redo for card moves and edits (Ctrl/Cmd+Z, Shift+Ctrl/Cmd+Z, and buttons).
+- Works offline: changes made offline are kept in the browser and sent when back online, without duplicating a card if a request is sent twice.
+- Database changes as SQL migration files; a seed script with one demo board.
+- Tests for the ordering logic (moves between and within columns), undo/redo, and the offline queue sending each change once, run with npm test.

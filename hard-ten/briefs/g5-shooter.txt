@@ -1,0 +1,7 @@
+Build an original top-down arena shooter web game called "Static Bloom" (HTML canvas).
+- Twin-stick controls: WASD to move and the mouse to aim and shoot on desktop; two on-screen sticks on phones.
+- Enemy waves of 4 kinds (chaser, shooter, splitter, shielded) and a boss every 5 waves; 20 waves in all.
+- Up to 500 bullets on screen at 60 frames a second: bullets, particles and enemies come from object pools (no new objects inside the loop).
+- Screen shake from a decaying "trauma" value, a short hit-stop on big hits, and a reduced-motion setting that turns both off.
+- Score, multiplier, health, 3 pickup types; pause, game over, restart; high score saved.
+- Unit tests for the collision checks and the wave schedule, run with npm test.

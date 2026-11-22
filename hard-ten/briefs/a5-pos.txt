@@ -1,0 +1,8 @@
+Build a small shop point-of-sale web app called "Tallyroom": Next.js with a PostgreSQL database.
+- Products with SKU, price, tax rate and stock. Stock is never a number edited directly: it is the sum of a stock-movement ledger (received, sold, returned, adjusted with a reason).
+- A sale screen: add products by search or by typing a barcode, quantities, a discount, totals with tax computed in integer cents; completing a sale writes the sale and its stock movements in one database transaction.
+- Refunds of a whole sale or some lines, which return stock.
+- Low-stock list, and a daily report: sales, tax collected, top products.
+- Receipts printable from the browser.
+- Database changes as SQL migration files.
+- Tests for the totals (tax and discount rounding), the stock ledger, and that a failed sale leaves no stock movement behind, run with npm test.

@@ -1,0 +1,6 @@
+Build an original 2D platformer web game called "Moss & Copper" (HTML canvas, plain JavaScript or TypeScript).
+- A fixed-step physics loop (1/60 s) with interpolated drawing. Running, variable-height jumping, coyote time (100 ms) and jump buffering (100 ms), wall slide and wall jump.
+- 3 hand-made levels stored as data (JSON or arrays), with moving platforms, spikes, collectible gears and a checkpoint flag; reaching the door finishes the level.
+- A camera that follows the player smoothly and stays inside the level bounds.
+- Keyboard controls and on-screen touch buttons for phones; pause, restart level, level select for unlocked levels; best times saved.
+- Unit tests for the collision resolution (no falling through platforms at speed) and the coyote/buffer timing, run with npm test.

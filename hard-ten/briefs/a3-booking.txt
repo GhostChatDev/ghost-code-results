@@ -1,0 +1,8 @@
+Build an appointment booking web app called "Hourglass Desk": Next.js with a PostgreSQL database.
+- A provider sets weekly working hours and days off, in their own time zone; services have a length (15-120 min) and a buffer after.
+- A client sees open slots in THEIR time zone (shown clearly) and books one; booking the same slot twice at the same moment must be impossible, enforced by the database (a constraint, not only a check in code).
+- Daylight-saving changes handled: a slot never appears twice or vanishes on the change day.
+- Clients can cancel up to 24 hours before; the provider sees a day/week calendar.
+- An .ics file for each booking.
+- Database changes as SQL migration files.
+- Tests for slot generation across time zones and a DST change, and for two bookings of the same slot at once (one succeeds), run with npm test.

@@ -1,0 +1,8 @@
+Build a notes web app called "Quillstack": Next.js with a PostgreSQL database.
+- Notes in Markdown with a live preview; tags; pinning.
+- Full-text search over titles and bodies using PostgreSQL full-text search (tsvector with an index), with results ranked and the matching words highlighted.
+- Version history: every save keeps a version; view and restore an old version.
+- Two tabs editing the same note: saving over a newer version is refused and the person is shown both versions to choose (no silent overwrite).
+- Export a note as Markdown, and all notes as a zip.
+- Database changes as SQL migration files.
+- Tests for the search (ranking, highlighting), version restore, and the conflict refusal, run with npm test.
