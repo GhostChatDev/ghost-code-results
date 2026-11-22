@@ -72,3 +72,31 @@ Small things: a second copy of the screenshot check file was left in the reposit
 
 ![Tidepool Tiles, phone](builds/g4-match3-phone.jpg)
 
+## G5 Static Bloom (arena shooter, Ghost Gamer): **passed, 4 of 4, with a finding about our own check**
+
+12 minutes · 4 rounds · 11 commits · **$2.25** of its $4.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000019`). On the way, two fixes made things worse (errors 1 → 1, then 1 → 4) and Ghost Code undid both by itself. |
+| 2. Browser | **Pass, run by us afterwards.** This repository never got Ghost Code's own browser check (see the finding below), so our test machine did not run it during the build. We ran it on the final commit ourselves: no console errors, failed requests, blank page or sideways scroll; "Start" worked (the sound button could not be pressed while the start screen covers it). The build's own Chromium test also passes here. |
+| 3. Own tests, covering the hard part | **Pass.** 12 of 12: collisions (a fast bullet that would skip over a target is caught by a segment test; shields block from the front only), the wave schedule (20 waves, bosses on 5/10/15/20 only, all 4 kinds), and the pool (hands out at most its size and reuses objects). |
+| 4. Hard part, by hand | **Pass.** With 500 bullets alive in a real browser, 240 frames: median 16.7 ms, worst 16.8 ms (60 frames a second, steady; headless Chromium on our machine, not a phone). Bullets, particles, enemies and pickups come from fixed pools made up front; we found no object creation in the simulation loop. Shake from a "trauma" value, hit-stop, and a reduced-motion setting that turns both off are in the code. |
+
+**The second reviewer ran and raised 3 points; the builder changed code for all three**, with tests: a new object made during play (against "no new objects inside the loop"), a win that could overwrite a fatal hit's game over, and a touch stick that slowed down when dragged past its edge.
+
+![Static Bloom with 500 bullets](builds/g5-shooter-stress.png)
+
+### A finding about Ghost Code itself, from the five games
+
+Ghost Code adds its own browser check (a long, fixed file) to a web app's first commit. It decides "this is a web
+app" from the request's words, and **"web game" and "HTML canvas" are not among them**. So only G1 (whose brief says
+"one HTML page") got the real file. In G2, G3 and G4 the builder wrote a short check file of its own under the same
+name; in G5 there is none.
+
+What this means for the results above: our test machine runs Ghost Code's real browser script for any check named
+"Ghost Screenshots", so the browser results for G1 to G4 are from the real script, and G5's is from us running it
+afterwards. **On real GitHub, the repositories of G2, G3 and G4 would run the builder's own browser test instead,
+and G5's would run only its own tests.** The games are not worse for it; our check was simply not there. To be
+fixed in Ghost Code after this test (the five apps say "web app" and are not affected).
+
