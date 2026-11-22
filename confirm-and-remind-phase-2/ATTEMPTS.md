@@ -568,3 +568,56 @@ spare, the review runs. A stop that needs a person can end this one too, and we 
 builder's behalf. We do not know whether the builder will fix what it is told. A pass on all four items would
 surprise us. **This is the last try tonight for this question:** if the reviewer does not run this time either, we
 stop running whole builds to reach it and test it on a finished build instead, and say so here.
+
+**Attempt 26 result: did not pass, and it answered none of its questions. It used all 9 rounds and the 150 steps one task may take, and ended with its build red. The second reviewer did not run.**
+29.6 minutes · 9 rounds · 150 steps · 28 commits · about **$3.75** of its $5, on a healthy machine. (The bill moved
+$3.97 during the run; about $0.22 of that was four unrelated model calls we made while it ran.)
+
+No stop of ours ended this one. It built the review screen and the routes (3 of its 5 list items done), then spent
+its last three rounds on a build that would not go green: 13 failed checks in the run, and its last three fixes
+were each undone by Ghost Code's rule that a change must lower the error count (8 → 9, 8 → 10, 8 → 8). It was
+paused at the step limit. Not judged on the four items: unfinished and red.
+
+| Question | Answer |
+|---|---|
+| 1. Did the review run? | **No.** The build never reached "done on green checks". |
+| 2. How many points did the builder act on? | Nothing to count. |
+| 3. The four items | Not judged. |
+
+**Four runs, and the reviewer has not run inside a task once:** a stop that needs a person (23), our time rule
+(24), a false alarm in our protected-file rule (25), a build that never went green (26). As said before this run:
+we stop paying for whole builds to reach the reviewer. Of five tries since attempt 22, one (24) reached "done on
+green checks" at all, which says more about this prompt than about the reviewer.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 26: $28.11.
+
+## Reviewer trial on a finished build (rules written before it starts)
+
+November 22, 2026. **This is not an attempt at the pass line and will not be counted as one.** It asks the one
+question four whole builds failed to reach, on a build that is already finished.
+
+**The set-up.** Attempt 24's finished build, exactly as it ended (green check, judged 1 of 4), is put on the
+working branch of our stand-in GitHub, with the Phase 1 app as the base and the same Phase 2 prompt as the
+request. The task is marked as it was at that moment: list done, last check passed, second review owed. One round
+then starts the way a real task's next round would: the reviewer reads the request and the diff, and what it
+finds goes to the builder. Up to 4 rounds, **$3** from the real bill.
+
+**Ghost Code under test:** main as of pull request #334, plus two changes not merged yet that do not touch the
+builder or the reviewer (three starter skills; this set-up option in our test script): local commit `3c53072`.
+
+**Honest limit, said first:** the builder starts without the conversation that built attempt 24. It has the
+request, the files and the reviewer's findings, like a long task after its memory was cleared. A builder in the
+middle of its own task knows more.
+
+**The questions, counted:**
+1. Did the review run in the loop, and how many points did it raise (findings and missing pieces)?
+2. For each point: did the builder change the named file in a commit, answer it in words only, or ignore it?
+3. Did the build stay green?
+4. Judged again with the same script: is it still 1 of 4, or did an item change? (Attempt 24 failed item 2 because
+   the review screen was the untouched Phase 1 file, and item 4 because nothing calls the job recovery. The
+   reviewer named both when run by hand.)
+
+**Said beforehand:** we expect the review to run and to raise 5 to 8 points, the unbuilt review screen among them.
+We do not know what the builder does with them: that is the question. If it builds the review screen and item 2
+passes, that is the first sign the reviewer changes a result. If it answers in words and changes nothing, the
+reviewer is a report for the person and not a fix, and we will say that.
