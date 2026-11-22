@@ -298,7 +298,7 @@ The third is the main finding, fixed although the rules do not require it.
    `package.json`) and starts the sandbox with Node 24 when it needs it. If that cannot be started, it falls back
    to the usual sandbox and tells the model that a refusal over the Node version is not caused by its change.
 
-Each has a test built from the repository that showed it. Not fixed: a repository that demands an exact pnpm
+Each has a test built from the repository that showed it. They are in Ghost Chat pull request #326. Not fixed: a repository that demands an exact pnpm
 version only in `engines` (umami). Even with the right pnpm, umami still needs a database, so the fix would not
 have turned it green; it is noted, not done.
 
