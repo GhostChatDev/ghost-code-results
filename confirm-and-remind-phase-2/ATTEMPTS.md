@@ -345,3 +345,29 @@ Settings, which records consent. The cases' setup writes `ai_enabled: true` stra
 turns AI on the way the app's own Settings route does (`updateProfile`), and nothing else; it says so at its top.
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 21: $16.88.
+
+## Attempt 22: the confirmation run, seventh try (rules written before it starts)
+
+Asked for on November 22, 2026 ("stress test the remaining app"). Same rules as attempts 16 to 21: the same prompt,
+the same Phase 1 app, the same four-item pass line and the same judging, **$5 for the attempt** from the real bill.
+The test machine's database and Docker were checked as answering before the start. Published either way.
+
+**Ghost Code under test:** main as of #326, plus two changes that are written and tested but not merged yet (the
+new agents in #327, which this run does not use, and the upgrade check below). Commit `64d3094`.
+
+What changed since attempt 21, and so what this run is the first to try:
+
+- **The upgrade check.** Ghost Code's own check file used to install an app's database changes into an empty
+  database only: a first install. It now also builds a second database the way a live one was built (the change
+  files already on the main branch, with a made-up row in every table) and installs only the commit's new files on
+  top. It refuses, outright, an edit to a file that is already on main, a deleted one, and a new file numbered
+  before one that is already there. Our test machine's stand-in for GitHub runs this step too.
+- Ghost Code's starting instructions were rewritten around building apps (they were written around Swift), and a
+  check file that would run twice per commit, or duplicate an existing one, is named at commit time (#325).
+
+**What has NOT changed, and still limits a green from our machine:** the stand-in runs one job per check file.
+Any other job is listed as not run. Attempt 21 reached its end on such a green. So for this run a green from the
+machine is not taken as item 1: the judging runs the app's own database job by hand, as it did for attempt 21.
+
+**The question for this run:** the four items, as always. And one more thing counted: whether the upgrade check
+ever fired during the build (how many times, on which commit, and whether Ghost Code fixed what it named).
