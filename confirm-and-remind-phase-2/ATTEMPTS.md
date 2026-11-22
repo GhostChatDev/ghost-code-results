@@ -521,3 +521,50 @@ only in round 9, the last round allowed, with under a minute left, there is no r
 will not run: that is a limit we know about and have not changed. The stop on sign-in changes that ended attempt 23 can end this one too;
 we will not approve it on the builder's behalf. We do not know whether the builder will fix what it is told. A pass
 on all four items would surprise us.
+
+**Attempt 25 result: did not pass, and it answered none of its questions. It was stopped in round 6 by a false alarm in one of Ghost Code's own safety rules. The second reviewer did not run.**
+16.8 minutes · 6 rounds · 95 steps · 8 commits · **$2.27** of its $5, on a healthy machine.
+
+**What stopped it.** With 4 of its 5 list items done and its last check red (a build error it was fixing), the
+builder went to write `tests/check-production-secrets.mjs`: a test that looks for AI keys in the built app, which
+the request asks for and which the reviewer had named as missing on attempt 24. Ghost Code's protected-file rule
+saw the word "secret" in the file name and treated a test script as a file that holds secrets: "Paused: this needs
+your permission, not a retry". On our machine there is nobody to say yes. The run ended there, unfinished.
+
+That is our fault, not the builder's, and it would have paused a real person's task the same way. The rule now
+protects files that hold secrets (`secrets.json`, `credentials`, `.pem`, `.key`, `.env`) and not program code
+that has the word in its name; a real key inside any file is still stopped at the commit. It has a test with this
+file's name in it.
+
+| Question | Answer |
+|---|---|
+| 1. Did the review run? | **No.** The build never reached "done on green checks". |
+| 2. How many points did the builder act on? | Nothing to count. |
+| 3. The four items | Not judged: the build was unfinished and red at the stop. (Unlike attempt 24, it had written a review screen, `src/components/SuggestionReview.tsx`.) |
+
+**Three runs, three different reasons the reviewer never ran:** a stop that needs a person (23), our time rule
+(24), a false alarm in our protected-file rule (25). Two of the three were faults of ours. The question this was
+all for, what a builder does when the reviewer tells it something during its task, has still not been asked once.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 25: $24.36.
+
+## Attempt 26: the second reviewer in the loop, fourth try (rules written before it starts)
+
+November 22, 2026. Same rules as attempts 16 to 25: the same prompt, the same Phase 1 app, the same four-item pass
+line and the same judging, **$5 for the attempt** from the real bill. The test machine's database and Docker were
+checked as answering before the start. Published either way.
+
+**Ghost Code under test:** main as of pull request #333 (commit `78ff672`), plus the one fix found in attempt 25
+(program code with "secret" in its name is not a protected file), which is not merged yet: local commit `d695d5e`.
+
+**The questions are the same three, unanswered three times:**
+1. Did the review run (yes or no), at which round, and how many points did it raise?
+2. Of those points, how many did the builder act on (a commit that changes the named file) and how many did it
+   answer in words only?
+3. The four items, as always.
+
+**Said beforehand:** the same as for attempt 25. If the build reaches "done on green checks" with a round to
+spare, the review runs. A stop that needs a person can end this one too, and we will not approve it on the
+builder's behalf. We do not know whether the builder will fix what it is told. A pass on all four items would
+surprise us. **This is the last try tonight for this question:** if the reviewer does not run this time either, we
+stop running whole builds to reach it and test it on a finished build instead, and say so here.
