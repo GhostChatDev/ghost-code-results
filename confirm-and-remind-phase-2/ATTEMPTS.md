@@ -586,7 +586,7 @@ paused at the step limit. Not judged on the four items: unfinished and red.
 
 **Four runs, and the reviewer has not run inside a task once:** a stop that needs a person (23), our time rule
 (24), a false alarm in our protected-file rule (25), a build that never went green (26). As said before this run:
-we stop paying for whole builds to reach the reviewer. Of five tries since attempt 22, one (24) reached "done on
+we stop paying for whole builds to reach the reviewer. Of these four tries (23 to 26), one (24) reached "done on
 green checks" at all, which says more about this prompt than about the reviewer.
 
 Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 26: $28.11.
