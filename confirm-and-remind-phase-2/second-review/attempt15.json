@@ -1,0 +1,55 @@
+{
+ "model": "anthropic/claude-sonnet-5.5",
+ "files": 22,
+ "left": 0,
+ "diffChars": 98729,
+ "costUsd": 0.099658,
+ "tokens": {
+  "in": 44569,
+  "out": 1052,
+  "thinking": 0,
+  "finish": "stop"
+ },
+ "review": {
+  "verdict": "FINDINGS",
+  "findings": [
+   {
+    "file": "supabase/migrations/0004_phase2_ai.sql",
+    "line": 96,
+    "problem": "confirm_ai_suggestion ignores the user's reviewed edits when the note text is unchanged, and raises when p_remind_at is null. A suggestion with a due date but no reminder can never be confirmed, even though the in-memory path allows it.",
+    "scenario": "A user edits a suggestion to have a due date and no reminder, then taps Confirm. In production the RPC throws 'An explicit title and reminder time are required' and the user sees an error."
+   },
+   {
+    "file": "supabase/migrations/0004_phase2_ai.sql",
+    "line": 91,
+    "problem": "The confirm function checks `s.needs_clarification` before the note-version check, and the task is created with the profile time zone rather than s.time_zone. The task's zone can therefore differ from the zone used for the reminder.",
+    "scenario": "A user changes their time zone after a suggestion was created. The confirmed task and its reminder end up with different time zones."
+   },
+   {
+    "file": "supabase/migrations/0004_phase2_ai.sql",
+    "line": 30,
+    "problem": "The migration adds columns to ai_suggestions with `add column` (no `if not exists`) and does not guard the later `create table`, index and policy statements. It assumes Phase 1 already created ai_suggestions with specific columns. Because the Phase 1 schema is not shown, whether this applies cleanly cannot be confirmed. Also, `alter column status set default 'pending'` may violate an existing chec",
+    "scenario": "The migration is run on a database that already holds Phase 1 data, and it fails or leaves the table with a different status constraint."
+   },
+   {
+    "file": "src/app/api/notes/[id]/route.ts",
+    "line": 13,
+    "problem": "After an edit, `enqueueAi` is called inside `after()`, so stale suggestions are only marked stale in the background. If AI is disabled or the note is over the size limit, enqueueAi returns null in the same function before the stale update, so old pending suggestions stay confirmable.",
+    "scenario": "A user turns AI off, edits a note, and opens Review. The old suggestions still show as pending. Confirm does check the note version and returns an error, but the UI shows stale items."
+   },
+   {
+    "file": "src/lib/core/aiExtraction.ts",
+    "line": 142,
+    "problem": "The completed-event filter is a narrow regex on the source quote only (for example 'I paid'). A quote such as 'Paid rent yesterday' passes. Past-dated resolutions are also not rejected, so a reminder can be proposed in the past.",
+    "scenario": "A note says 'Rent paid yesterday', and the model proposes a task anyway. The task is shown for confirmation, contrary to the 'I paid rent yesterday' rule."
+   }
+  ],
+  "missing": [],
+  "dropped": 0,
+  "notChecked": [
+   "The final part of tests/ai.test.ts was cut, so the bundle/source-map secret test and any log checks could not be judged.",
+   "The Phase 1 schema and migrations are not shown, so whether 0004 applies on top of them cannot be confirmed.",
+   "The notes page 'This note changed' banner shows only in the client session after an edit and is not persisted."
+  ]
+ }
+}

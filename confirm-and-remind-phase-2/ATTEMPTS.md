@@ -371,3 +371,19 @@ machine is not taken as item 1: the judging runs the app's own database job by h
 
 **The question for this run:** the four items, as always. And one more thing counted: whether the upgrade check
 ever fired during the build (how many times, on which commit, and whether Ghost Code fixed what it named).
+
+**Attempt 22 result: did not pass. It called itself done on green checks with the middle of the feature missing.**
+26.9 minutes · 9 rounds · 150 steps · 27 commits (7 of them Ghost Code undoing its own commit while the build was red) · **$1.54** of its $5, on a healthy machine.
+
+| Pass line | Result |
+|---|---|
+| 1. Checks green, database changes install | **Green as measured, and it means little here.** The final commit's build, type check, 60 tests and browser check passed; this build has one check job, so nothing was left unrun. The database step passed because **the build adds no database change at all**: the three change files are Phase 1's, untouched. Everything Phase 2 needs stored (suggestions, jobs, quotas, spend) exists only in the in-memory stand-in used by the tests. |
+| 2. Our review test, unchanged | **Fails, and could not even be run.** The test needs a way to confirm a suggestion. This build has none: the only AI route is `/api/ai/run/[id]`; there is no route to review, confirm or dismiss, and the review screen is Phase 1's file, unchanged. Settings calls `GET /api/ai/review`, which does not exist. Checked by listing the build's files. |
+| 3. A real save read back from a real database | **Fails: no such test.** |
+| 4. Money comes back after a crash | **Fails: no such test.** The recovery code is there; nothing stops a job after it reserved and shows the money come back. |
+
+**The upgrade check, the thing this run was first to try:** it ran and had nothing to do. No new database change file was ever committed, so it said "no new database change files in this commit" each time. It is not shown to have helped or hurt here.
+
+**What this attempt shows.** Ghost Code's own checks were green and it stopped. Its tests exercised the service code in memory, never through a route a person would use, and never against a database. Nothing it ran could see that the screen, the routes and the tables were missing. That is the gap a reader with no stake in the work is for: see [SECOND-REVIEW.md](SECOND-REVIEW.md), where a second reviewer, shown only the request and this build's diff, names the missing screen and routes.
+
+Attempt 15 remains the only attempt that passed all four items. Spent on confirmation tries 16 to 22: $18.42.

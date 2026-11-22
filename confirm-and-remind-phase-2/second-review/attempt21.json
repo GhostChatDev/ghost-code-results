@@ -1,0 +1,55 @@
+{
+ "model": "anthropic/claude-sonnet-5.5",
+ "files": 23,
+ "left": 0,
+ "diffChars": 103621,
+ "costUsd": 0.103126,
+ "tokens": {
+  "in": 46338,
+  "out": 1045,
+  "thinking": 0,
+  "finish": "stop"
+ },
+ "review": {
+  "verdict": "FINDINGS",
+  "findings": [
+   {
+    "file": "supabase/migrations/0004_phase2_ai.sql",
+    "line": 67,
+    "problem": "The review_ai_suggestion RPC (used in production with Supabase) never checks that the confirmed reminder time lies in the future when the client sends no remind_at. The TS route also sends the suggestion's stored proposed_reminder only when edited, so an unedited confirm passes null for remind/due and the RPC creates a task with no reminder and no due date.",
+    "scenario": "A user taps Confirm without pressing Edit on a suggestion with a proposed reminder. The body carries only action and timeZone, so the RPC receives p_remind_at null and p_due_at null. The task is created with no due date and no reminder, and the suggestion is marked confirmed. The reminder the review screen showed is silently lost."
+   },
+   {
+    "file": "src/app/api/suggestions/[id]/review/route.ts",
+    "line": 19,
+    "problem": "The route passes only the client-supplied dueAt/remindAt/title to the RPC, with no fallback to the stored suggestion values. The in-memory path falls back to them, so tests pass while production behaves differently.",
+    "scenario": "Same as above: on real Supabase an unedited Confirm gives a title-null error. p_title is null, so the RPC returns 400 'Check the task and reminder time' and Confirm never works without pressing Edit first."
+   },
+   {
+    "file": "src/lib/server/aiWorker.ts",
+    "line": 55,
+    "problem": "Providers that report no usage.cost field (many OpenAI-compatible APIs) are treated as errors, so a successful, paid call is recorded as failed and no suggestions are saved.",
+    "scenario": "The user saves a note and the provider returns valid JSON with prompt_tokens and completion_tokens but no cost. The worker throws, the job is marked failed, and the user never sees any suggestion."
+   },
+   {
+    "file": "src/app/api/notes/route.ts",
+    "line": 12,
+    "problem": "Jobs are only processed once, in after() right after the save, for the single user. A job that fails to claim (lease, transient error, budget) is never retried because no cron or retry path calls processNextAiJob.",
+    "scenario": "A provider outage fails a job. After the provider recovers, nothing reprocesses it, so that note never gets suggestions unless the user edits it."
+   },
+   {
+    "file": "src/app/review/page.tsx",
+    "line": 53,
+    "problem": "In edit mode an emptied date field is sent as an empty value and cannot clear a proposed date, because the server falls back to the suggestion's stored value (`decision.remindAt ?? suggestion.proposed_reminder`).",
+    "scenario": "The user clears the Reminder field to confirm a task without a reminder. The server still creates the original proposed reminder."
+   }
+  ],
+  "missing": [],
+  "dropped": 0,
+  "notChecked": [
+   "The tail of tests/ai-phase2.test.ts was cut off, so the secret-in-bundle and quota tests could not be reviewed.",
+   "Whether localInputToIso returns null or undefined for an empty string.",
+   "Global quota enforcement: the daily and monthly counts in claim_ai_job and MemoryDb are per user only, so no global request quota is visible."
+  ]
+ }
+}

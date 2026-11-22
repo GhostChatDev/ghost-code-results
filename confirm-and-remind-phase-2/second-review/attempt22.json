@@ -1,0 +1,63 @@
+{
+ "model": "anthropic/claude-sonnet-5.5",
+ "files": 20,
+ "left": 0,
+ "diffChars": 70330,
+ "costUsd": 0.075366,
+ "tokens": {
+  "in": 32888,
+  "out": 959,
+  "thinking": 0,
+  "finish": "stop"
+ },
+ "review": {
+  "verdict": "FINDINGS",
+  "findings": [
+   {
+    "file": "src/app/settings/page.tsx",
+    "line": 48,
+    "problem": "Settings calls GET /api/ai/review, but the diff adds no such route, so the call fails and the whole settings load is aborted.",
+    "scenario": "A user opens Settings: the call throws inside the same try block, the error banner shows, and the AI toggle and explanation never render properly. The fetch happens right after setShowTitle, so the earlier fields may load but the error blocks use."
+   },
+   {
+    "file": "src/lib/core/aiService.ts",
+    "line": 1,
+    "problem": "The service functions confirmAi, dismissAi and reviewAi have no API routes (no /api/ai/confirm, /dismiss or /review in the diff) and no review screen file exists.",
+    "scenario": "A user can never see suggestions or press Confirm, Edit or Dismiss, so no AI-suggested reminder can ever be created."
+   },
+   {
+    "file": "src/lib/server/aiWorker.ts",
+    "line": 26,
+    "problem": "The usage month is taken from note.created_at, not the current month, and the review code uses the current month. Editing an old note then counts against an old month's quota and budget.",
+    "scenario": "Edits to old notes escape the current month's cap, and the usage shown to the user disagrees with what is enforced."
+   },
+   {
+    "file": "src/lib/core/aiValidation.ts",
+    "line": 135,
+    "problem": "The completed-event filter tests the entire note text for 'I paid/called/had/went...'. One past-tense sentence discards every valid task from the same note.",
+    "scenario": "A note says 'I called the bank. Pay rent Friday at 10:00' and the rent task is silently dropped."
+   },
+   {
+    "file": "src/lib/core/aiService.ts",
+    "line": 14,
+    "problem": "enqueueAi marks only queued and running jobs stale and never checks for jobs that were blocked or failed. Separately, the migration for the ai tables and the reserve_ai_usage and claim_ai_job RPCs is not in the diff.",
+    "scenario": "On a real Supabase database the rpc calls fail and the profiles.ai_enabled column does not exist, so profile updates break."
+   }
+  ],
+  "missing": [
+   {
+    "asked": "Review screen: for each suggestion show the task, the exact source quote, the FULL resolved date (never just \"next Friday\"), the proposed reminder time and the time zone. Buttons: Confirm, Edit, Dismiss.",
+    "problem": "No review page or component is in the diff, and there are no confirm, dismiss or review API routes."
+   },
+   {
+    "asked": "Controls: AI on/off in Settings, with a plain explanation of what is sent.",
+    "problem": "The settings page holds aiEnabled state but renders no toggle and no explanation text in the shown diff."
+   }
+  ],
+  "dropped": 0,
+  "notChecked": [
+   "The cut-off remainder of tests/ai.test.ts",
+   "Whether a Supabase migration exists elsewhere (none appears in the shown files)"
+  ]
+ }
+}
