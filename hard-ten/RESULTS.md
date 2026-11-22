@@ -57,3 +57,18 @@ The second reviewer ran and found no problems. Not played to the end; not tried 
 
 ![Ashen Stair, start of a run](builds/g3-roguelike-play.jpg)
 
+## G4 Tidepool Tiles (match-3, Ghost Gamer): **passed, 4 of 4**
+
+12 minutes · 4 rounds · 9 commits · **$1.35** of its $4.
+
+| Item | Result |
+|---|---|
+| 1. Checks | **Pass.** Last check passed on the final commit (`c000013`). |
+| 2. Browser | **Pass.** No console errors, failed requests, blank page or sideways scroll; it clicked Levels, Rules, Sound and five tiles, and all worked. |
+| 3. Own tests, covering the hard part | **Pass.** 13 of 13 pass: 100 seeds start with no match and a move; matches don't wrap across rows; a swap that makes no match rolls back exactly; cascades keep the order of surviving tiles and settle; 4 makes a line tile and 5 a colour bomb, each firing when matched or swapped, two bombs clearing the board; "no move left" reshuffles to a playable board; a long seeded game stays full and playable. The board logic is its own file (`engine.js`), and a test checks the page embeds exactly that file. |
+| 4. Hard part, by hand | **Pass.** We played 300 seeded boards for 40 moves each (12,000 moves): **0** boards started with a match or with no move, and **0** ended a move with a gap, an unsettled match or no move left. 12 levels with goals (score, or tiles of a kind) and a move limit; stars; progress saved. |
+
+Small things: a second copy of the screenshot check file was left in the repository's root (`ghost-screenshots.yml`; harmless, not a check GitHub runs). The tiles are emoji. The second reviewer ran and found no problems.
+
+![Tidepool Tiles, phone](builds/g4-match3-phone.jpg)
+

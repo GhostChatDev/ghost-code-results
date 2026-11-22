@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#103e42"><title>Tidepool Tiles</title>
+<style>
+@import url('data:text/css,');
+*{box-sizing:border-box}body{margin:0;color:#edeee0;background:#092e34;font-family:system-ui,sans-serif;background-image:radial-gradient(ellipse at 20% 0%,#286066,transparent 65%);min-height:100dvh}button{font:inherit;cursor:pointer;color:inherit;border:1px solid #92b4a13b;background:#ffffff0c;border-radius:12px;padding:10px 15px}button:hover{background:#ffffff20}button:focus-visible{outline:3px solid #fbd78d;outline-offset:2px}header{max-width:1060px;margin:auto;padding:26px 28px;display:flex;align-items:center;justify-content:space-between}.brand{font:italic 25px Georgia,serif}.brand small{font:10px system-ui;letter-spacing:3px;display:block;color:#a4c1b7;margin-top:7px}.top-actions{display:flex;gap:8px}main{max-width:990px;margin:10px auto 30px;display:grid;grid-template-columns:270px minmax(0,540px);gap:65px;padding:12px 24px}.eyebrow{color:#b9d4bc;font-size:11px;letter-spacing:3px;text-transform:uppercase}h1{font:normal 55px/1.02 Georgia,serif;margin:16px 0;color:#fff4dc}p{color:#afc9c3;line-height:1.6;font-size:14px}.goal{border-top:1px solid #95b5a23b;border-bottom:1px solid #95b5a23b;padding:20px 0;margin:25px 0}.goal strong{font:26px Georgia,serif;display:block;margin:9px 0}.progress{height:4px;border-radius:5px;background:#061e25;margin-top:15px;overflow:hidden}.progress i{display:block;background:#f4d094;height:100%;transition:width .3s}.legend{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;color:#bfd1c7}.legend b{font-size:22px;margin-right:6px}.note{font-size:12px;color:#8eb3ad;margin-top:25px}.board-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.stat span{display:block;color:#a6c6bc;font-size:10px;letter-spacing:2px;text-transform:uppercase}.stat strong{font:29px Georgia,serif}.stat:last-child{text-align:right}.sea{position:relative;padding:10px;border:1px solid #69958c66;border-radius:23px;background:#06272d;box-shadow:0 25px 65px #001d2380,inset 0 1px #ffffff12}.board{position:relative;width:100%;aspect-ratio:1;touch-action:none;background:repeating-conic-gradient(#123b40 0% 25%,#10363c 0% 50%) 0/25% 25%;border-radius:14px;overflow:hidden}.tile{position:absolute;width:12.5%;height:12.5%;display:grid;place-items:center;padding:4px;border:0;background:transparent;border-radius:13px;transition:left .23s ease,top .23s ease,transform .18s,opacity .18s;user-select:none;-webkit-user-select:none}.tile:hover{background:#ffffff0a}.tile .gem{display:grid;place-items:center;width:91%;height:91%;border-radius:32%;font-size:clamp(21px,4vw,39px);background:radial-gradient(circle at 30% 20%,var(--light),var(--dark));box-shadow:inset 0 2px 1px #ffffff66,inset 0 -4px 2px #0003,0 4px 5px #00191d66;text-shadow:0 2px 3px #0004}.tile.selected{outline:2px solid #ffe6ac;outline-offset:-4px;transform:scale(.94)}.tile.special .gem{box-shadow:inset 0 0 0 2px #ffe6ac,0 0 14px #ffe6ac80}.tile em{position:absolute;bottom:5%;right:10%;font-style:normal;font-size:17px;color:white;text-shadow:0 1px 4px #000}.tile.removing{transform:scale(.1) rotate(35deg);opacity:0}.under{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:17px 2px;font-size:12px;color:#b1cec4}#status{min-height:18px}dialog{color:#f6efda;background:#103e42;border:1px solid #8caf9b88;border-radius:24px;padding:30px;max-width:min(92vw,470px);box-shadow:0 20px 100px #0008}dialog::backdrop{background:#001d25cb;backdrop-filter:blur(8px)}dialog h2{font:36px Georgia,serif;margin:0 0 12px}dialog button.primary{background:#f1d29b;color:#163d3d;font-weight:700;border:0}#level-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:24px 0}#level-grid button{padding:13px 8px}#level-grid small{display:block;color:#f4d296;font-size:12px;margin-top:6px}button:disabled{opacity:.4;cursor:default}.dialog-actions{display:flex;gap:10px;flex-wrap:wrap}.footer{text-align:center;color:#79a29b;font-size:10px;letter-spacing:3px;margin:25px}.bubble{color:#f1d29b}@media(max-width:720px){header{padding:16px 18px}.brand{font-size:21px}.brand small{font-size:8px}main{display:flex;flex-direction:column;gap:16px;max-width:550px;margin:0 auto;padding:6px 14px}.intro h1{font-size:32px;margin:8px 0}.intro>p,.legend,.note{display:none}.goal{padding:0;border:0;margin:8px 0}.goal strong{font:18px Georgia,serif;margin:6px 0}.goal .eyebrow{display:none}.progress{margin-top:9px}.board-top{margin-bottom:10px}.stat strong{font-size:25px}.sea{padding:7px;border-radius:18px}.tile .gem{font-size:clamp(22px,7vw,38px)}.under{margin:12px 2px}.footer{margin:12px}.top-actions button{padding:8px 10px}.eyebrow{font-size:9px}}@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+@media(max-width:720px){header{padding:12px 14px;gap:8px}.brand{font-size:18px;white-space:nowrap}.brand small{display:none}.top-actions{gap:4px}.top-actions button{font-size:12px;padding:8px}.sea{width:min(100%,calc(100dvh - 295px));margin-inline:auto}.under{flex-wrap:wrap}.tile .gem{font-size:clamp(18px,6vw,34px)}}
+</style></head><body>
+<header><div class="brand">Tidepool Tiles <small>A LITTLE OCEAN. A LITTLE WONDER.</small></div><div class="top-actions"><button id="levels">Levels</button><button id="guide">Rules</button><button id="mute" aria-label="Toggle sound">Sound off</button></div></header>
+<main><section class="intro"><div class="eyebrow" id="chapter">01 / THE SHALLOWS</div><h1>A moment<br>by the sea.</h1><p>Follow the tide. Find a little magic.<br>Match ocean treasures, one ripple at a time.</p><div class="goal"><div class="eyebrow">Your little mission</div><strong id="goal">Reach 1,500 points</strong><span id="goal-count">0 / 1,500</span><div class="progress"><i id="goal-bar" style="width:0%"></i></div></div><div class="legend"><span><b>↔</b> Four: line sweep</span><span><b>✺</b> Five: colour bomb</span></div><p class="note">Drag a treasure or tap two neighbours.<br>Swap a special to release its magic.<br>Use arrow keys + Enter to play.</p></section>
+<section class="play"><div class="board-top"><div class="stat"><span>Level</span><strong id="level-number">01</strong></div><div class="stat"><span>Score</span><strong id="score">0</strong></div><div class="stat"><span>Moves left</span><strong id="moves">20</strong></div></div><div class="sea"><div class="board" id="board" role="group" aria-label="Ocean match-three board"></div></div><div class="under"><span id="status" aria-live="polite">The tide is yours.</span><div><button id="hint">Hint</button> <button id="pause">Pause</button></div></div></section></main><div class="footer">✧ &nbsp; TAKE IT ONE TIDE AT A TIME &nbsp; ✧</div>
+<dialog id="modal" aria-labelledby="modal-title"><h2 id="modal-title">Welcome to the tidepool.</h2><p id="modal-copy"></p><div id="level-grid" hidden></div><div class="dialog-actions"><button class="primary" id="modal-primary">Start exploring</button><button id="modal-secondary" hidden>Back</button></div></dialog>
+<script id="rules">
+/* Tidepool Tiles: deterministic rules, independent of DOM and rendering. */
+(function (root) {
+  'use strict';
+  const SIZE = 8, KINDS = 6;
+  class TideEngine {
+    constructor(seed = 1, board = null) {
+      this.seed = seed >>> 0; this.nextId = 1;
+      this.board = board ? board.map(t => t && ({ ...t, id: this.nextId++ })) : [];
+      if (!board) this.generate();
+    }
+    random() {
+      this.seed = (Math.imul(1664525, this.seed) + 1013904223) >>> 0;
+      return this.seed / 4294967296;
+    }
+    tile(kind = Math.floor(this.random() * KINDS), special = null, dir = 'row') {
+      return { kind, special, dir, id: this.nextId++ };
+    }
+    snapshot() { return this.board.map(t => t && ({ ...t })); }
+    adjacent(a, b) {
+      return Number.isInteger(a) && Number.isInteger(b) && a >= 0 && b >= 0 && a < 64 && b < 64 &&
+        Math.abs(a % 8 - b % 8) + Math.abs(Math.floor(a / 8) - Math.floor(b / 8)) === 1;
+    }
+    swap(a, b) { [this.board[a], this.board[b]] = [this.board[b], this.board[a]]; }
+    matches() {
+      const runs = [];
+      for (let axis = 0; axis < 2; axis++) for (let line = 0; line < 8; line++) {
+        let run = [], kind = -1;
+        const flush = () => { if (run.length >= 3) runs.push({ cells: run.slice(), dir: axis ? 'col' : 'row' }); };
+        for (let p = 0; p <= 8; p++) {
+          const index = axis ? p * 8 + line : line * 8 + p;
+          const next = p < 8 && this.board[index] ? this.board[index].kind : -2;
+          if (next !== kind || p === 8) { flush(); run = []; kind = next; }
+          run.push(index);
+        }
+      }
+      return runs;
+    }
+    generate() {
+      do {
+        this.board = [];
+        for (let i = 0; i < 64; i++) {
+          const choices = [];
+          for (let k = 0; k < KINDS; k++) {
+            if (i % 8 >= 2 && this.board[i - 1].kind === k && this.board[i - 2].kind === k) continue;
+            if (i >= 16 && this.board[i - 8].kind === k && this.board[i - 16].kind === k) continue;
+            choices.push(k);
+          }
+          this.board.push(this.tile(choices[Math.floor(this.random() * choices.length)]));
+        }
+      } while (!this.hasMove());
+    }
+    hasMove() {
+      for (let a = 0; a < 64; a++) for (const b of [a + 1, a + 8]) {
+        if (!this.adjacent(a, b)) continue;
+        if (this.board[a]?.special || this.board[b]?.special) return true;
+        this.swap(a, b); const found = this.matches().length > 0; this.swap(a, b);
+        if (found) return true;
+      }
+      return false;
+    }
+    reshuffle() {
+      const tiles = this.board.filter(Boolean);
+      for (let attempt = 0; attempt < 150; attempt++) {
+        this.board = tiles.slice();
+        for (let i = 63; i > 0; i--) {
+          const j = Math.floor(this.random() * (i + 1)); this.swap(i, j);
+        }
+        if (!this.matches().length && this.hasMove()) return;
+      }
+      this.generate();
+    }
+    turn(a, b) {
+      if (!this.adjacent(a, b)) return { valid: false, frames: [], counts: Array(6).fill(0), score: 0 };
+      this.swap(a, b);
+      const frames = [{ type: 'swap', board: this.snapshot() }];
+      const activated = [a, b].filter(i => this.board[i].special);
+      if (!activated.length && !this.matches().length) {
+        this.swap(a, b); frames.push({ type: 'rollback', board: this.snapshot() });
+        return { valid: false, frames, counts: Array(6).fill(0), score: 0 };
+      }
+      const bombTargets = {};
+      for (const i of activated) if (this.board[i].special === 'bomb') {
+        bombTargets[i] = this.board[i === a ? b : a].special === 'bomb' ? -1 : this.board[i === a ? b : a].kind;
+      }
+      return { valid: true, ...this.resolve([b, a], activated, bombTargets, frames) };
+    }
+    resolve(preferred = [], initial = [], bombTargets = {}, frames = []) {
+      const counts = Array(6).fill(0); let score = 0, chain = 0;
+      while (true) {
+        const runs = this.matches();
+        if (!runs.length && !initial.length) break;
+        chain++;
+        const clear = new Set(initial), spawns = new Map();
+        for (const run of runs) {
+          run.cells.forEach(i => clear.add(i));
+          if (run.cells.length < 4) continue;
+          const at = preferred.find(i => run.cells.includes(i)) ?? run.cells[Math.floor(run.cells.length / 2)];
+          const special = run.cells.length >= 5 ? 'bomb' : 'line';
+          if (!spawns.has(at) || special === 'bomb') spawns.set(at, { special, dir: run.dir });
+        }
+        // A special hit by another special fires too, once, before replacements appear.
+        const fired = new Set();
+        for (const i of clear) {
+          const t = this.board[i];
+          if (!t?.special || fired.has(i)) continue;
+          fired.add(i);
+          if (t.special === 'line') {
+            for (let n = 0; n < 8; n++) clear.add(t.dir === 'col' ? n * 8 + i % 8 : Math.floor(i / 8) * 8 + n);
+          } else {
+            const target = bombTargets[i] ?? t.kind;
+            this.board.forEach((other, j) => { if (other && (target === -1 || other.kind === target)) clear.add(j); });
+          }
+        }
+        for (const i of clear) { if (this.board[i]) { counts[this.board[i].kind]++; score += 60 * chain; } }
+        const before = this.snapshot();
+        for (const i of clear) this.board[i] = null;
+        for (const [i, value] of spawns) this.board[i] = this.tile(before[i].kind, value.special, value.dir);
+        frames.push({ type: 'clear', board: this.snapshot(), removed: [...clear], chain });
+        for (let c = 0; c < 8; c++) {
+          const column = [];
+          for (let r = 7; r >= 0; r--) if (this.board[r * 8 + c]) column.push(this.board[r * 8 + c]);
+          for (let r = 7; r >= 0; r--) this.board[r * 8 + c] = column[7 - r] || this.tile();
+        }
+        frames.push({ type: 'fall', board: this.snapshot(), chain });
+        initial = []; preferred = []; bombTargets = {};
+        if (chain >= 100) { this.generate(); frames.push({ type: 'shuffle', board: this.snapshot() }); break; }
+      }
+      if (!this.hasMove()) { this.reshuffle(); frames.push({ type: 'shuffle', board: this.snapshot() }); }
+      return { frames, counts, score };
+    }
+  }
+  if (typeof module !== 'undefined' && module.exports) module.exports = { TideEngine, SIZE, KINDS };
+  else root.TideEngine = TideEngine;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+</script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id), icons = ['🐚','⭐','🪸','🫧','🍃','💎'];
+const palette = [['#f7c4af','#cb7e77'],['#ffe49a','#d6a54d'],['#f4a7ae','#bd687c'],['#a5e1e8','#5b9fbb'],['#c6e4a0','#72a88a'],['#d2c3ed','#9284b9']];
+const levels = Array.from({length:12}, (_,i) => ({ moves:20 + Math.floor(i/3), target:i%2 ? 18+i*2 : 1500+i*400, kind:i%2 ? Math.floor(i/2)%6 : null }));
+let saved; try { saved=JSON.parse(localStorage.getItem('tidepool-v1')); } catch {} 
+let progress=Array.from({length:12},(_,i)=>Math.max(0,Math.min(3,Number(saved?.stars?.[i])||0)));
+let sound=false,audio,engine,level=0,score=0,moves=0,counts=[],busy=false,selected=-1,cursor=0,playing=false,view=[],hintPair=[],clock=0;
+const modal=$('modal'), board=$('board'), nodes=new Map(), wait=ms=>new Promise(r=>setTimeout(r,ms));
+function tone(chain=1){if(!sound)return;try{audio ||= new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.type='sine';o.frequency.setValueAtTime(260+chain*110,audio.currentTime);g.gain.setValueAtTime(.07,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.18);o.start();o.stop(audio.currentTime+.2);}catch{}}
+function save(){try{localStorage.setItem('tidepool-v1',JSON.stringify({stars:progress}));}catch{$('status').textContent='Storage unavailable — stars last this session.';}}
+function paint(tiles,removed=[]){
+ const live=new Set();tiles.forEach((t,i)=>{if(!t)return;live.add(t.id);let el=nodes.get(t.id);if(!el){el=document.createElement('button');el.className='tile';el.innerHTML='<span class="gem"></span><em></em>';el.style.top='-15%';board.append(el);nodes.set(t.id,el);el.getBoundingClientRect();}
+ el.dataset.index=i;el.style.left=(i%8*12.5)+'%';el.style.top=(Math.floor(i/8)*12.5)+'%';el.style.setProperty('--light',palette[t.kind][0]);el.style.setProperty('--dark',palette[t.kind][1]);el.firstChild.textContent=icons[t.kind];el.lastChild.textContent=t.special==='bomb'?'✺':t.special==='line'?(t.dir==='row'?'↔':'↕'):'';el.className='tile'+(t.special?' special':'')+(i===selected||hintPair.includes(i)?' selected':'');el.setAttribute('aria-label',`Row ${Math.floor(i/8)+1}, column ${i%8+1}, ${['shell','star','coral','bubble','kelp','crystal'][t.kind]}${t.special?' '+t.special:''}`);el.tabIndex=i===cursor?0:-1;
+ });for(const[id,el]of nodes){if(!live.has(id)){el.classList.add('removing');setTimeout(()=>el.remove(),190);nodes.delete(id);}} view=tiles;
+}
+function hud(){const spec=levels[level],v=spec.kind===null?score:counts[spec.kind];$('level-number').textContent=String(level+1).padStart(2,'0');$('chapter').textContent=`${String(level+1).padStart(2,'0')} / ${['THE SHALLOWS','CORAL GARDENS','MOONLIT POOLS'][Math.floor(level/4)]}`;$('score').textContent=score.toLocaleString();$('moves').textContent=moves;$('goal').textContent=spec.kind===null?`Reach ${spec.target.toLocaleString()} points`:`Collect ${spec.target} ${icons[spec.kind]} tiles`;$('goal-count').textContent=`${Math.min(v,spec.target).toLocaleString()} / ${spec.target.toLocaleString()}`;$('goal-bar').style.width=Math.min(100,v/spec.target*100)+'%';}
+function dialog(title,copy,primary,action,secondary,second){$('modal-title').textContent=title;$('modal-copy').textContent=copy;$('level-grid').hidden=true;$('modal-primary').textContent=primary;$('modal-primary').onclick=action;$('modal-secondary').hidden=!secondary;$('modal-secondary').textContent=secondary||'';$('modal-secondary').onclick=second||(()=>modal.close());if(!modal.open)modal.showModal();}
+function start(n){level=n;engine=new TideEngine(1729+n*7919);score=0;moves=levels[n].moves;counts=Array(6).fill(0);selected=-1;hintPair=[];busy=false;playing=true;board.replaceChildren();nodes.clear();paint(engine.snapshot());hud();$('status').textContent='The tide is yours.';modal.close();}
+function finish(){const spec=levels[level],won=(spec.kind===null?score:counts[spec.kind])>=spec.target;if(!won&&moves>0)return;playing=false;const stars=won?Math.min(3,1+(moves>=3?1:0)+(moves>=7?1:0)):0;if(won){progress[level]=Math.max(progress[level],stars);save();}dialog(won?'A beautiful little tide.':'The tide will turn.',won?`${'★'.repeat(stars)}${'☆'.repeat(3-stars)} · ${score.toLocaleString()} points. ${level===11?'You explored all twelve tidepools!':'A new tidepool is waiting.'}`:'Out of moves. Take another breath and try this tidepool again.',won&&level<11?'Next tidepool':'Try again',()=>start(won&&level<11?level+1:level),'Level map',showLevels);}
+async function move(a,b){if(busy||!playing||modal.open)return;busy=true;hintPair=[];selected=-1;const result=engine.turn(a,b);for(const f of result.frames){paint(f.board,f.removed);if(f.type==='clear'){tone(f.chain);$('status').textContent=f.chain>1?`Cascade ×${f.chain} — lovely!`:'A little ripple of magic.';}if(f.type==='shuffle')$('status').textContent='A fresh tide: no moves, so we reshuffled.';await wait(f.type==='clear'?220:260);}if(result.valid){moves--;score+=result.score;counts=counts.map((v,i)=>v+result.counts[i]);hud();}else $('status').textContent='No match — try another treasure.';busy=false;finish();}
+function choose(i){if(busy||!playing||modal.open)return;hintPair=[];if(selected===i){selected=-1;$('status').textContent='Selection cleared — pick any treasure.';}else if(selected>=0&&engine.adjacent(selected,i)){const a=selected;move(a,i);return;}else{selected=i;$('status').textContent=`Selected row ${Math.floor(i/8)+1}, column ${i%8+1} — tap a neighbour to swap.`;}paint(view);}
+let press=null;board.addEventListener('pointerdown',e=>{const el=e.target.closest('.tile');if(!el||busy)return;press={i:Number(el.dataset.index),x:e.clientX,y:e.clientY};board.setPointerCapture(e.pointerId);});
+board.addEventListener('pointerup',e=>{if(!press)return;const p=press;press=null;const dx=e.clientX-p.x,dy=e.clientY-p.y;if(Math.hypot(dx,dy)<15){choose(p.i);return;}const end=p.i+(Math.abs(dx)>Math.abs(dy)?(dx>0?1:-1):(dy>0?8:-8));if(engine.adjacent(p.i,end))move(p.i,end);});board.addEventListener('pointercancel',()=>press=null);
+board.addEventListener('keydown',e=>{if(!playing||busy||modal.open)return;const delta={ArrowLeft:-1,ArrowRight:1,ArrowUp:-8,ArrowDown:8}[e.key];if(delta){e.preventDefault();const n=cursor+delta;if(engine.adjacent(cursor,n))cursor=n;paint(view);board.querySelector(`[data-index="${cursor}"]`)?.focus();}else if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(cursor);}});
+function showLevels(){dialog('Choose your tidepool.','Earn one star for the goal, two with 3 moves left, three with 7.','Back to the tide',()=>modal.close());const grid=$('level-grid');grid.hidden=false;grid.replaceChildren();levels.forEach((s,i)=>{const b=document.createElement('button');b.innerHTML=`${String(i+1).padStart(2,'0')}<small>${progress[i]?'★'.repeat(progress[i]):'○ ○ ○'}</small>`;b.disabled=i>0&&!progress[i-1];b.setAttribute('aria-label',`Level ${i+1}, ${progress[i]} stars`);b.onclick=()=>start(i);grid.append(b);});}
+function showGuide(){dialog('Welcome to the tidepool.','Match 3 treasures to clear them. Match 4 for a line sweep, 5 for a colour bomb. Swap any special to activate it. Reach the goal before your moves run out.','Back to the tide',()=>modal.close(),'Level map',showLevels);}
+$('levels').onclick=()=>{if(!busy)showLevels();};$('guide').onclick=()=>{if(!busy)showGuide();};$('mute').onclick=()=>{sound=!sound;$('mute').textContent=sound?'Sound on':'Sound off';tone();};
+$('pause').onclick=()=>{if(!playing||busy)return;dialog('A quiet moment.','Your tidepool will be right here.','Resume',()=>modal.close(),'Restart level',()=>start(level));};
+$('hint').onclick=()=>{if(busy||!playing)return;for(let a=0;a<64;a++)for(const b of[a+1,a+8]){if(!engine.adjacent(a,b))continue;engine.swap(a,b);const valid=engine.board[a].special||engine.board[b].special||engine.matches().length;engine.swap(a,b);if(valid){hintPair=[a,b];selected=-1;paint(view);$('status').textContent='Try the two glowing treasures.';return;}}};
+// Fixed-step ambient clock: animation timing is independent of frame rate.
+let previous=0,accumulator=0;function loop(time){accumulator+=Math.min((time-previous)/1000,.1);previous=time;while(accumulator>=1/60){clock+=1/60;accumulator-=1/60;}document.querySelector('.sea').style.borderColor=`rgba(140,185,163,${.38+Math.sin(clock)*.12})`;requestAnimationFrame(loop);}requestAnimationFrame(loop);
+start(Math.min(11,Math.max(0,progress.findIndex(n=>!n)===-1?11:progress.findIndex(n=>!n))));
+</script></body></html>

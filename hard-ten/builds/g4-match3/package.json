@@ -1,0 +1,12 @@
+{
+  "name": "tidepool-tiles",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An original seeded match-three tidepool puzzle",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test tests/engine.test.cjs",
+    "test:browser": "node tests/browser.cjs"
+  },
+  "devDependencies": { "@playwright/test": "1.58.2" }
+}
